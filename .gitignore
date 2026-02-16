@@ -57,9 +57,6 @@ logs/
 *.log
 
 # Data files (large files that shouldn't be versioned)
-*.csv
-*.npy
-*.npz
 *.h5
 *.hdf5
 *.parquet

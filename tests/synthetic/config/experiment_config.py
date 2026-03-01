@@ -139,7 +139,7 @@ DL_MODELS_CONFIG = {
     "LSTM": {
         "units": [128, 64],
         "dropout_rate": 0.3,
-        "recurrent_dropout": 0.2,
+        "recurrent_dropout": 0.0,   # 0.0 para habilitar kernel CuDNN (muito mais rápido em GPU)
         "learning_rate": 0.001,
         "l2_reg": 0.001,
     },

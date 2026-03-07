@@ -1,0 +1,108 @@
+========================================
+Parallel 2-GPU execution: sex 06 mar 2026 01:41:18 -03
+  EPOCHS_OVERRIDE=0
+  MAX_GRID_CONFIGS=0
+========================================
+
+── Fase 1: 02 (GPU 0) + 03 (GPU 1) ──
+[GPU 1] Starting: 03_dl_wavelet_experiments.ipynb at sex 06 mar 2026 01:41:18 -03
+[GPU 0] Starting: 02_dl_raw_experiments.ipynb at sex 06 mar 2026 01:41:18 -03
+[NbConvertApp] Converting notebook 02_dl_raw_experiments.ipynb to notebook
+[NbConvertApp] Converting notebook 03_dl_wavelet_experiments.ipynb to notebook
+2026-03-06 01:41:24.407373: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-03-06 01:41:24.407394: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1772772089.019499 3016661 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 14160 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4080 SUPER, pci bus id: 0000:4c:00.0, compute capability: 8.9
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1772772089.019484 3016660 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 14163 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4080 SUPER, pci bus id: 0000:01:00.0, compute capability: 8.9
+2026-03-06 01:41:32.531206: I external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:473] Loaded cuDNN version 91900
+2026-03-06 01:41:40.586702: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+2026-03-06 01:41:40.586781: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:41:41.638556: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:41:43.944618: I external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:473] Loaded cuDNN version 91900
+2026-03-06 01:41:47.692869: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:41:51.351484: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+2026-03-06 01:41:51.351546: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:41:52.531857: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:41:58.299213: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:41:59.365313: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:42:09.068101: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:42:21.038076: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:42:31.231364: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:43:05.778496: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:43:15.079466: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:44:33.236610: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:44:42.165567: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:47:29.013689: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:47:36.970086: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:53:26.924093: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 01:53:32.233207: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 02:05:29.653946: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 02:05:31.819790: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 02:29:22.058863: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 02:29:36.211481: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 03:16:59.550015: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 03:17:38.005600: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 04:52:39.820747: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 04:54:05.777624: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]
+2026-03-06 09:23:01.888164: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+2026-03-06 11:43:56.923428: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+	 [[{{node MultiDeviceIteratorGetNextFromShard}}]]
+	 [[RemoteCall]]

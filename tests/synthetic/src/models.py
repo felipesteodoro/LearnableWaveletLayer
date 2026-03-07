@@ -49,7 +49,7 @@ def create_random_forest(params: Optional[Dict] = None) -> RandomForestRegressor
         min_samples_split=params.get('min_samples_split', 2),
         min_samples_leaf=params.get('min_samples_leaf', 1),
         random_state=42,
-        n_jobs=-1,
+        n_jobs=params.get('n_jobs', -1),
     )
 
 
@@ -64,7 +64,7 @@ def create_xgboost(params: Optional[Dict] = None):
         subsample=params.get('subsample', 0.8),
         colsample_bytree=params.get('colsample_bytree', 0.8),
         random_state=42,
-        n_jobs=-1,
+        n_jobs=params.get('n_jobs', -1),
         verbosity=0,
     )
 
@@ -80,9 +80,42 @@ def create_lightgbm(params: Optional[Dict] = None):
         num_leaves=params.get('num_leaves', 31),
         subsample=params.get('subsample', 0.8),
         random_state=42,
-        n_jobs=-1,
+        n_jobs=params.get('n_jobs', -1),
         verbose=-1,
     )
+
+
+# ============================================================================
+# MULTI-GPU
+# ============================================================================
+
+def get_distribute_strategy() -> tf.distribute.Strategy:
+    """
+    Retorna a melhor estratégia de distribuição disponível.
+
+    - 2+ GPUs  → MirroredStrategy (treina em todas as GPUs em paralelo)
+    - 1 GPU    → OneDeviceStrategy (GPU única, sem overhead)
+    - 0 GPUs   → OneDeviceStrategy (CPU)
+
+    Uso nos notebooks::
+
+        strategy = get_distribute_strategy()
+        ...
+        with strategy.scope():
+            model = create_cnn_model(input_shape, params=params)
+        model.fit(...)          # fora do scope — funciona normalmente
+    """
+    gpus = tf.config.list_physical_devices('GPU')
+    if len(gpus) >= 2:
+        strategy = tf.distribute.MirroredStrategy()
+        print(f"⚡ MirroredStrategy: {strategy.num_replicas_in_sync} GPUs")
+    elif len(gpus) == 1:
+        strategy = tf.distribute.OneDeviceStrategy(device="/gpu:0")
+        print("⚡ OneDeviceStrategy: GPU:0")
+    else:
+        strategy = tf.distribute.OneDeviceStrategy(device="/cpu:0")
+        print("⚡ OneDeviceStrategy: CPU")
+    return strategy
 
 
 # ============================================================================
@@ -246,6 +279,104 @@ def create_cnn_lstm_model(
     return model
 
 
+def create_learned_wavelet_cnn_lstm_model(
+    input_shape: Tuple[int, int],
+    wavelet_config: Optional[Dict] = None,
+    cnn_lstm_params: Optional[Dict] = None
+) -> Model:
+    """
+    Cria modelo com LearnedWaveletDWT1D_QMF seguido de CNN-LSTM.
+    """
+    import sys
+    sys.path.append('../../../models')
+    from LWT import LearnedWaveletDWT1D_QMF
+
+    wavelet_config = wavelet_config or {}
+    cnn_lstm_params = cnn_lstm_params or {}
+
+    cnn_filters = cnn_lstm_params.get('cnn_filters', [64, 128])
+    cnn_kernel_sizes = cnn_lstm_params.get('cnn_kernel_sizes', [5, 3])
+    lstm_units = cnn_lstm_params.get('lstm_units', [100, 50])
+    dense_units = cnn_lstm_params.get('dense_units', [64])
+    dropout_rate = cnn_lstm_params.get('dropout_rate', 0.3)
+    l2_reg = cnn_lstm_params.get('l2_reg', 0.001)
+    learning_rate = cnn_lstm_params.get('learning_rate', 0.001)
+
+    inputs = Input(shape=input_shape)
+
+    # Learned Wavelet Layer
+    wavelet_layer = LearnedWaveletDWT1D_QMF(
+        levels=wavelet_config.get('levels', 3),
+        kernel_size=wavelet_config.get('kernel_size', 32),
+        wavelet_net_units=wavelet_config.get('wavelet_net_units', 32),
+        mode="concat",
+        reg_energy=wavelet_config.get('reg_energy', 1e-2),
+        reg_high_dc=wavelet_config.get('reg_high_dc', 1e-2),
+        reg_smooth=wavelet_config.get('reg_smooth', 1e-3),
+    )
+
+    x = wavelet_layer(inputs)
+
+    # CNN blocks
+    for i, (f, k) in enumerate(zip(cnn_filters, cnn_kernel_sizes)):
+        x = Conv1D(f, k, activation='relu', padding='same',
+                   kernel_regularizer=l2(l2_reg))(x)
+        x = BatchNormalization()(x)
+        x = MaxPooling1D(pool_size=2)(x)
+        x = Dropout(dropout_rate)(x)
+
+    # LSTM layers
+    for u in lstm_units[:-1]:
+        x = LSTM(u, return_sequences=True, dropout=dropout_rate,
+                 kernel_regularizer=l2(l2_reg))(x)
+
+    x = LSTM(lstm_units[-1], return_sequences=False, dropout=dropout_rate,
+             kernel_regularizer=l2(l2_reg))(x)
+
+    # Dense layers
+    for units in dense_units:
+        x = Dense(units, activation='relu', kernel_regularizer=l2(l2_reg))(x)
+        x = Dropout(dropout_rate)(x)
+
+    outputs = Dense(1, name='output')(x)
+
+    model = Model(inputs=inputs, outputs=outputs, name='LearnedWavelet_CNN_LSTM')
+    model.compile(
+        optimizer=Adam(learning_rate=learning_rate),
+        loss='mse',
+        metrics=['mae']
+    )
+
+    return model
+
+
+class SinusoidalPositionalEncoding(tf.keras.layers.Layer):
+    """Codificação posicional sinusoidal (Vaswani et al., 2017)."""
+
+    def __init__(self, max_len=2048, **kwargs):
+        super().__init__(**kwargs)
+        self.max_len = max_len
+
+    def build(self, input_shape):
+        d_model = input_shape[-1]
+        positions = np.arange(self.max_len)[:, np.newaxis]  # (max_len, 1)
+        dims = np.arange(d_model)[np.newaxis, :]            # (1, d_model)
+        angles = positions / np.power(10000.0, (2 * (dims // 2)) / d_model)
+        angles[:, 0::2] = np.sin(angles[:, 0::2])
+        angles[:, 1::2] = np.cos(angles[:, 1::2])
+        self.pe = tf.constant(angles[np.newaxis, :, :], dtype=tf.float32)  # (1, max_len, d_model)
+        super().build(input_shape)
+
+    def call(self, x):
+        seq_len = tf.shape(x)[1]
+        return x + self.pe[:, :seq_len, :]
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({"max_len": self.max_len})
+        return config
+
+
 class TransformerBlock(tf.keras.layers.Layer):
     """Bloco Transformer para processamento de sequências."""
     
@@ -283,12 +414,37 @@ class TransformerBlock(tf.keras.layers.Layer):
         return self.layernorm2(out1 + ffn_output)
 
 
+class TransformerWarmupSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
+    """Warmup linear seguido de decay, como em Vaswani et al."""
+
+    def __init__(self, d_model, warmup_steps=500):
+        super().__init__()
+        self.d_model = tf.cast(d_model, tf.float32)
+        self.warmup_steps = tf.cast(warmup_steps, tf.float32)
+
+    def __call__(self, step):
+        step = tf.cast(step, tf.float32)
+        arg1 = tf.math.rsqrt(step + 1)
+        arg2 = (step + 1) * (self.warmup_steps ** -1.5)
+        return tf.math.rsqrt(self.d_model) * tf.math.minimum(arg1, arg2)
+
+    def get_config(self):
+        return {"d_model": int(self.d_model.numpy()),
+                "warmup_steps": int(self.warmup_steps.numpy())}
+
+
 def create_transformer_model(
     input_shape: Tuple[int, int],
     params: Optional[Dict] = None
 ) -> Model:
     """
     Cria modelo Transformer para regressão de séries temporais.
+
+    Inclui:
+    - Projeção inicial + Positional Encoding sinusoidal
+    - Blocos Transformer com pre-LayerNorm
+    - L2 regularização no MLP head
+    - Warmup learning-rate schedule
     """
     params = params or {}
     
@@ -299,12 +455,21 @@ def create_transformer_model(
     mlp_units = params.get('mlp_units', [128, 64])
     dropout_rate = params.get('dropout_rate', 0.2)
     learning_rate = params.get('learning_rate', 0.001)
+    l2_reg = params.get('l2_reg', 0.001)
+    use_warmup = params.get('use_warmup', True)
+    warmup_steps = params.get('warmup_steps', 500)
+    
+    embed_dim = head_size * num_heads
     
     inputs = Input(shape=input_shape)
     x = inputs
     
-    # Projeção inicial
-    x = Dense(head_size * num_heads)(x)
+    # Projeção inicial para embed_dim dimensões
+    x = Dense(embed_dim, kernel_regularizer=l2(l2_reg))(x)
+    
+    # Positional Encoding — essencial para o Transformer saber a ordem
+    x = SinusoidalPositionalEncoding(max_len=input_shape[0])(x)
+    x = Dropout(dropout_rate)(x)
     
     # Blocos Transformer
     for _ in range(num_transformer_blocks):
@@ -313,16 +478,26 @@ def create_transformer_model(
     # Global Average Pooling
     x = GlobalAveragePooling1D()(x)
     
-    # MLP head
+    # MLP head com regularização
     for units in mlp_units:
-        x = Dense(units, activation="relu")(x)
+        x = Dense(units, activation="relu", kernel_regularizer=l2(l2_reg))(x)
         x = Dropout(dropout_rate)(x)
     
     outputs = Dense(1, name='output')(x)
     
     model = Model(inputs=inputs, outputs=outputs, name='Transformer_Regressor')
+    
+    # Optimizer: warmup schedule ou lr fixo
+    if use_warmup:
+        lr_schedule = TransformerWarmupSchedule(d_model=embed_dim,
+                                                warmup_steps=warmup_steps)
+        optimizer = Adam(learning_rate=lr_schedule, beta_1=0.9,
+                         beta_2=0.98, epsilon=1e-9)
+    else:
+        optimizer = Adam(learning_rate=learning_rate)
+    
     model.compile(
-        optimizer=Adam(learning_rate=learning_rate),
+        optimizer=optimizer,
         loss='mse',
         metrics=['mae']
     )
@@ -473,19 +648,37 @@ def create_learned_wavelet_transformer_model(
     ff_dim = transformer_params.get('ff_dim', 128)
     num_blocks = transformer_params.get('num_transformer_blocks', 2)
     
-    x = Dense(head_size * num_heads)(x)
+    embed_dim = head_size * num_heads
+    dropout_rate = transformer_params.get('dropout_rate', 0.2)
+    l2_reg = transformer_params.get('l2_reg', 0.001)
+    
+    x = Dense(embed_dim, kernel_regularizer=l2(l2_reg))(x)
+    x = SinusoidalPositionalEncoding()(x)
+    x = Dropout(dropout_rate)(x)
     
     for _ in range(num_blocks):
-        x = TransformerBlock(head_size, num_heads, ff_dim, 0.2)(x)
+        x = TransformerBlock(head_size, num_heads, ff_dim, dropout_rate)(x)
     
     x = GlobalAveragePooling1D()(x)
-    x = Dense(64, activation='relu')(x)
-    x = Dropout(0.2)(x)
+    x = Dense(64, activation='relu', kernel_regularizer=l2(l2_reg))(x)
+    x = Dropout(dropout_rate)(x)
     outputs = Dense(1)(x)
     
     model = Model(inputs=inputs, outputs=outputs, name='LearnedWavelet_Transformer')
+    
+    lr = transformer_params.get('learning_rate', 0.001)
+    use_warmup = transformer_params.get('use_warmup', True)
+    warmup_steps = transformer_params.get('warmup_steps', 500)
+    if use_warmup:
+        lr_schedule = TransformerWarmupSchedule(d_model=embed_dim,
+                                                warmup_steps=warmup_steps)
+        optimizer = Adam(learning_rate=lr_schedule, beta_1=0.9,
+                         beta_2=0.98, epsilon=1e-9)
+    else:
+        optimizer = Adam(learning_rate=lr)
+    
     model.compile(
-        optimizer=Adam(learning_rate=transformer_params.get('learning_rate', 0.001)),
+        optimizer=optimizer,
         loss='mse',
         metrics=['mae']
     )
@@ -502,21 +695,20 @@ def get_callbacks(
     patience_early: int = 15,
     patience_lr: int = 7,
     min_lr: float = 1e-6,
-    monitor: str = 'val_loss'
+    monitor: str = 'val_loss',
+    use_reduce_lr: bool = True
 ) -> list:
-    """Retorna lista de callbacks padrão para treinamento."""
-    return [
+    """Retorna lista de callbacks padrão para treinamento.
+    
+    Args:
+        use_reduce_lr: Se False, omite ReduceLROnPlateau (necessário quando
+            o optimizer usa LearningRateSchedule, e.g. TransformerWarmupSchedule).
+    """
+    callbacks = [
         EarlyStopping(
             monitor=monitor,
             patience=patience_early,
             restore_best_weights=True,
-            verbose=1
-        ),
-        ReduceLROnPlateau(
-            monitor=monitor,
-            factor=0.5,
-            patience=patience_lr,
-            min_lr=min_lr,
             verbose=1
         ),
         ModelCheckpoint(
@@ -526,6 +718,17 @@ def get_callbacks(
             verbose=0
         )
     ]
+    if use_reduce_lr:
+        callbacks.append(
+            ReduceLROnPlateau(
+                monitor=monitor,
+                factor=0.5,
+                patience=patience_lr,
+                min_lr=min_lr,
+                verbose=1
+            )
+        )
+    return callbacks
 
 
 # ============================================================================
@@ -548,6 +751,7 @@ MODEL_FACTORY = {
     # Learned Wavelets
     'LearnedWavelet_CNN': create_learned_wavelet_cnn_model,
     'LearnedWavelet_LSTM': create_learned_wavelet_lstm_model,
+    'LearnedWavelet_CNN_LSTM': create_learned_wavelet_cnn_lstm_model,
     'LearnedWavelet_Transformer': create_learned_wavelet_transformer_model,
 }
 

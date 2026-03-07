@@ -113,15 +113,19 @@ VALIDATION_CONFIG = {
 ML_FEATURE_CONFIG = {
     "variance_threshold": 1e-8,     # Limiar para remover features constantes
     "mi_subsample": 5000,           # Amostras para cálculo de Mutual Information
+    "mi_n_neighbors": 5,            # Vizinhos para mutual_info_regression
+    "mi_top_k": 15,                 # Quantas top features exibir
 }
 
 # ============================================================================
 # CONFIGURAÇÕES DE BUSCA DE HIPERPARÂMETROS (ML)
 # ============================================================================
 ML_SEARCH_CONFIG = {
-    "cv_splits": 5,                            # Número de splits para TimeSeriesSplit
+    "cv_splits": 3,                            # Número de splits para TimeSeriesSplit
     "scoring": "neg_mean_squared_error",       # Métrica para otimização
-    "n_jobs": N_JOBS_QUARTER,                  # Jobs paralelos para RandomizedSearchCV (1/4 cores)
+    "n_jobs": 16,                               # Jobs paralelos para RandomizedSearchCV (limitado)
+    "verbose": 1,                              # Verbosidade do RandomizedSearchCV
+    "random_state": SEED,                      # Semente para reprodutibilidade
 }
 
 # ============================================================================
@@ -140,7 +144,7 @@ ML_MODELS_CONFIG = {
             "epsilon": ("uniform", 0, 0.5),
             "loss": ["epsilon_insensitive", "squared_epsilon_insensitive"],
         },
-        "n_iter": 60,
+        "n_iter": 15,
     },
     "SGDRegressor": {
         "model_kwargs": {"max_iter": 5000, "random_state": 42},
@@ -152,7 +156,7 @@ ML_MODELS_CONFIG = {
             "l1_ratio": ("uniform", 0.0, 1.0),
             "learning_rate": ["constant", "optimal", "invscaling", "adaptive"],
         },
-        "n_iter": 80,
+        "n_iter": 20,
     },
     "ElasticNet": {
         "model_kwargs": {"max_iter": 10000, "random_state": 42},
@@ -160,65 +164,67 @@ ML_MODELS_CONFIG = {
             "alpha": ("loguniform", 1e-5, 10),
             "l1_ratio": ("uniform", 0.0, 1.0),
         },
-        "n_iter": 60,
+        "n_iter": 15,
     },
     "RandomForest": {
-        "model_kwargs": {"random_state": 42, "n_jobs": N_JOBS},
+        "model_kwargs": {"random_state": 42, "n_jobs": 4},
         "param_dist": {
-            "n_estimators": ("randint", 100, 500),
-            "max_depth": [5, 10, 20, 30, None],
-            "min_samples_split": ("randint", 2, 20),
-            "min_samples_leaf": ("randint", 1, 10),
-            "max_features": ["sqrt", "log2", 0.5, 0.8, 1.0],
+            "n_estimators": ("randint", 50, 200),
+            "max_depth": [5, 10, 20],
+            "min_samples_split": ("randint", 2, 10),
+            "min_samples_leaf": ("randint", 1, 5),
+            "max_features": ["sqrt", "log2", 0.5],
         },
-        "n_iter": 50,
+        "n_iter": 15,
     },
     "XGBoost": {
-        "model_kwargs": {"random_state": 42, "n_jobs": N_JOBS, "verbosity": 0},
+        "model_kwargs": {"random_state": 42, "n_jobs": 4, "verbosity": 0},
         "param_dist": {
-            "n_estimators": ("randint", 100, 600),
-            "max_depth": ("randint", 3, 12),
+            "n_estimators": ("randint", 50, 200),
+            "max_depth": ("randint", 3, 8),
             "learning_rate": ("loguniform", 1e-3, 0.3),
-            "subsample": ("uniform", 0.6, 0.4),        # uniform(loc=0.6, scale=0.4) → [0.6, 1.0]
+            "subsample": ("uniform", 0.6, 0.4),
             "colsample_bytree": ("uniform", 0.6, 0.4),
             "reg_alpha": ("loguniform", 1e-4, 10),
             "reg_lambda": ("loguniform", 1e-4, 10),
             "min_child_weight": ("randint", 1, 10),
         },
-        "n_iter": 60,
+        "n_iter": 15,
     },
     "LightGBM": {
         "model_kwargs": {"random_state": 42, "n_jobs": 4, "verbose": -1},
         "param_dist": {
-            "n_estimators": ("randint", 100, 400),
-            "max_depth": ("randint", 3, 10),
+            "n_estimators": ("randint", 50, 200),
+            "max_depth": ("randint", 3, 8),
             "learning_rate": ("loguniform", 1e-3, 0.3),
-            "num_leaves": ("randint", 20, 80),
+            "num_leaves": ("randint", 20, 50),
             "subsample": ("uniform", 0.6, 0.4),
             "colsample_bytree": ("uniform", 0.6, 0.4),
             "reg_alpha": ("loguniform", 1e-4, 10),
             "reg_lambda": ("loguniform", 1e-4, 10),
-            "min_child_samples": ("randint", 5, 50),
+            "min_child_samples": ("randint", 5, 30),
         },
-        "n_iter": 30,
+        "n_iter": 15,
     },
     "CatBoost": {
-        "model_kwargs": {"random_seed": 42, "thread_count": N_JOBS, "verbose": 0},
+        "model_kwargs": {"random_seed": 42, "thread_count": 4, "verbose": 0},
         "param_dist": {
-            "iterations": ("randint", 200, 800),
-            "depth": ("randint", 4, 10),
+            "iterations": ("randint", 100, 300),
+            "depth": ("randint", 4, 8),
             "learning_rate": ("loguniform", 1e-3, 0.3),
             "l2_leaf_reg": ("loguniform", 1e-2, 10),
             "bagging_temperature": ("uniform", 0, 2.0),
             "random_strength": ("uniform", 0.5, 2.0),
         },
-        "n_iter": 40,
+        "n_iter": 15,
     },
     "Stacking": {
         # Configuração especial — usa os melhores modelos como base learners
         "base_learners": ["RandomForest", "XGBoost", "LightGBM", "CatBoost"],
         "meta_learner": "RidgeCV",
-        "model_kwargs": {"n_jobs": N_JOBS, "passthrough": False},
+        "ridge_alphas": [0.01, 0.1, 1.0, 10.0, 100.0],
+        "base_n_jobs": 4,             # n_jobs para cada base learner no stacking
+        "model_kwargs": {"n_jobs": 4, "passthrough": False},
     },
 }
 
@@ -459,6 +465,17 @@ OPTUNA_CONFIG = {
     "direction": "minimize",       # Minimizar erro
     "sampler": "TPESampler",       # Sampler do Optuna
     "pruner": "MedianPruner",      # Pruner para early stopping
+}
+
+# ============================================================================
+# MÉTRICAS DE AVALIAÇÃO
+# ============================================================================
+# ============================================================================
+# CONFIGURAÇÕES DE VISUALIZAÇÃO (ML)
+# ============================================================================
+ML_VIS_CONFIG = {
+    "prediction_n_samples": 500,     # Amostras a exibir no gráfico de predições
+    "feature_importance_top_k": 25,  # Top-K features no gráfico de importância
 }
 
 # ============================================================================

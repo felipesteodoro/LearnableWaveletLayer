@@ -1,0 +1,9 @@
+========================================
+Parallel 2-GPU execution: sex 06 mar 2026 23:29:33 -03
+  EPOCHS_OVERRIDE=0
+  MAX_GRID_CONFIGS=0
+========================================
+
+── Fase 1: 02 (GPU 0) + 03 (GPU 1) ──
+[GPU 0] Starting: 02_dl_raw_experiments.ipynb at sex 06 mar 2026 23:29:33 -03
+[GPU 1] Starting: 03_dl_wavelet_experiments.ipynb at sex 06 mar 2026 23:29:33 -03

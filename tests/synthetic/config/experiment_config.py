@@ -417,6 +417,7 @@ LEARNED_WAVELET_GRID_AXES = {
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "filters": [[32, 64, 128], [64, 128, 256]],
+        "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
     },
     "LSTM": {
         "dropout_rate": [0.2, 0.3, 0.4],

@@ -540,17 +540,25 @@ def create_learned_wavelet_cnn_model(
     x = wavelet_layer(inputs)
     
     # CNN layers
-    filters = cnn_params.get('filters', [64, 128])
-    for f in filters:
-        x = Conv1D(f, 3, activation='relu', padding='same')(x)
+    filters = cnn_params.get('filters', [64, 128, 256])
+    kernel_sizes = cnn_params.get('kernel_sizes', [7, 5, 3])
+    pool_sizes = cnn_params.get('pool_sizes', [2, 2, 2])
+    dense_units = cnn_params.get('dense_units', [96, 48])
+    dropout_rate = cnn_params.get('dropout_rate', 0.3)
+    l2_reg = cnn_params.get('l2_reg', 0.001)
+    for i, (f, k, p) in enumerate(zip(filters, kernel_sizes, pool_sizes)):
+        x = Conv1D(f, k, activation='relu', padding='same',
+                   kernel_regularizer=l2(l2_reg), name=f'cnn_conv_{i+1}')(x)
         x = BatchNormalization()(x)
-        x = MaxPooling1D(2)(x)
-        x = Dropout(0.3)(x)
+        x = MaxPooling1D(pool_size=p)(x)
+        x = Dropout(dropout_rate)(x)
     
     x = GlobalAveragePooling1D()(x)
-    x = Dense(64, activation='relu')(x)
-    x = Dropout(0.3)(x)
-    outputs = Dense(1)(x)
+    for i, units in enumerate(dense_units):
+        x = Dense(units, activation='relu', kernel_regularizer=l2(l2_reg),
+                  name=f'dense_{i+1}')(x)
+        x = Dropout(dropout_rate)(x)
+    outputs = Dense(1, name='output')(x)
     
     model = Model(inputs=inputs, outputs=outputs, name='LearnedWavelet_CNN')
     model.compile(

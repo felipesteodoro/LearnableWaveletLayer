@@ -1,0 +1,22 @@
+{
+  "dataset": "FordA",
+  "n_train": 3060,
+  "n_val": 541,
+  "n_test": 1320,
+  "sequence_length": 500,
+  "n_classes": 2,
+  "class_distribution_train": {
+    "0": 1569,
+    "1": 1491
+  },
+  "class_distribution_val": {
+    "0": 277,
+    "1": 264
+  },
+  "class_distribution_test": {
+    "0": 681,
+    "1": 639
+  },
+  "val_fraction": 0.15,
+  "random_seed": 42
+}

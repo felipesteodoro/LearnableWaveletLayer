@@ -1,8 +1,11 @@
 """
 Fábricas de modelos para Machine Learning (classificação) e Deep Learning.
 """
+import os as _os
 import numpy as np
 from typing import Dict, Any, Optional, Tuple
+
+_MODELS_DIR = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), '..', '..', '..', 'models'))
 
 # ML
 from sklearn.svm import LinearSVC
@@ -358,7 +361,7 @@ def create_transformer_model(input_shape: Tuple[int, int], params: Optional[Dict
 # ============================================================================
 
 def create_learned_wavelet_cnn_model(input_shape, wavelet_config=None, cnn_params=None):
-    import sys; sys.path.append('../../../models')
+    import sys; sys.path.append(_MODELS_DIR)
     from LWT import LearnedWaveletDWT1D_QMF
     wavelet_config = wavelet_config or {}
     cnn_params = cnn_params or {}
@@ -390,7 +393,7 @@ def create_learned_wavelet_cnn_model(input_shape, wavelet_config=None, cnn_param
 
 
 def create_learned_wavelet_lstm_model(input_shape, wavelet_config=None, lstm_params=None):
-    import sys; sys.path.append('../../../models')
+    import sys; sys.path.append(_MODELS_DIR)
     from LWT import LearnedWaveletDWT1D_QMF
     wavelet_config = wavelet_config or {}
     lstm_params = lstm_params or {}
@@ -420,7 +423,7 @@ def create_learned_wavelet_lstm_model(input_shape, wavelet_config=None, lstm_par
 
 
 def create_learned_wavelet_cnn_lstm_model(input_shape, wavelet_config=None, cnn_lstm_params=None):
-    import sys; sys.path.append('../../../models')
+    import sys; sys.path.append(_MODELS_DIR)
     from LWT import LearnedWaveletDWT1D_QMF
     wavelet_config = wavelet_config or {}
     cnn_lstm_params = cnn_lstm_params or {}
@@ -462,7 +465,7 @@ def create_learned_wavelet_cnn_lstm_model(input_shape, wavelet_config=None, cnn_
 
 
 def create_learned_wavelet_transformer_model(input_shape, wavelet_config=None, transformer_params=None):
-    import sys; sys.path.append('../../../models')
+    import sys; sys.path.append(_MODELS_DIR)
     from LWT import LearnedWaveletDWT1D_QMF
     wavelet_config = wavelet_config or {}
     transformer_params = transformer_params or {}

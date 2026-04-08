@@ -414,23 +414,27 @@ LEARNED_WAVELET_MODELS_CONFIG = {
 # Grid axes específicos para learned wavelets (podem diferir dos DL padrão)
 LEARNED_WAVELET_GRID_AXES = {
     "CNN": {
+        "wavelet_kernel_size": [4, 8, 16],
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "filters": [[32, 64, 128], [64, 128, 256]],
         "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
     },
     "LSTM": {
+        "wavelet_kernel_size": [4, 8, 16],
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "units": [[64, 32], [128, 64]],
     },
     "CNN_LSTM": {
+        "wavelet_kernel_size": [4, 8, 16],
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "cnn_filters": [[32, 64], [64, 128]],
         "lstm_units": [[64, 32], [100, 50]],
     },
     "Transformer": {
+        "wavelet_kernel_size": [4, 8, 16],
         "dropout_rate": [0.15, 0.2, 0.3],
         "num_heads": [2, 4],
         "ff_dim": [64, 128],

@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Layer
 
-from learned_wavelet_pair_qmf import LearnedWaveletPair1D_QMF
+from .learned_wavelet_pair_qmf import LearnedWaveletPair1D_QMF
 
 
 class LearnedWaveletDWT1D_QMF(Layer):

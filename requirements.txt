@@ -1,0 +1,37 @@
+# ============================================================
+# LearnableWaveletLayer – Project Dependencies
+# Generated from full scan of .py modules and .ipynb notebooks
+# Install with:  pip install -r requirements.txt
+# Requires:      NVIDIA GPU + driver >= 570  (CUDA 12 via pip)
+# Python:        3.11+
+# ============================================================
+
+# --- Core scientific stack ---
+numpy>=2.4
+pandas>=3.0
+scipy>=1.17
+
+# --- Machine Learning ---
+scikit-learn>=1.8
+xgboost>=3.2
+lightgbm>=4.6
+optuna>=4.7
+joblib>=1.5
+
+# --- Deep Learning (GPU via pip CUDA 12 libraries) ---
+tensorflow[and-cuda]>=2.20
+
+# --- Signal / Wavelet processing ---
+PyWavelets>=1.8      # imported as pywt
+
+# --- Visualization ---
+matplotlib>=3.10
+seaborn>=0.13
+
+# --- Financial data ---
+yfinance>=0.2
+
+# --- Notebook / progress ---
+jupyter
+ipykernel
+tqdm>=4.67

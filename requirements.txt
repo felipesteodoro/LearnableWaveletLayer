@@ -31,6 +31,15 @@ seaborn>=0.13
 # --- Financial data ---
 yfinance>=0.2
 
+# --- Financial indicators & metrics ---
+pandas-ta>=0.3          # RSI, MACD, Bollinger Bands, ADX, Stochastic, etc.
+quantstats>=0.0.62      # Sharpe, Sortino, MDD, Calmar, VaR, tear sheets
+empyrical>=0.5          # Alpha, Beta, Sortino (standalone)
+statsmodels>=0.14       # ADF, KPSS stationarity tests
+
+# --- Dashboard & CLI ---
+rich>=13.0              # GPU queue monitor terminal dashboard
+
 # --- Notebook / progress ---
 jupyter
 ipykernel

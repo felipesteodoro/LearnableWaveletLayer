@@ -94,3 +94,6 @@ htmlcov/
 tmp/
 temp/
 *.tmp
+
+# Claude Code
+.claude/

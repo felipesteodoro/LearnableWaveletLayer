@@ -35,7 +35,7 @@ from pathlib import Path
 # Allow running from repo root
 sys.path.insert(0, str(Path(__file__).parent))
 
-from queue import GPUJobQueueManager, ExperimentJob  # noqa: E402
+from gpu_queue import GPUJobQueueManager, ExperimentJob  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,

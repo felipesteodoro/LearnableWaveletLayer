@@ -8,7 +8,7 @@ import sys
 import time
 import threading
 from pathlib import Path
-from queue import Queue
+from queue import Queue  # stdlib queue
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:

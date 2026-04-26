@@ -65,28 +65,33 @@ class PurgedKFold(KFold):
                 continue
             
             test_start_time = X.index[test_indices[0]]
+            test_end_time = X.index[test_indices[-1]]
             
             # Combina índices de treino de outras dobras
             train_indices_all = np.concatenate([
                 split for j, split in enumerate(test_splits) if i != j
             ])
             
-            # Aplica purga: remove observações cujo t1 >= test_start_time
+            # Aplica purga: remove observações de treino cujo evento (t1)
+            # se estende para dentro do período de teste
             t1_train = t1_aligned.iloc[train_indices_all]
-            purged_train_mask = t1_train < test_start_time
-            train_indices = t1_train[purged_train_mask].index
-            train_indices = X.index.get_indexer(train_indices)
+            purged_mask = t1_train < test_start_time  # treino antes do teste: manter se evento termina antes
             
-            # Aplica embargo
-            if len(test_indices) > 0:
-                test_end_time = X.index[test_indices[-1]]
-                embargo_start_time = test_end_time + pd.Timedelta(days=1)
-                embargo_end_time = embargo_start_time + pd.Timedelta(days=embargo_size)
+            # Para amostras de treino DEPOIS do teste, manter todas
+            after_test_mask = X.index[train_indices_all] > test_end_time
+            keep_mask = purged_mask | after_test_mask
+            
+            train_indices = train_indices_all[keep_mask.values]
+            
+            # Aplica embargo: remove amostras logo após o teste
+            if embargo_size > 0 and len(test_indices) > 0:
+                test_end_idx = test_indices[-1]
+                embargo_end_idx = min(test_end_idx + embargo_size, X.shape[0] - 1)
+                embargo_end_time = X.index[embargo_end_idx]
                 
-                embargo_mask = (
-                    (X.index[train_indices] < embargo_start_time) | 
-                    (X.index[train_indices] > embargo_end_time)
-                )
+                # Remove amostras de treino no período de embargo (entre teste e embargo_end)
+                train_times = X.index[train_indices]
+                embargo_mask = ~((train_times > test_end_time) & (train_times <= embargo_end_time))
                 train_indices = train_indices[embargo_mask]
             
             yield train_indices, test_indices

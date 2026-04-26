@@ -50,7 +50,7 @@ class ClassificationEvaluator:
         p = f"{prefix}_" if prefix else ""
 
         # Per-class F1
-        f1_per_class = f1_score(y_true, y_pred, average=None, zero_division=0)
+        f1_per_class = f1_score(y_true, y_pred, average=None, labels=[0, 1, 2], zero_division=0)
         f1_dict = {
             f"{p}f1_sell": float(f1_per_class[0]),
             f"{p}f1_hold": float(f1_per_class[1]),

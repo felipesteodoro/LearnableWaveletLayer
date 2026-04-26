@@ -18,14 +18,86 @@ from scipy import stats
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 try:
-    import pandas_ta as ta
+    import ta as _ta_lib  # Technical Analysis Library (pip install ta)
 except ImportError:
-    raise ImportError("Install pandas-ta: pip install pandas-ta")
+    raise ImportError("Install ta library: pip install ta")
 
 try:
     from statsmodels.tsa.stattools import adfuller
 except ImportError:
     raise ImportError("Install statsmodels: pip install statsmodels")
+
+
+# ---------------------------------------------------------------------------
+# Thin wrapper functions mimicking pandas_ta interface using `ta` library
+# ---------------------------------------------------------------------------
+
+class _TA:
+    """Wrapper around the `ta` library to provide pandas_ta-compatible API."""
+
+    @staticmethod
+    def rsi(close, length=14):
+        return _ta_lib.momentum.RSIIndicator(close, window=length).rsi()
+
+    @staticmethod
+    def stoch(high, low, close, k=14):
+        ind = _ta_lib.momentum.StochasticOscillator(high, low, close, window=k)
+        result = pd.DataFrame({
+            f"STOCHk_{k}": ind.stoch(),
+            f"STOCHd_{k}": ind.stoch_signal(),
+        })
+        return result
+
+    @staticmethod
+    def willr(high, low, close, length=14):
+        return _ta_lib.momentum.WilliamsRIndicator(high, low, close, lbp=length).williams_r()
+
+    @staticmethod
+    def ema(close, length=20):
+        return _ta_lib.trend.EMAIndicator(close, window=length).ema_indicator()
+
+    @staticmethod
+    def sma(close, length=50):
+        return _ta_lib.trend.SMAIndicator(close, window=length).sma_indicator()
+
+    @staticmethod
+    def macd(close, fast=12, slow=26, signal=9):
+        ind = _ta_lib.trend.MACD(close, window_fast=fast, window_slow=slow, window_sign=signal)
+        result = pd.DataFrame({
+            f"MACD_{fast}_{slow}_{signal}":  ind.macd(),
+            f"MACDs_{fast}_{slow}_{signal}": ind.macd_signal(),
+            f"MACDh_{fast}_{slow}_{signal}": ind.macd_diff(),
+        })
+        return result
+
+    @staticmethod
+    def atr(high, low, close, length=14):
+        return _ta_lib.volatility.AverageTrueRange(high, low, close, window=length).average_true_range()
+
+    @staticmethod
+    def bbands(close, length=20):
+        ind = _ta_lib.volatility.BollingerBands(close, window=length)
+        result = pd.DataFrame({
+            f"BBU_{length}": ind.bollinger_hband(),
+            f"BBL_{length}": ind.bollinger_lband(),
+            f"BBM_{length}": ind.bollinger_mavg(),
+        })
+        return result
+
+    @staticmethod
+    def adx(high, low, close, length=14):
+        ind = _ta_lib.trend.ADXIndicator(high, low, close, window=length)
+        result = pd.DataFrame({
+            f"ADX_{length}": ind.adx(),
+        })
+        return result
+
+    @staticmethod
+    def obv(close, volume):
+        return _ta_lib.volume.OnBalanceVolumeIndicator(close, volume).on_balance_volume()
+
+
+ta = _TA()
 
 
 # ---------------------------------------------------------------------------

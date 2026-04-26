@@ -5,7 +5,7 @@ import logging
 import threading
 import time
 from pathlib import Path
-from queue import Queue
+from queue import Queue  # stdlib queue
 from typing import List, Optional
 
 from .job import ExperimentJob

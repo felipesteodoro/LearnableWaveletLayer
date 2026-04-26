@@ -163,8 +163,8 @@ DL_GRID_AXES = {
 # Machine Learning
 # ---------------------------------------------------------------------------
 
-ML_N_JOBS_OUTER = max(1, (os.cpu_count() or 4) - 2)   # parallel (ticker × model)
-ML_N_JOBS_MODEL = 4                                     # per-model thread count
+ML_N_JOBS_OUTER = 16                                    # parallel (ticker × model)
+ML_N_JOBS_MODEL = 2                                     # per-model thread count
 
 ML_MODELS_CONFIG = {
     "RandomForest": {

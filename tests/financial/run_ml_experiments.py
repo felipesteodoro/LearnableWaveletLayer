@@ -46,7 +46,7 @@ from catboost import CatBoostClassifier
 
 from config.experiment_config import (
     TICKERS, ML_MODELS_CONFIG, ML_N_JOBS_OUTER, VALIDATION_CONFIG, BACKTEST_CONFIG,
-    LABELING_CONFIG, ML_N_JOBS_MODEL
+    LABELING_CONFIG, ML_N_JOBS_MODEL, ML_PARAM_GRID
 )
 from src.data_loader import load_processed, load_labels, load_t1
 from src.evaluation import ClassificationEvaluator, FinancialMetrics
@@ -55,34 +55,6 @@ from src.backtest import simulate_strategy, buy_and_hold_returns
 RESULTS_DIR   = BASE / "results"
 N_OOS_WINDOWS = VALIDATION_CONFIG.get("n_oos_windows", 2)   # walk-forward splits
 
-
-# ── Hyperparameter Grid ───────────────────────────────────────────────────
-PARAM_GRID = {
-    "RandomForest": [
-        {"n_estimators": 100, "max_depth": None, "min_samples_leaf": 2},
-        {"n_estimators": 200, "max_depth": 10,   "min_samples_leaf": 2},
-        {"n_estimators": 200, "max_depth": None, "min_samples_leaf": 5},
-    ],
-    "XGBoost": [
-        {"n_estimators": 100, "max_depth": 4, "learning_rate": 0.1},
-        {"n_estimators": 200, "max_depth": 6, "learning_rate": 0.05},
-        {"n_estimators": 300, "max_depth": 6, "learning_rate": 0.03},
-    ],
-    "LightGBM": [
-        {"n_estimators": 100, "max_depth": 4, "learning_rate": 0.1,  "num_leaves": 15},
-        {"n_estimators": 200, "max_depth": 6, "learning_rate": 0.05, "num_leaves": 31},
-        {"n_estimators": 300, "max_depth": 6, "learning_rate": 0.03, "num_leaves": 63},
-    ],
-    "CatBoost": [
-        {"iterations": 100, "depth": 4, "learning_rate": 0.1},
-        {"iterations": 200, "depth": 6, "learning_rate": 0.05},
-        {"iterations": 300, "depth": 6, "learning_rate": 0.03},
-    ],
-    "Stacking": [
-        {"base_n_estimators": 50},
-        {"base_n_estimators": 100},
-    ],
-}
 
 
 # ── Model Factory ─────────────────────────────────────────────────────────
@@ -155,7 +127,7 @@ def _grid_search_is(X_is, y_is, dates_is, t1_is, model_name, pkf_cfg):
     )
     X_is_df = pd.DataFrame(X_is, index=dates_is)
 
-    param_grid     = PARAM_GRID.get(model_name, [{}])
+    param_grid     = ML_PARAM_GRID.get(model_name, [{}])
     best_score     = -np.inf
     best_overrides = param_grid[0]
     grid_results   = []

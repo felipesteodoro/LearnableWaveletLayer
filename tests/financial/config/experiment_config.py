@@ -167,6 +167,82 @@ DL_GRID_AXES = {
 ML_N_JOBS_OUTER = 4                                     # parallel (ticker × model)
 ML_N_JOBS_MODEL = 2                                     # per-model thread count
 
+# Hyperparameter grid for ML models — each list entry is a dict of overrides
+# applied on top of ML_MODELS_CONFIG defaults.  6 configs per tree-based model,
+# ordered from shallow/fast → deep/slow, kept equivalent across models:
+#
+#  lvl 1 — shallow,  fast  (n_est=100, depth=4/None, lr=0.10)
+#  lvl 2 — shallow+  fast  (n_est=100, depth=6,      lr=0.10)
+#  lvl 3 — medium,   mid   (n_est=200, depth=4/10,   lr=0.05)
+#  lvl 4 — medium+   mid   (n_est=200, depth=6,      lr=0.05)
+#  lvl 5 — deep,     slow  (n_est=300, depth=6,      lr=0.03)
+#  lvl 6 — deep+reg, slow  (n_est=300, depth=8,      lr=0.01)
+ML_PARAM_GRID = {
+    "RandomForest": [
+        # lvl 1 — 100 trees, unrestricted depth, leaf=2
+        {"n_estimators": 100, "max_depth": None, "min_samples_leaf": 2},
+        # lvl 2 — 100 trees, capped depth=10
+        {"n_estimators": 100, "max_depth": 10,   "min_samples_leaf": 2},
+        # lvl 3 — 200 trees, capped depth=10
+        {"n_estimators": 200, "max_depth": 10,   "min_samples_leaf": 2},
+        # lvl 4 — 200 trees, unrestricted depth, leaf=5 (more regularised)
+        {"n_estimators": 200, "max_depth": None, "min_samples_leaf": 5},
+        # lvl 5 — 300 trees, unrestricted depth, leaf=2
+        {"n_estimators": 300, "max_depth": None, "min_samples_leaf": 2},
+        # lvl 6 — 300 trees, capped depth=15, leaf=5
+        {"n_estimators": 300, "max_depth": 15,   "min_samples_leaf": 5},
+    ],
+    "XGBoost": [
+        # lvl 1
+        {"n_estimators": 100, "max_depth": 4, "learning_rate": 0.10},
+        # lvl 2
+        {"n_estimators": 100, "max_depth": 6, "learning_rate": 0.10},
+        # lvl 3
+        {"n_estimators": 200, "max_depth": 4, "learning_rate": 0.05},
+        # lvl 4
+        {"n_estimators": 200, "max_depth": 6, "learning_rate": 0.05},
+        # lvl 5
+        {"n_estimators": 300, "max_depth": 6, "learning_rate": 0.03},
+        # lvl 6
+        {"n_estimators": 300, "max_depth": 8, "learning_rate": 0.01},
+    ],
+    "LightGBM": [
+        # lvl 1
+        {"n_estimators": 100, "max_depth": 4, "learning_rate": 0.10, "num_leaves": 15},
+        # lvl 2
+        {"n_estimators": 100, "max_depth": 6, "learning_rate": 0.10, "num_leaves": 31},
+        # lvl 3
+        {"n_estimators": 200, "max_depth": 4, "learning_rate": 0.05, "num_leaves": 15},
+        # lvl 4
+        {"n_estimators": 200, "max_depth": 6, "learning_rate": 0.05, "num_leaves": 31},
+        # lvl 5
+        {"n_estimators": 300, "max_depth": 6, "learning_rate": 0.03, "num_leaves": 63},
+        # lvl 6
+        {"n_estimators": 300, "max_depth": 8, "learning_rate": 0.01, "num_leaves": 127},
+    ],
+    "CatBoost": [
+        # lvl 1
+        {"iterations": 100, "depth": 4, "learning_rate": 0.10},
+        # lvl 2
+        {"iterations": 100, "depth": 6, "learning_rate": 0.10},
+        # lvl 3
+        {"iterations": 200, "depth": 4, "learning_rate": 0.05},
+        # lvl 4
+        {"iterations": 200, "depth": 6, "learning_rate": 0.05},
+        # lvl 5
+        {"iterations": 300, "depth": 6, "learning_rate": 0.03},
+        # lvl 6
+        {"iterations": 300, "depth": 8, "learning_rate": 0.01},
+    ],
+    # Stacking base learner size — 4 configs (doubled from 2)
+    "Stacking": [
+        {"base_n_estimators":  50},
+        {"base_n_estimators":  75},
+        {"base_n_estimators": 100},
+        {"base_n_estimators": 150},
+    ],
+}
+
 ML_MODELS_CONFIG = {
     "RandomForest": {
         "n_estimators": 200,

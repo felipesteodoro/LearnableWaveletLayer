@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 """
-Canonical ML experiments — IS/OOS split + grid search on IS.
+Canonical ML experiments — Walk-Forward OOS + IS grid search.
 
-Methodology
------------
-1. Load pre-computed engineered features (load_processed) and labels.
-2. Reserve the last `test_years` (6) years as a fixed OOS test set.
-3. Grid-search hyperparameters using PurgedKFold (n_folds=5) on IS only.
-4. Retrain the best config on the full IS set.
-5. Evaluate on OOS → final reported ml_metrics / fin_metrics.
+Methodology (all fixes applied)
+--------------------------------
+Fix 1 — Features are causal (rolling lookback only); no future leakage.
+         RobustScaler is fit exclusively on each window's IS.
+Fix 3 — t1 estimated with BDay(time_horizon) instead of calendar days.
+Fix 4 — Real t1 (actual barrier-exit date) loaded from labels parquet when
+         available (requires re-running 00_data_preparation.ipynb); falls back
+         to BDay estimate.
+Fix 5 — Walk-forward OOS: total OOS is divided into `n_oos_windows` temporal
+         windows. For each window the IS grows (expanding window). Grid search
+         via PurgedKFold is re-run on each IS. Final metrics are the average
+         across all OOS windows.
 
-Results are saved to results/<ticker>/<model>_ml/metrics.json.
+Results: results/<ticker>/<model>_ml/metrics.json
 Existing results are skipped automatically.
 
 Usage: python run_ml_experiments.py
@@ -43,14 +48,15 @@ from config.experiment_config import (
     TICKERS, ML_MODELS_CONFIG, ML_N_JOBS_OUTER, VALIDATION_CONFIG, BACKTEST_CONFIG,
     LABELING_CONFIG, ML_N_JOBS_MODEL
 )
-from src.data_loader import load_processed, load_labels
-from src.evaluation import ClassificationEvaluator, FinancialMetrics, ResultsManager
+from src.data_loader import load_processed, load_labels, load_t1
+from src.evaluation import ClassificationEvaluator, FinancialMetrics
 from src.backtest import simulate_strategy, buy_and_hold_returns
 
-RESULTS_DIR = BASE / "results"
+RESULTS_DIR   = BASE / "results"
+N_OOS_WINDOWS = VALIDATION_CONFIG.get("n_oos_windows", 2)   # walk-forward splits
 
 
-# ── Hyperparameter Grid (small search per model) ──────────────────────────
+# ── Hyperparameter Grid ───────────────────────────────────────────────────
 PARAM_GRID = {
     "RandomForest": [
         {"n_estimators": 100, "max_depth": None, "min_samples_leaf": 2},
@@ -81,7 +87,6 @@ PARAM_GRID = {
 
 # ── Model Factory ─────────────────────────────────────────────────────────
 def build_model(model_name: str, overrides: dict | None = None):
-    """Build model from base config + optional hyperparameter overrides."""
     overrides = overrides or {}
     base = dict(ML_MODELS_CONFIG.get(model_name, {}))
     base.update(overrides)
@@ -111,98 +116,52 @@ def build_model(model_name: str, overrides: dict | None = None):
     raise ValueError(f"Unknown model: {model_name}")
 
 
-# ── Single Job Runner ─────────────────────────────────────────────────────
-def run_ml_job(ticker: str, model_name: str) -> dict:
+# ── Helper: build t1 series (Fix 3+4) ────────────────────────────────────
+def _build_t1(dates: pd.DatetimeIndex, t1_real: pd.Series | None,
+              time_horizon: int) -> pd.Series:
+    """
+    Return event-end dates for PurgedKFold purge.
+    Uses real t1 from Triple Barrier when available (Fix 4),
+    otherwise estimates using business days (Fix 3).
+    """
+    if t1_real is not None:
+        t1 = t1_real.reindex(dates)
+        # Fill any gaps with BDay estimate
+        missing = t1.isna()
+        if missing.any():
+            bday_est = pd.Series(
+                [d + pd.tseries.offsets.BDay(time_horizon) for d in dates[missing]],
+                index=dates[missing],
+            )
+            t1[missing] = bday_est
+        return t1
+    # Full BDay fallback (Fix 3)
+    return pd.Series(
+        [d + pd.tseries.offsets.BDay(time_horizon) for d in dates],
+        index=dates,
+    )
+
+
+# ── Helper: grid search on one IS block ──────────────────────────────────
+def _grid_search_is(X_is, y_is, dates_is, t1_is, model_name, pkf_cfg):
+    """Run PurgedKFold grid search on IS block; return (best_overrides, best_score, grid_results)."""
     from utils.validation import PurgedKFold
 
-    result_path = RESULTS_DIR / ticker / f"{model_name}_ml" / "metrics.json"
-    if result_path.exists():
-        return {"ticker": ticker, "model_name": model_name, "status": "skipped"}
+    pct_embargo = pkf_cfg["embargo_days"] / len(y_is)
+    pkf = PurgedKFold(
+        n_splits=pkf_cfg["n_folds"],
+        t1=t1_is,
+        pct_embargo=pct_embargo,
+    )
+    X_is_df = pd.DataFrame(X_is, index=dates_is)
 
-    try:
-        # ── 1. Load data ─────────────────────────────────────────────────
-        features = load_processed(ticker)
-        labels   = load_labels(ticker)
-        common   = features.index.intersection(labels.index)
-        features = features.loc[common].dropna()
-        labels   = labels.loc[features.index]
+    param_grid     = PARAM_GRID.get(model_name, [{}])
+    best_score     = -np.inf
+    best_overrides = param_grid[0]
+    grid_results   = []
 
-        X     = features.values.astype(np.float32)
-        y     = labels.values
-        dates = features.index
-
-        # Synthetic price series from log-returns for backtest.
-        # log_return_1 is a log-return; compound it so pct_change() inside
-        # simulate_strategy yields the correct daily return.
-        if "log_return_1" in features.columns:
-            lr = features["log_return_1"].values
-            price_series = pd.Series(np.exp(np.cumsum(lr)), index=dates)
-        else:
-            price_series = pd.Series(np.ones(len(dates)), index=dates)
-
-        # ── 2. IS / OOS split ────────────────────────────────────────────
-        test_years = VALIDATION_CONFIG.get("test_years", 6)
-        oos_start  = dates[-1] - pd.DateOffset(years=test_years)
-
-        is_mask  = dates <= oos_start
-        oos_mask = dates  > oos_start
-
-        if is_mask.sum() < 100:
-            raise ValueError(f"Not enough IS samples ({is_mask.sum()}).")
-        if oos_mask.sum() < 10:
-            raise ValueError(f"Not enough OOS samples ({oos_mask.sum()}).")
-
-        X_is, y_is, dates_is = X[is_mask], y[is_mask], dates[is_mask]
-        X_oos, y_oos         = X[oos_mask], y[oos_mask]
-        prices_oos           = price_series[oos_mask]
-
-        # ── 3. PurgedKFold setup on IS ───────────────────────────────────
-        time_horizon = LABELING_CONFIG.get("time_horizon", 10)
-        t1_is = pd.Series(
-            [d + pd.Timedelta(days=int(time_horizon * 1.5)) for d in dates_is],
-            index=dates_is,
-        )
-        pct_embargo = VALIDATION_CONFIG.get("embargo_days", 10) / len(y_is)
-        pkf = PurgedKFold(
-            n_splits=VALIDATION_CONFIG.get("n_folds", 5),
-            t1=t1_is,
-            pct_embargo=pct_embargo,
-        )
-        X_is_df = pd.DataFrame(X_is, index=dates_is)
-
-        # ── 4. Grid search on IS ─────────────────────────────────────────
-        param_grid     = PARAM_GRID.get(model_name, [{}])
-        best_score     = -np.inf
-        best_overrides = param_grid[0]
-        grid_results   = []
-
-        for overrides in param_grid:
-            fold_scores = []
-            for train_val_idx, val_idx in pkf.split(X_is_df, y_is):
-                n_val_inner = max(1, int(len(train_val_idx) * 0.15))
-                train_idx   = train_val_idx[:-n_val_inner]
-
-                scaler = RobustScaler()
-                X_tr = scaler.fit_transform(X_is[train_idx])
-                X_va = scaler.transform(X_is[val_idx])
-
-                model = build_model(model_name, overrides)
-                model.fit(X_tr, y_is[train_idx])
-                y_pred_va = np.asarray(model.predict(X_va)).ravel()
-
-                fold_scores.append(
-                    f1_score(y_is[val_idx], y_pred_va, average="macro", zero_division=0)
-                )
-
-            mean_score = float(np.mean(fold_scores))
-            grid_results.append({"overrides": overrides, "cv_f1_macro": mean_score})
-            if mean_score > best_score:
-                best_score     = mean_score
-                best_overrides = overrides
-
-        # ── 5. CV metrics with best config (for reporting) ───────────────
-        cv_ml_folds, cv_fin_folds = [], []
-
+    for overrides in param_grid:
+        fold_scores = []
         for train_val_idx, val_idx in pkf.split(X_is_df, y_is):
             n_val_inner = max(1, int(len(train_val_idx) * 0.15))
             train_idx   = train_val_idx[:-n_val_inner]
@@ -211,80 +170,180 @@ def run_ml_job(ticker: str, model_name: str) -> dict:
             X_tr = scaler.fit_transform(X_is[train_idx])
             X_va = scaler.transform(X_is[val_idx])
 
-            model = build_model(model_name, best_overrides)
+            model = build_model(model_name, overrides)
             model.fit(X_tr, y_is[train_idx])
-            y_pred_cv = np.asarray(model.predict(X_va)).ravel()
+            y_pred_va = np.asarray(model.predict(X_va)).ravel()
 
-            cv_ml_folds.append(ClassificationEvaluator.evaluate(y_is[val_idx], y_pred_cv))
-            strat_cv = simulate_strategy(
-                y_pred_cv, price_series[is_mask][val_idx],
+            fold_scores.append(
+                f1_score(y_is[val_idx], y_pred_va, average="macro", zero_division=0)
+            )
+
+        mean_score = float(np.mean(fold_scores))
+        grid_results.append({"overrides": overrides, "cv_f1_macro": mean_score})
+        if mean_score > best_score:
+            best_score     = mean_score
+            best_overrides = overrides
+
+    return best_overrides, best_score, grid_results
+
+
+# ── Single Job Runner ─────────────────────────────────────────────────────
+def run_ml_job(ticker: str, model_name: str) -> dict:
+    result_path = RESULTS_DIR / ticker / f"{model_name}_ml" / "metrics.json"
+    if result_path.exists():
+        return {"ticker": ticker, "model_name": model_name, "status": "skipped"}
+
+    try:
+        # ── 1. Load data ─────────────────────────────────────────────────
+        features = load_processed(ticker)
+        labels   = load_labels(ticker)
+        t1_real  = load_t1(ticker)          # None if not yet generated (Fix 4)
+
+        common   = features.index.intersection(labels.index)
+        features = features.loc[common].dropna()
+        labels   = labels.loc[features.index]
+
+        X     = features.values.astype(np.float32)
+        y     = labels.values
+        dates = features.index
+
+        # Synthetic price series for backtest (compound log-returns)
+        if "log_return_1" in features.columns:
+            lr = features["log_return_1"].values
+            price_series = pd.Series(np.exp(np.cumsum(lr)), index=dates)
+        else:
+            price_series = pd.Series(np.ones(len(dates)), index=dates)
+
+        time_horizon = LABELING_CONFIG.get("time_horizon", 10)
+        t1_all = _build_t1(dates, t1_real, time_horizon)    # Fix 3 + 4
+
+        # ── 2. Walk-forward OOS windows (Fix 5) ──────────────────────────
+        # OOS total = last test_years years, divided into N_OOS_WINDOWS windows.
+        # Each window evaluates on a disjoint OOS slice while IS grows.
+        #
+        #   Window 1: IS = [start → oos_start],     OOS = [oos_start → wp1]
+        #   Window 2: IS = [start → wp1],            OOS = [wp1 → wp2]
+        #   ...
+        #   Window N: IS = [start → wp(N-1)],        OOS = [wp(N-1) → end]
+        test_years = VALIDATION_CONFIG.get("test_years", 6)
+        last_date  = dates[-1]
+        oos_start  = last_date - pd.DateOffset(years=test_years)
+
+        # Evenly-spaced window boundaries within the OOS period
+        window_boundaries = [
+            oos_start + pd.DateOffset(years=round(test_years * k / N_OOS_WINDOWS, 2))
+            for k in range(N_OOS_WINDOWS + 1)
+        ]
+
+        pkf_cfg = {
+            "n_folds":      VALIDATION_CONFIG.get("n_folds", 5),
+            "embargo_days": VALIDATION_CONFIG.get("embargo_days", 10),
+        }
+
+        wf_ml_results  = []
+        wf_fin_results = []
+        wf_info        = []
+        all_y_true, all_y_pred = [], []
+
+        for w in range(N_OOS_WINDOWS):
+            win_is_end  = window_boundaries[w]
+            win_oos_end = window_boundaries[w + 1]
+
+            is_mask  = dates <= win_is_end
+            oos_mask = (dates > win_is_end) & (dates <= win_oos_end)
+
+            if is_mask.sum() < 100 or oos_mask.sum() < 10:
+                continue
+
+            X_is,   y_is,   dates_is = X[is_mask],  y[is_mask],  dates[is_mask]
+            X_oos,  y_oos            = X[oos_mask], y[oos_mask]
+            prices_oos               = price_series[oos_mask].reset_index(drop=True)
+            t1_is = t1_all[is_mask]
+
+            # ── 3. Grid search on this IS window ─────────────────────────
+            best_overrides, best_score, grid_results = _grid_search_is(
+                X_is, y_is, dates_is, t1_is, model_name, pkf_cfg
+            )
+
+            # ── 4. Retrain on full IS → evaluate OOS ─────────────────────
+            final_scaler = RobustScaler()
+            X_is_sc  = final_scaler.fit_transform(X_is)
+            X_oos_sc = final_scaler.transform(X_oos)
+
+            final_model = build_model(model_name, best_overrides)
+            final_model.fit(X_is_sc, y_is)
+
+            y_pred_oos = np.asarray(final_model.predict(X_oos_sc)).ravel()
+
+            oos_ml    = ClassificationEvaluator.evaluate(y_oos, y_pred_oos)
+            strat_oos = simulate_strategy(
+                y_pred_oos, prices_oos,
                 transaction_cost=BACKTEST_CONFIG["transaction_cost"],
                 allow_short=BACKTEST_CONFIG["allow_short"],
             )
-            bh_cv = buy_and_hold_returns(price_series[is_mask][val_idx])
-            cv_fin_folds.append(FinancialMetrics.compute(strat_cv, bh_cv))
+            bh_oos = buy_and_hold_returns(prices_oos)
+            oos_fin = FinancialMetrics.compute(strat_oos, bh_oos)
 
-        cv_ml  = {k: float(np.mean([f[k] for f in cv_ml_folds])) for k in cv_ml_folds[0]}
-        cv_fin = FinancialMetrics.aggregate_cv(cv_fin_folds)
+            wf_ml_results.append(oos_ml)
+            wf_fin_results.append(oos_fin)
+            wf_info.append({
+                "window":    w + 1,
+                "is_end":    str(win_is_end.date()),
+                "oos_start": str(dates[oos_mask][0].date()),
+                "oos_end":   str(dates[oos_mask][-1].date()),
+                "n_is":      int(is_mask.sum()),
+                "n_oos":     int(oos_mask.sum()),
+                "best_params":   best_overrides,
+                "cv_f1_macro":   float(best_score),
+                "grid_search":   grid_results,
+                "oos_f1_macro":  float(oos_ml.get("f1_macro", float("nan"))),
+            })
+            all_y_true.append(y_oos)
+            all_y_pred.append(y_pred_oos)
 
-        # ── 6. Final model: full IS → evaluate OOS ───────────────────────
-        final_scaler = RobustScaler()
-        X_is_scaled  = final_scaler.fit_transform(X_is)
-        X_oos_scaled = final_scaler.transform(X_oos)
+        if not wf_ml_results:
+            raise ValueError("No valid walk-forward windows produced.")
 
-        final_model = build_model(model_name, best_overrides)
-        final_model.fit(X_is_scaled, y_is)
-
-        y_pred_oos = np.asarray(final_model.predict(X_oos_scaled)).ravel()
-
-        oos_ml    = ClassificationEvaluator.evaluate(y_oos, y_pred_oos)
-        strat_oos = simulate_strategy(
-            y_pred_oos, prices_oos,
-            transaction_cost=BACKTEST_CONFIG["transaction_cost"],
-            allow_short=BACKTEST_CONFIG["allow_short"],
-        )
-        bh_oos  = buy_and_hold_returns(prices_oos)
-        oos_fin = FinancialMetrics.compute(strat_oos, bh_oos)
-
-        # ── 7. Persist ───────────────────────────────────────────────────
-        result_path.parent.mkdir(parents=True, exist_ok=True)
-
+        # ── 5. Aggregate across windows ───────────────────────────────────
         def _safe(v):
             try:
                 return float(v) if np.isfinite(float(v)) else None
             except Exception:
                 return None
 
+        agg_ml  = {k: _safe(np.mean([w[k] for w in wf_ml_results]))
+                   for k in wf_ml_results[0]}
+        agg_fin = {k: _safe(np.mean([w[k] for w in wf_fin_results
+                                      if k in w and w[k] is not None]))
+                   for k in wf_fin_results[0]}
+
+        # ── 6. Persist ───────────────────────────────────────────────────
+        result_path.parent.mkdir(parents=True, exist_ok=True)
         payload = {
-            "ml_metrics":       {k: _safe(v) for k, v in oos_ml.items()},
-            "fin_metrics":      {k: _safe(v) for k, v in oos_fin.items()},
-            "cv_ml_metrics":    {k: _safe(v) for k, v in cv_ml.items()},
-            "cv_fin_metrics":   {k: _safe(v) for k, v in cv_fin.items()},
-            "best_params":      best_overrides,
-            "best_cv_f1_macro": float(best_score),
-            "grid_search":      grid_results,
+            "ml_metrics":  agg_ml,
+            "fin_metrics": agg_fin,
+            "walk_forward_windows": wf_info,
             "split_info": {
-                "oos_start":  str(oos_start.date()),
-                "n_is":       int(is_mask.sum()),
-                "n_oos":      int(oos_mask.sum()),
-                "test_years": test_years,
+                "oos_start":       str(oos_start.date()),
+                "test_years":      test_years,
+                "n_oos_windows":   N_OOS_WINDOWS,
+                "t1_source":       "real" if t1_real is not None else "bday_estimate",
             },
         }
         result_path.write_text(json.dumps(payload, indent=2))
         np.savez(
             result_path.parent / "predictions_oos.npz",
-            y_true=y_oos,
-            y_pred=y_pred_oos,
+            y_true=np.concatenate(all_y_true),
+            y_pred=np.concatenate(all_y_pred),
         )
 
         return {
             "ticker":      ticker,
             "model_name":  model_name,
             "status":      "done",
-            "f1_macro":    oos_ml.get("f1_macro", float("nan")),
-            "cv_f1_macro": float(best_score),
-            "best_params": str(best_overrides),
-            "n_oos":       int(oos_mask.sum()),
+            "f1_macro":    agg_ml.get("f1_macro"),
+            "cv_f1_macro": float(np.mean([w["cv_f1_macro"] for w in wf_info])),
+            "n_windows":   len(wf_info),
         }
 
     except Exception:
@@ -302,9 +361,10 @@ if __name__ == "__main__":
     combos = [(t, m) for t in TICKERS for m in ML_MODELS_TO_RUN]
     n_jobs = ML_N_JOBS_OUTER
 
-    print(f"Total jobs : {len(combos)}")
-    print(f"n_jobs     : {n_jobs}")
-    print(f"Results dir: {RESULTS_DIR}")
+    print(f"Total jobs    : {len(combos)}")
+    print(f"n_jobs        : {n_jobs}")
+    print(f"OOS windows   : {N_OOS_WINDOWS} (walk-forward)")
+    print(f"Results dir   : {RESULTS_DIR}")
     print("=" * 60)
 
     t0 = time.time()
@@ -322,10 +382,9 @@ if __name__ == "__main__":
             status = r["status"]
             extra = ""
             if status == "done":
-                extra = (f"  OOS_F1={r.get('f1_macro', 0):.3f}"
+                extra = (f"  OOS_F1={r.get('f1_macro') or 0:.3f}"
                          f"  CV_F1={r.get('cv_f1_macro', 0):.3f}"
-                         f"  n_oos={r.get('n_oos', 0)}"
-                         f"  best={r.get('best_params', '')}")
+                         f"  windows={r.get('n_windows', 0)}")
             elif status == "error":
                 extra = f"  ERR: {r.get('error', '')[:120]}"
             print(f"  [{done_count:3d}/{len(combos)}] {r['ticker']}/{r['model_name']}: {status}{extra}")
@@ -341,9 +400,7 @@ if __name__ == "__main__":
 
     done_df = results_df[results_df["status"] == "done"]
     if not done_df.empty:
-        print("\nOOS F1-macro by model (mean across tickers):")
+        print("\nWalk-Forward OOS F1-macro by model (mean across tickers):")
         print(done_df.groupby("model_name")["f1_macro"].mean()
               .sort_values(ascending=False).to_string())
-        print("\nIS CV F1-macro by model (mean across tickers):")
-        print(done_df.groupby("model_name")["cv_f1_macro"].mean()
-              .sort_values(ascending=False).to_string())
+

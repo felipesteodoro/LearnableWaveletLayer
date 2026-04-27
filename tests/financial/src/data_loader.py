@@ -50,11 +50,26 @@ def save_processed(
     ticker: str,
     features: pd.DataFrame,
     labels: pd.Series,
+    t1: pd.Series | None = None,
 ) -> None:
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     LABELS_DIR.mkdir(parents=True, exist_ok=True)
     features.to_parquet(PROCESSED_DIR / f"{ticker}.parquet")
-    labels.to_frame("label").to_parquet(LABELS_DIR / f"{ticker}.parquet")
+    label_df = labels.to_frame("label")
+    if t1 is not None:
+        label_df["t1"] = t1
+    label_df.to_parquet(LABELS_DIR / f"{ticker}.parquet")
+
+
+def load_t1(ticker: str) -> pd.Series | None:
+    """Load the actual event-end dates (t1) saved alongside labels, or None."""
+    path = LABELS_DIR / f"{ticker}.parquet"
+    if not path.exists():
+        return None
+    df = pd.read_parquet(path)
+    if "t1" not in df.columns:
+        return None
+    return df["t1"]
 
 
 def load_all_raw(tickers: list[str], data_dir: Optional[Path] = None) -> dict[str, pd.DataFrame]:

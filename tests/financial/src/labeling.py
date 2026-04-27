@@ -25,19 +25,14 @@ CLASS_NAMES = {0: "sell", 1: "hold", 2: "buy"}
 def label_asset(
     df: pd.DataFrame,
     cfg: Optional[dict] = None,
-) -> pd.Series:
+) -> tuple[pd.Series, pd.Series]:
     """
     Apply Triple Barrier labeling to a single asset.
 
-    Parameters
-    ----------
-    df  : OHLCV DataFrame (must have 'Close' column)
-    cfg : LABELING_CONFIG dict
-
     Returns
     -------
-    Series with integer labels 0 (sell), 1 (hold), 2 (buy), indexed like df.
-    Missing labels (warmup rows) are dropped.
+    labels : Series with integer labels 0 (sell), 1 (hold), 2 (buy)
+    t1     : Series with the actual event-end date for each sample (for PurgedKFold)
     """
     if cfg is None:
         from config.experiment_config import LABELING_CONFIG
@@ -51,7 +46,18 @@ def label_asset(
     )
 
     labels = labeled["label"].map(_LABEL_MAP).dropna().astype(int)
-    return labels
+
+    if "t1" in labeled.columns:
+        t1 = labeled.loc[labels.index, "t1"]
+    else:
+        # Fallback: estimate t1 as date + time_horizon business days
+        bdays = cfg.get("time_horizon", 10)
+        t1 = labels.index.to_series().apply(
+            lambda d: d + pd.tseries.offsets.BDay(bdays)
+        )
+        t1.index = labels.index
+
+    return labels, t1
 
 
 def label_distribution(labels: pd.Series) -> pd.Series:

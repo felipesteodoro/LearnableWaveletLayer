@@ -75,6 +75,7 @@ VALIDATION_CONFIG = {
     "embargo_days": 10,       # trading days embargo between train and test
     "val_split": 0.15,        # fraction of training fold used as validation
     "test_years": 6,          # last N years reserved as out-of-sample test
+    "n_oos_windows": 2,       # walk-forward OOS windows (Fix 5)
 }
 
 # ---------------------------------------------------------------------------
@@ -163,7 +164,7 @@ DL_GRID_AXES = {
 # Machine Learning
 # ---------------------------------------------------------------------------
 
-ML_N_JOBS_OUTER = 16                                    # parallel (ticker × model)
+ML_N_JOBS_OUTER = 4                                     # parallel (ticker × model)
 ML_N_JOBS_MODEL = 2                                     # per-model thread count
 
 ML_MODELS_CONFIG = {

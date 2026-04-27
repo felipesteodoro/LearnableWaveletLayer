@@ -89,7 +89,14 @@ def triple_barrier_labeling(
                 ret = (price / start_price) - 1
                 break
         
-        out.append({'index': idx, 'ret': ret, 'label': label})
+        # record the actual date the event ended (first barrier hit or vertical)
+        t1_actual = price_path.index[-1]
+        for t, price in price_path.items():
+            if price >= thresh_up or price <= thresh_down:
+                t1_actual = t
+                break
+
+        out.append({'index': idx, 'ret': ret, 'label': label, 't1': t1_actual})
 
     df_out = pd.DataFrame(out).set_index('index')
     return df_out
@@ -120,8 +127,9 @@ def apply_labeling(df: pd.DataFrame, pt_sl: list = [1.5, 1.5], min_ret: float = 
         num_days=num_days
     )
     labels['label'] = labels['label'].astype(int)
-    
-    final_df = df.join(labels[['label', 'ret']])
+
+    cols = ['label', 'ret'] + (['t1'] if 't1' in labels.columns else [])
+    final_df = df.join(labels[cols])
     final_df.dropna(inplace=True)
-    
+
     return final_df

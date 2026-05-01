@@ -27,7 +27,10 @@ MODES      = ["raw", "db4", "learned_wavelet"]
 # ---------------------------------------------------------------------------
 
 FEATURE_CONFIG = {
-    "sequence_length": 30,           # sliding window (trading days)
+    # sequence_length=60 garante que kernel_size=8 seja válido até o nível 2:
+    # nível 1 → L/2 = 30 amostras (>= kernel_size=8 OK)
+    # nível 2 → L/4 = 15 amostras (>= kernel_size=8 OK)
+    "sequence_length": 60,           # sliding window (trading days)
     # Distribution-quality thresholds — features failing these are dropped
     "adf_max_failing_pct": 0.30,     # drop if non-stationary in >30% of assets
     "max_kurtosis": 20.0,            # after 1%-99% winsorisation
@@ -83,18 +86,33 @@ VALIDATION_CONFIG = {
 # ---------------------------------------------------------------------------
 
 WAVELET_CONFIG = {
-    "wavelet_type": "db2",
-    "decomposition_level": 3,
+    "wavelet_type": "db4",
+    # align="pad_to_first" evita aliasing espectral causado por interpolação bilinear
+    # (tf.image.resize com bilinear introduz artefatos de alta frequência)
+    "align": "pad_to_first",
+    "wavelet_levels": 2,
 }
 
 LEARNED_WAVELET_CONFIG = {
     "levels": 2,
-    "kernel_size": 32,
+    # kernel_size=8 é compatível com seq_len=60:
+    #   nível 1: 60//2=30 amostras > 8 coeficientes → overlap bem definido
+    #   nível 2: 30//2=15 amostras > 8 coeficientes → mesma garantia
+    # kernel_size=32 era problemático pois no nível 2 tínhamos ~7 amostras
+    # com 32 coeficientes — quase tudo padding, sem informação de wavelet real.
+    "kernel_size": 8,
     "wavelet_net_units": 32,
     "reg_energy": 1e-2,
     "reg_high_dc": 1e-2,
     "reg_smooth": 1e-3,
-    "output_mode": "concat",
+    # align="pad_to_first": alinha coeficientes de detalhe por zero-padding no final.
+    # Preserva as posições temporais originais sem introduzir artefatos de interpolação.
+    "align": "pad_to_first",
+    # warm_start_db4=True: inicializa a rede wavelet para aproximar db4 antes de treinar,
+    # dando um ponto de partida melhor do que inicialização aleatória.
+    "warm_start_db4": True,
+    # wavelet_levels exposto aqui para que _apply_wavelet_frontend possa lê-lo
+    "wavelet_levels": 2,
 }
 
 # ---------------------------------------------------------------------------
@@ -102,13 +120,24 @@ LEARNED_WAVELET_CONFIG = {
 # ---------------------------------------------------------------------------
 
 DL_TRAINING_CONFIG = {
+    # EPOCHS_OVERRIDE permite validação rápida: EPOCHS_OVERRIDE=3 python run.py
     "epochs": int(os.environ.get("EPOCHS_OVERRIDE", "100")),
     "batch_size": 64,
     "early_stopping_patience": 15,
+    # ReduceLROnPlateau unificado para todas as arquiteturas:
+    # garante que CNN, LSTM, CNN_LSTM e Transformer usem o mesmo scheduler,
+    # tornando a comparação entre modos (raw/db4/learned) mais justa.
     "reduce_lr_patience": 7,
     "reduce_lr_factor": 0.5,
     "min_lr": 1e-6,
     "learning_rate": 1e-3,
+    # Projeção linear após o frontend wavelet para controlar capacidade:
+    # raw=(N,L,F) vs learned_wavelet=(N,L,(levels+1)*F) — sem projeção,
+    # o backbone vê dimensionalidades diferentes e tem capacidades distintas.
+    "wavelet_projection_dim": 32,
+    # sequence_length aqui para que pipeline.py possa importar via DL_TRAINING_CONFIG
+    # sem depender do config dict passado pelo job (que não deve sobrescrever defaults).
+    "sequence_length": FEATURE_CONFIG["sequence_length"],
 }
 
 DL_MODELS_CONFIG = {
@@ -140,15 +169,21 @@ DL_MODELS_CONFIG = {
     },
 }
 
-# Grid axes for DL hyperparameter search (subset, controlled by MAX_GRID_CONFIGS)
+# Grid axes para busca aleatória de hiperparâmetros DL.
+# MAX_GRID_CONFIGS garante orçamento balanceado: cada arquitetura recebe
+# o mesmo número de combinações avaliadas, independentemente do tamanho do grid.
+# Sem esse limite, arquiteturas com grids menores são testadas exaustivamente
+# enquanto as maiores são sub-amostradas de forma desigual.
 DL_GRID_AXES = {
     "CNN": {
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
+        "filters": [[32, 64, 128], [64, 128, 256]],
     },
     "LSTM": {
         "dropout_rate": [0.2, 0.3],
         "l2_reg": [1e-4, 1e-3],
+        "units": [[64, 32], [128, 64]],
     },
     "CNN_LSTM": {
         "dropout_rate": [0.2, 0.3],
@@ -157,7 +192,18 @@ DL_GRID_AXES = {
     "Transformer": {
         "dropout_rate": [0.1, 0.2],
         "num_heads": [2, 4],
+        "ff_dim": [64, 128],
     },
+}
+
+# Número máximo de configurações avaliadas por arquitetura no random search.
+# Valor 6 garante que: mesmo a arquitetura com grid 3×3×2=18 combinações
+# avalia apenas 6 configs, igual às arquiteturas com grid menor (ex: 2×2=4).
+MAX_GRID_CONFIGS = {
+    "CNN": 6,
+    "LSTM": 6,
+    "CNN_LSTM": 4,
+    "Transformer": 6,
 }
 
 # ---------------------------------------------------------------------------

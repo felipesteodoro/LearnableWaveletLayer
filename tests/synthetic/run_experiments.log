@@ -1,0 +1,37 @@
+════════════════════════════════════════════
+Synthetic experiments: seg 27 abr 2026 00:58:00 -03
+  N_GPUS=3  RUN_CPU=0  SMOKE=0
+  EPOCHS_OVERRIDE=0
+  MAX_GRID_CONFIGS=0
+  Logs individuais: /home/felipeteodoro/projetos/LearnableWaveletLayer/tests/synthetic/logs/
+════════════════════════════════════════════
+
+── Fase GPU: 02 (GPU0) + 03 (GPU1) + 04 (GPU2) em paralelo ──
+[GPU 0] START: 02_dl_raw_experiments.ipynb  →  02_dl_raw_experiments_gpu0.ipynb  (seg 27 abr 2026 00:58:00 -03)
+[GPU 2] START: 04_learned_wavelet_experiments.ipynb  →  04_learned_wavelet_experiments_gpu2.ipynb  (seg 27 abr 2026 00:58:00 -03)
+[GPU 1] START: 03_dl_wavelet_experiments.ipynb  →  03_dl_wavelet_experiments_gpu1.ipynb  (seg 27 abr 2026 00:58:00 -03)
+              log: /home/felipeteodoro/projetos/LearnableWaveletLayer/tests/synthetic/logs/02_dl_raw_experiments_gpu0.log
+              log: /home/felipeteodoro/projetos/LearnableWaveletLayer/tests/synthetic/logs/03_dl_wavelet_experiments_gpu1.log
+              log: /home/felipeteodoro/projetos/LearnableWaveletLayer/tests/synthetic/logs/04_learned_wavelet_experiments_gpu2.log
+[GPU 1] FAIL:  03_dl_wavelet_experiments.ipynb  (44855s)
+  Últimas linhas do log:
+    execute_notebook(
+  File "/home/felipeteodoro/projetos/LearnableWaveletLayer/.venv/lib/python3.10/site-packages/papermill/execute.py", line 116, in execute_notebook
+    nb = papermill_engines.execute_notebook_with_engine(
+  File "/home/felipeteodoro/projetos/LearnableWaveletLayer/.venv/lib/python3.10/site-packages/papermill/engines.py", line 49, in execute_notebook_with_engine
+    return self.get_engine(engine_name).execute_notebook(nb, kernel_name, **kwargs)
+  File "/home/felipeteodoro/projetos/LearnableWaveletLayer/.venv/lib/python3.10/site-packages/papermill/engines.py", line 371, in execute_notebook
+    cls.execute_managed_notebook(nb_man, kernel_name, log_output=log_output, **kwargs)
+  File "/home/felipeteodoro/projetos/LearnableWaveletLayer/.venv/lib/python3.10/site-packages/papermill/engines.py", line 443, in execute_managed_notebook
+    return PapermillNotebookClient(nb_man, **final_kwargs).execute()
+  File "/home/felipeteodoro/projetos/LearnableWaveletLayer/.venv/lib/python3.10/site-packages/papermill/clientwrap.py", line 45, in execute
+    self.papermill_execute_cells()
+  File "/home/felipeteodoro/projetos/LearnableWaveletLayer/.venv/lib/python3.10/site-packages/papermill/clientwrap.py", line 72, in papermill_execute_cells
+    self.execute_cell(cell, index)
+  File "/home/felipeteodoro/projetos/LearnableWaveletLayer/.venv/lib/python3.10/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/felipeteodoro/projetos/LearnableWaveletLayer/.venv/lib/python3.10/site-packages/nbclient/client.py", line 1009, in async_execute_cell
+    raise DeadKernelError("Kernel died") from None
+nbclient.exceptions.DeadKernelError: Kernel died

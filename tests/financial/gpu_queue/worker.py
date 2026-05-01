@@ -62,6 +62,9 @@ class GPUWorker(threading.Thread):
         env["CUDA_VISIBLE_DEVICES"] = str(self.gpu_id)
         env["EXP_CONFIG_FILE"] = config_file
         env["TF_CPP_MIN_LOG_LEVEL"] = "2"
+        # Passa o diretório de resultados desta run para o subprocess,
+        # permitindo que experiment_runner.py salve na pasta datada correta.
+        env["RESULTS_DIR"] = str(self.status.status_file.parent)
 
         job.status = "running"
         job.gpu_id = self.gpu_id

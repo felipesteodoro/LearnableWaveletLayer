@@ -1,27 +1,36 @@
 """
 Launch all DL financial experiments across 7 GPUs.
 
-Auto-resumes from checkpoint if queue_status.json exists — safe to re-run
-after any crash or interruption.
+Cada execução cria uma subpasta datada dentro de results/, por exemplo:
+    results/2026-04-27_143012/
+
+Isso permite múltiplas simulações do mesmo experimento sem sobrescrever resultados.
 
 Usage:
-    # Terminal 1 — start (or resume) the queue
+    # Terminal 1 — nova execução (cria pasta nova com data atual)
     cd tests/financial
-    python run_dl_queue.py
-
-    # Terminal 2 — monitor dashboard
-    python queue/dashboard.py
-
-    # Force fresh start (ignores checkpoint):
     python run_dl_queue.py --fresh
 
+    # Terminal 1 — retoma a execução mais recente (padrão)
+    python run_dl_queue.py
+
+    # Terminal 1 — retoma uma execução específica pelo run_id
+    python run_dl_queue.py --run-id 2026-04-27_143012
+
+    # Terminal 2 — monitor dashboard (detecta automaticamente a run mais recente)
+    python gpu_queue/dashboard.py
+
+    # Terminal 2 — dashboard de uma run específica
+    python gpu_queue/dashboard.py --status results/2026-04-27_143012/queue_status.json
+
 Environment variables:
-    N_GPUS      number of GPUs (default: 7)
-    GPU_IDS     comma-separated list, e.g. "0,1,2" (overrides N_GPUS)
-    RETRY_WAIT  seconds before retrying a failed job (default: 60)
-    TICKERS     comma-separated subset, e.g. "PETR4.SA,VALE3.SA"
-    DL_MODELS   comma-separated subset, e.g. "CNN,LSTM"
-    MODES       comma-separated subset, e.g. "raw,learned_wavelet"
+    N_GPUS          number of GPUs (default: 7)
+    GPU_IDS         comma-separated list, e.g. "0,1,2" (overrides N_GPUS)
+    RETRY_WAIT      seconds before retrying a failed job (default: 60)
+    TICKERS         comma-separated subset, e.g. "PETR4.SA,VALE3.SA"
+    DL_MODELS       comma-separated subset, e.g. "CNN,LSTM"
+    MODES           comma-separated subset, e.g. "raw,learned_wavelet"
+    EPOCHS_OVERRIDE override epoch count for all jobs, e.g. "3" for smoke test
 """
 from __future__ import annotations
 
@@ -30,6 +39,7 @@ import itertools
 import logging
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 
 # Allow running from repo root
@@ -42,6 +52,8 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(name)s — %(message)s",
     datefmt="%H:%M:%S",
 )
+
+_BASE = Path(__file__).parent
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -57,21 +69,9 @@ ALL_TICKERS = [
 ALL_MODELS = ["CNN", "LSTM", "CNN_LSTM", "Transformer"]
 ALL_MODES  = ["raw", "db4", "learned_wavelet"]
 
-BASE_CONFIG = {
-    "sequence_length": 30,
-    "n_folds": 5,
-    "embargo_days": 10,
-    "epochs": 100,
-    "batch_size": 64,
-    "early_stopping_patience": 15,
-    "reduce_lr_patience": 7,
-    "wavelet_levels": 2,
-    "kernel_size": 32,
-    "reg_energy": 1e-2,
-    "reg_high_dc": 1e-2,
-    "reg_smooth": 1e-3,
-    "transaction_cost": 0.001,
-}
+# BASE_CONFIG is intentionally empty: all hyperparameters are defined in
+# config/experiment_config.py and loaded by FinancialExperimentPipeline.__init__().
+BASE_CONFIG: dict = {}
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -90,6 +90,23 @@ def _gpu_ids() -> list[int]:
     return list(range(int(os.environ.get("N_GPUS", "7"))))
 
 
+def _latest_run_id() -> str | None:
+    """Retorna o run_id mais recente que possui queue_status.json, ou None."""
+    results = _BASE / "results"
+    if not results.exists():
+        return None
+    # Pastas no formato YYYY-MM-DD_HHMMSS, ordenadas da mais recente
+    dated = sorted(results.glob("????-??-??_??????"), reverse=True)
+    for folder in dated:
+        if (folder / "queue_status.json").exists():
+            return folder.name
+    return None
+
+
+def _new_run_id() -> str:
+    return datetime.now().strftime("%Y-%m-%d_%H%M%S")
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -100,7 +117,13 @@ def main():
     parser.add_argument(
         "--fresh",
         action="store_true",
-        help="Ignore checkpoint and start from scratch",
+        help="Cria uma nova pasta de resultados (nova run com data atual)",
+    )
+    parser.add_argument(
+        "--run-id",
+        default=None,
+        metavar="YYYY-MM-DD_HHMMSS",
+        help="Retoma uma run específica pelo seu run_id (ex: 2026-04-27_143012)",
     )
     args = parser.parse_args()
 
@@ -120,32 +143,55 @@ def main():
         for ticker, model, mode in itertools.product(tickers, models, modes)
     ]
 
+    # Determina o run_id e results_dir
+    if args.fresh:
+        run_id      = _new_run_id()
+        results_dir = f"results/{run_id}"
+        mode_label  = f"NOVA RUN  →  {run_id}"
+    elif args.run_id:
+        run_id      = args.run_id
+        results_dir = f"results/{run_id}"
+        mode_label  = f"RESUMINDO RUN  →  {run_id}"
+    else:
+        # Auto-resume: usa o run mais recente; se não existir, cria um novo
+        run_id = _latest_run_id() or _new_run_id()
+        results_dir = f"results/{run_id}"
+        mode_label  = f"AUTO-RESUME  →  {run_id}"
+
     print(
         f"\n{'='*62}\n"
-        f"  GPU Job Queue {'(FRESH START)' if args.fresh else '(auto-resume)'}\n"
-        f"  Total jobs : {len(all_jobs)}\n"
-        f"  GPUs       : {gpu_ids}\n"
-        f"  Tickers    : {len(tickers)}\n"
-        f"  Models     : {models}\n"
-        f"  Modes      : {modes}\n"
-        f"  Retry wait : {retry_wait}s  |  max retries: 2\n"
+        f"  GPU Job Queue  |  {mode_label}\n"
         f"{'='*62}\n"
-        f"  Monitor    : python queue/dashboard.py\n"
+        f"  Results dir : results/{run_id}/\n"
+        f"  Total jobs  : {len(all_jobs)}\n"
+        f"  GPUs        : {gpu_ids}\n"
+        f"  Tickers     : {len(tickers)}\n"
+        f"  Models      : {models}\n"
+        f"  Modes       : {modes}\n"
+        f"  Retry wait  : {retry_wait}s  |  max retries: 2\n"
+        f"{'='*62}\n"
+        f"  Dashboard   : python gpu_queue/dashboard.py\n"
+        f"  Run status  : results/{run_id}/queue_status.json\n"
         f"{'='*62}\n"
     )
 
     if args.fresh:
-        manager = GPUJobQueueManager(gpu_ids=gpu_ids, retry_wait=retry_wait)
+        manager = GPUJobQueueManager(
+            gpu_ids=gpu_ids,
+            retry_wait=retry_wait,
+            results_dir=results_dir,
+        )
         manager.add_many(all_jobs)
     else:
         manager = GPUJobQueueManager.resume_or_create(
             all_jobs=all_jobs,
             gpu_ids=gpu_ids,
             retry_wait=retry_wait,
+            results_dir=results_dir,
         )
 
     manager.run()
-    print("\nAll experiments completed.")
+    print(f"\nAll experiments completed.  Results: results/{run_id}/")
 
 
 if __name__ == "__main__":

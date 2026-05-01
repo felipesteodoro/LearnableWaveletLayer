@@ -25,9 +25,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Results are stored relative to the tests/financial directory
+# Results dir recebido via env var injetada pelo GPUWorker (RESULTS_DIR=results/YYYY-MM-DD_HHMMSS).
+# Fallback para results/ raiz caso seja chamado diretamente fora da fila.
 FINANCIAL_DIR = Path(__file__).parent.parent
-RESULTS_DIR = FINANCIAL_DIR / "results"
+RESULTS_DIR = Path(os.environ.get("RESULTS_DIR", str(FINANCIAL_DIR / "results")))
 
 
 def _results_exist(ticker: str, model_name: str, mode: str) -> bool:

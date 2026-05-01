@@ -1,6 +1,12 @@
 """
 Classification and financial metrics for experiment results.
 Mirrors tests/synthetic/src/evaluation.py (RegressionEvaluator → ClassificationEvaluator).
+
+Inclui:
+- ClassificationEvaluator: acurácia, F1, MCC, ROC-AUC OvR
+- FinancialMetrics: Sharpe, Sortino, Calmar, MDD, CAGR, VaR, CVaR
+- WilcoxonComparison: teste estatístico para comparar modos (raw/db4/learned_wavelet)
+- ResultsManager: persistência e carregamento de resultados de experimentos
 """
 from __future__ import annotations
 
@@ -11,6 +17,7 @@ from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
+from scipy.stats import wilcoxon
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
@@ -46,6 +53,7 @@ class ClassificationEvaluator:
         y_true: np.ndarray,
         y_pred: np.ndarray,
         prefix: str = "",
+        y_proba: np.ndarray | None = None,
     ) -> dict[str, float]:
         p = f"{prefix}_" if prefix else ""
 
@@ -57,13 +65,14 @@ class ClassificationEvaluator:
             f"{p}f1_buy":  float(f1_per_class[2]),
         }
 
-        # ROC-AUC (one-vs-rest, needs probability — skip if not available)
-        try:
-            y_true_oh = np.eye(3)[y_true.astype(int)]
-            y_pred_oh = np.eye(3)[y_pred.astype(int)]
-            roc_auc = float(roc_auc_score(y_true_oh, y_pred_oh, multi_class="ovr"))
-        except Exception:
-            roc_auc = float("nan")
+        # ROC-AUC (one-vs-rest) — requires probability scores, not hard labels
+        roc_auc = float("nan")
+        if y_proba is not None:
+            try:
+                y_true_oh = np.eye(3)[y_true.astype(int)]
+                roc_auc = float(roc_auc_score(y_true_oh, y_proba, multi_class="ovr"))
+            except Exception:
+                roc_auc = float("nan")
 
         return {
             f"{p}accuracy":        float(accuracy_score(y_true, y_pred)),
@@ -80,11 +89,20 @@ class ClassificationEvaluator:
     def evaluate_cv(
         y_true_list: list[np.ndarray],
         y_pred_list: list[np.ndarray],
+        y_proba_list: list[np.ndarray] | None = None,
     ) -> dict[str, float]:
         """Aggregate per-fold metrics (mean ± std)."""
         fold_metrics = [
-            ClassificationEvaluator.evaluate(yt, yp, prefix="")
-            for yt, yp in zip(y_true_list, y_pred_list)
+            ClassificationEvaluator.evaluate(
+                yt, yp,
+                prefix="",
+                y_proba=yprob if y_proba_list is not None else None,
+            )
+            for yt, yp, yprob in zip(
+                y_true_list,
+                y_pred_list,
+                y_proba_list if y_proba_list is not None else [None] * len(y_true_list),
+            )
         ]
         aggregated: dict[str, float] = {}
         for key in fold_metrics[0]:
@@ -285,3 +303,187 @@ class ResultsManager:
         if metric not in df.columns:
             raise ValueError(f"Metric '{metric}' not found.")
         return df.nlargest(top_n, metric)
+
+
+# ---------------------------------------------------------------------------
+# Wilcoxon signed-rank test para comparação entre modos
+# ---------------------------------------------------------------------------
+
+class WilcoxonComparison:
+    """
+    Teste de Wilcoxon signed-rank para comparar dois modos de experimento.
+
+    Por que Wilcoxon e não t-test?
+    --------------------------------
+    O t-test assume que as diferenças de performance entre modos seguem uma
+    distribuição normal. Em finanças, as métricas (Sharpe, F1) costumam ser
+    assimétricas e com caudas pesadas — a premissa de normalidade é violada.
+
+    O teste de Wilcoxon é não-paramétrico: compara os postos (ranks) das
+    diferenças em vez dos valores absolutos. Ele requer apenas que as diferenças
+    sejam simétricas em torno da mediana, uma suposição muito mais fraca.
+
+    Uso padrão: comparar 'learned_wavelet' vs 'raw' em todos os folds/ativos.
+    Se p-value < 0.05: rejeita H0 (diferença estatisticamente significativa).
+
+    Limitações:
+    - Requer pares de observações (mesmos folds/ativos nos dois modos)
+    - Com poucos pares (< 10), o poder do teste é baixo
+    - Não distingue magnitude do efeito — use effect_size para isso
+    """
+
+    @staticmethod
+    def compare(
+        scores_a: list[float] | np.ndarray,
+        scores_b: list[float] | np.ndarray,
+        alternative: str = "two-sided",
+    ) -> dict:
+        """
+        Compara duas sequências de scores com o teste de Wilcoxon.
+
+        H0: mediana(scores_a - scores_b) = 0
+        H1 (two-sided): mediana ≠ 0
+        H1 (greater): mediana(a) > mediana(b)
+
+        Parameters
+        ----------
+        scores_a    : scores do modo A (ex: learned_wavelet) — one per fold/ticker
+        scores_b    : scores do modo B (ex: raw)
+        alternative : 'two-sided' | 'greater' | 'less'
+
+        Returns
+        -------
+        dict com: statistic, p_value, significant (bool, α=0.05),
+                  median_diff, mean_diff, effect_size (rank-biserial correlation)
+        """
+        a = np.asarray(scores_a, dtype=float)
+        b = np.asarray(scores_b, dtype=float)
+
+        # Remove pares onde qualquer valor é NaN
+        valid = ~(np.isnan(a) | np.isnan(b))
+        a, b = a[valid], b[valid]
+
+        if len(a) < 3:
+            # Pares insuficientes para o teste
+            return {
+                "statistic":   float("nan"),
+                "p_value":     float("nan"),
+                "significant": False,
+                "median_diff": float(np.median(a - b)) if len(a) > 0 else float("nan"),
+                "mean_diff":   float(np.mean(a - b))   if len(a) > 0 else float("nan"),
+                "effect_size": float("nan"),
+                "n_pairs":     int(len(a)),
+                "note":        "Insufficient pairs for Wilcoxon test (need >= 3)",
+            }
+
+        try:
+            stat, p_val = wilcoxon(a, b, alternative=alternative, zero_method="wilcox")
+        except Exception as e:
+            return {
+                "statistic": float("nan"), "p_value": float("nan"),
+                "significant": False, "note": str(e),
+            }
+
+        # Effect size: rank-biserial correlation ∈ [-1, +1]
+        # |r| = 0.1 pequeno, 0.3 médio, 0.5 grande (Cohen, 1988)
+        n = len(a)
+        effect_size = 1 - (2 * stat) / (n * (n + 1) / 2) if n > 0 else float("nan")
+
+        return {
+            "statistic":   float(stat),
+            "p_value":     float(p_val),
+            "significant": bool(p_val < 0.05),
+            "median_diff": float(np.median(a - b)),
+            "mean_diff":   float(np.mean(a - b)),
+            "effect_size": float(effect_size),
+            "n_pairs":     int(n),
+        }
+
+    @staticmethod
+    def compare_modes(
+        results_df: pd.DataFrame,
+        metric: str = "ml_f1_macro",
+        mode_col: str = "mode",
+        baseline_mode: str = "raw",
+        comparison_modes: Optional[list[str]] = None,
+        group_col: Optional[str] = "ticker",
+    ) -> pd.DataFrame:
+        """
+        Compara múltiplos modos wavelet vs um baseline usando Wilcoxon.
+
+        Agrupa por ticker (ou outro group_col) para obter pares de observações,
+        então aplica Wilcoxon para cada par (comparison_mode vs baseline_mode).
+
+        Parameters
+        ----------
+        results_df        : DataFrame com colunas [mode_col, group_col, metric]
+        metric            : nome da coluna de métrica a comparar
+        mode_col          : coluna que identifica o modo (ex: "mode")
+        baseline_mode     : modo de referência (ex: "raw")
+        comparison_modes  : modos a comparar vs baseline (default: todos exceto baseline)
+        group_col         : coluna de agrupamento para criar pares (ex: "ticker")
+                           Se None, usa os índices como pares
+
+        Returns
+        -------
+        DataFrame com uma linha por comparison_mode, colunas do dict de WilcoxonComparison
+        """
+        if comparison_modes is None:
+            comparison_modes = [m for m in results_df[mode_col].unique() if m != baseline_mode]
+
+        records = []
+        for cmp_mode in comparison_modes:
+            if group_col and group_col in results_df.columns:
+                # Cria pares alinhados por grupo (ticker)
+                base_df = results_df[results_df[mode_col] == baseline_mode].set_index(group_col)[metric]
+                cmp_df  = results_df[results_df[mode_col] == cmp_mode].set_index(group_col)[metric]
+
+                # Alinha por grupos comuns
+                common_groups = base_df.index.intersection(cmp_df.index)
+                scores_base = base_df.loc[common_groups].values
+                scores_cmp  = cmp_df.loc[common_groups].values
+            else:
+                # Sem agrupamento: usa todos os valores como pares na ordem
+                scores_base = results_df[results_df[mode_col] == baseline_mode][metric].values
+                scores_cmp  = results_df[results_df[mode_col] == cmp_mode][metric].values
+                min_len = min(len(scores_base), len(scores_cmp))
+                scores_base = scores_base[:min_len]
+                scores_cmp  = scores_cmp[:min_len]
+
+            result = WilcoxonComparison.compare(scores_cmp, scores_base, alternative="two-sided")
+            records.append({
+                "comparison":   f"{cmp_mode}_vs_{baseline_mode}",
+                "mode_a":       cmp_mode,
+                "mode_b":       baseline_mode,
+                "metric":       metric,
+                **result,
+            })
+
+        return pd.DataFrame(records)
+
+    @staticmethod
+    def summary_table(
+        results_df: pd.DataFrame,
+        metrics: Optional[list[str]] = None,
+        mode_col: str = "mode",
+        group_col: str = "ticker",
+    ) -> pd.DataFrame:
+        """
+        Tabela resumo de todas as comparações Wilcoxon para múltiplas métricas.
+
+        Útil para o relatório final: mostra quais métricas são significativamente
+        diferentes entre modos wavelet e o baseline raw.
+        """
+        if metrics is None:
+            metrics = ["ml_f1_macro", "ml_accuracy", "ml_mcc", "ml_roc_auc_ovr"]
+            # Filtra apenas métricas que existem no DataFrame
+            metrics = [m for m in metrics if m in results_df.columns]
+
+        all_records = []
+        for metric in metrics:
+            comparison_df = WilcoxonComparison.compare_modes(
+                results_df, metric=metric, mode_col=mode_col, group_col=group_col
+            )
+            all_records.append(comparison_df)
+
+        return pd.concat(all_records, ignore_index=True) if all_records else pd.DataFrame()

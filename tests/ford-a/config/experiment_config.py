@@ -71,12 +71,25 @@ WAVELET_CONFIG = {
 
 LEARNED_WAVELET_CONFIG = {
     "levels": 2,
+    # kernel_size=32 é adequado para seq_len=500:
+    #   nível 1: 500//2 = 250 >> 32 coeficientes (suporte bem definido)
+    #   nível 2: 250//2 = 125 >> 32 coeficientes (ainda OK)
     "kernel_size": 32,
     "wavelet_net_units": 32,
     "reg_energy": 1e-2,
     "reg_high_dc": 1e-2,
     "reg_smooth": 1e-3,
-    "normalize_low": "sum1",
+    # "l2" preserva energia na cascata DWT (||h||_2 = 1).
+    # "sum1" preservava média (DC), mas viola ortogonalidade e degenera para
+    # filtro de box em sinal constante — não é o comportamento desejado.
+    "normalize_low": "l2",
+    # "pad_to_first" alinha coeficientes por zero-padding sem interpolação bilinear.
+    # Interpolação bilinear (align="upsample") introduz aliasing espectral que
+    # confunde o backbone — artefatos de alta frequência onde deveria haver zeros.
+    "align": "pad_to_first",
+    # warm_start_db4: inicializa a rede para produzir filtro próximo ao db4.
+    # Melhora a velocidade de convergência vs inicialização aleatória.
+    "warm_start_db4": True,
 }
 
 # ============================================================================
@@ -271,7 +284,9 @@ DL_MODELS_CONFIG = {
         "dropout_rate": 0.2,
         "learning_rate": 0.001,
         "l2_reg": 0.001,
-        "use_warmup": True,
+        # Warmup desativado: dataset Ford A é pequeno (~3600 amostras),
+        # o warmup cosine/linear não traz ganho e pode atrasar a convergência.
+        "use_warmup": False,
         "warmup_steps": 500,
     },
 }
@@ -355,7 +370,7 @@ LEARNED_WAVELET_MODELS_CONFIG = {
         "dropout_rate": 0.2,
         "learning_rate": 0.001,
         "l2_reg": 0.001,
-        "use_warmup": True,
+        "use_warmup": False,
         "warmup_steps": 500,
     },
 }

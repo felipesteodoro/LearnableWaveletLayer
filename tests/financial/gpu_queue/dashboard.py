@@ -25,10 +25,26 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-DEFAULT_STATUS = (
-    Path(__file__).parent.parent / "results" / "queue_status.json"
-)
 REFRESH_RATE = 2.0  # seconds
+
+_RESULTS_BASE = Path(__file__).parent.parent / "results"
+
+
+def _find_latest_status() -> Path:
+    """
+    Encontra o queue_status.json mais recente dentro de results/.
+
+    Procura primeiro por pastas datadas (YYYY-MM-DD_HHMMSS), que são as runs
+    criadas pelo novo run_dl_queue.py. Se não houver nenhuma, cai no caminho
+    legado results/queue_status.json para compatibilidade com runs antigas.
+    """
+    dated = sorted(_RESULTS_BASE.glob("????-??-??_??????"), reverse=True)
+    for folder in dated:
+        candidate = folder / "queue_status.json"
+        if candidate.exists():
+            return candidate
+    # Fallback legado: results/queue_status.json
+    return _RESULTS_BASE / "queue_status.json"
 
 
 # ---------------------------------------------------------------------------
@@ -247,7 +263,9 @@ def _waiting_panel() -> Panel:
 # ---------------------------------------------------------------------------
 
 
-def run_dashboard(status_file: Path = DEFAULT_STATUS, refresh: float = REFRESH_RATE):
+def run_dashboard(status_file: Path | None = None, refresh: float = REFRESH_RATE):
+    if status_file is None:
+        status_file = _find_latest_status()
     console = Console()
 
     def render():
@@ -270,8 +288,8 @@ def main():
     parser.add_argument(
         "--status",
         type=Path,
-        default=DEFAULT_STATUS,
-        help="Path to queue_status.json",
+        default=None,
+        help="Path to queue_status.json (padrão: run mais recente em results/)",
     )
     parser.add_argument(
         "--refresh",
@@ -280,7 +298,9 @@ def main():
         help="Refresh interval in seconds (default: 2)",
     )
     args = parser.parse_args()
-    run_dashboard(args.status, args.refresh)
+    status = args.status or _find_latest_status()
+    print(f"Dashboard monitorando: {status}")
+    run_dashboard(status, args.refresh)
 
 
 if __name__ == "__main__":

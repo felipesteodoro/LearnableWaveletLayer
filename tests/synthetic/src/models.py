@@ -1,6 +1,8 @@
 """
 Fábricas de modelos para Machine Learning e Deep Learning.
 """
+import os as _os
+import sys as _sys
 import numpy as np
 from typing import Dict, Any, Optional, Tuple
 from sklearn.svm import SVR
@@ -20,6 +22,13 @@ from tensorflow.keras.layers import (
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
+
+# Shared DL utilities (centralised)
+_MODELS_DIR = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), '..', '..', '..', 'models'))
+if _MODELS_DIR not in _sys.path:
+    _sys.path.insert(0, _MODELS_DIR)
+from dl_utils import SinusoidalPositionalEncoding, TransformerBlock, TransformerWarmupSchedule  # noqa: E402
+from LWT import LearnedWaveletDWT1D_QMF  # noqa: E402
 
 
 # ============================================================================
@@ -287,10 +296,6 @@ def create_learned_wavelet_cnn_lstm_model(
     """
     Cria modelo com LearnedWaveletDWT1D_QMF seguido de CNN-LSTM.
     """
-    import sys
-    sys.path.append('../../../models')
-    from LWT import LearnedWaveletDWT1D_QMF
-
     wavelet_config = wavelet_config or {}
     cnn_lstm_params = cnn_lstm_params or {}
 
@@ -348,89 +353,6 @@ def create_learned_wavelet_cnn_lstm_model(
     )
 
     return model
-
-
-class SinusoidalPositionalEncoding(tf.keras.layers.Layer):
-    """Codificação posicional sinusoidal (Vaswani et al., 2017)."""
-
-    def __init__(self, max_len=2048, **kwargs):
-        super().__init__(**kwargs)
-        self.max_len = max_len
-
-    def build(self, input_shape):
-        d_model = input_shape[-1]
-        positions = np.arange(self.max_len)[:, np.newaxis]  # (max_len, 1)
-        dims = np.arange(d_model)[np.newaxis, :]            # (1, d_model)
-        angles = positions / np.power(10000.0, (2 * (dims // 2)) / d_model)
-        angles[:, 0::2] = np.sin(angles[:, 0::2])
-        angles[:, 1::2] = np.cos(angles[:, 1::2])
-        self.pe = tf.constant(angles[np.newaxis, :, :], dtype=tf.float32)  # (1, max_len, d_model)
-        super().build(input_shape)
-
-    def call(self, x):
-        seq_len = tf.shape(x)[1]
-        return x + self.pe[:, :seq_len, :]
-
-    def get_config(self):
-        config = super().get_config()
-        config.update({"max_len": self.max_len})
-        return config
-
-
-class TransformerBlock(tf.keras.layers.Layer):
-    """Bloco Transformer para processamento de sequências."""
-    
-    def __init__(self, head_size, num_heads, ff_dim, dropout=0.1, **kwargs):
-        super().__init__(**kwargs)
-        self.head_size = head_size
-        self.num_heads = num_heads
-        self.ff_dim = ff_dim
-        self.dropout_rate = dropout
-        
-    def build(self, input_shape):
-        embed_dim = input_shape[-1]
-        self.att = MultiHeadAttention(
-            key_dim=self.head_size, 
-            num_heads=self.num_heads, 
-            dropout=self.dropout_rate
-        )
-        self.ffn = Sequential([
-            Dense(self.ff_dim, activation="relu"),
-            Dropout(self.dropout_rate),
-            Dense(embed_dim),
-        ])
-        self.layernorm1 = LayerNormalization(epsilon=1e-6)
-        self.layernorm2 = LayerNormalization(epsilon=1e-6)
-        self.dropout1 = Dropout(self.dropout_rate)
-        self.dropout2 = Dropout(self.dropout_rate)
-        super().build(input_shape)
-        
-    def call(self, inputs, training=False):
-        attn_output = self.att(inputs, inputs, training=training)
-        attn_output = self.dropout1(attn_output, training=training)
-        out1 = self.layernorm1(inputs + attn_output)
-        ffn_output = self.ffn(out1, training=training)
-        ffn_output = self.dropout2(ffn_output, training=training)
-        return self.layernorm2(out1 + ffn_output)
-
-
-class TransformerWarmupSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
-    """Warmup linear seguido de decay, como em Vaswani et al."""
-
-    def __init__(self, d_model, warmup_steps=500):
-        super().__init__()
-        self.d_model = tf.cast(d_model, tf.float32)
-        self.warmup_steps = tf.cast(warmup_steps, tf.float32)
-
-    def __call__(self, step):
-        step = tf.cast(step, tf.float32)
-        arg1 = tf.math.rsqrt(step + 1)
-        arg2 = (step + 1) * (self.warmup_steps ** -1.5)
-        return tf.math.rsqrt(self.d_model) * tf.math.minimum(arg1, arg2)
-
-    def get_config(self):
-        return {"d_model": int(self.d_model.numpy()),
-                "warmup_steps": int(self.warmup_steps.numpy())}
 
 
 def create_transformer_model(
@@ -602,21 +524,25 @@ def create_learned_wavelet_lstm_model(
     
     # LSTM layers
     units = lstm_params.get('units', [128, 64])
+    dropout_rate = lstm_params.get('dropout_rate', 0.3)
+    l2_reg = lstm_params.get('l2_reg', 0.001)
     for u in units[:-1]:
-        x = LSTM(u, return_sequences=True, dropout=0.3)(x)
-    x = LSTM(units[-1], return_sequences=False, dropout=0.3)(x)
-    
-    x = Dense(64, activation='relu')(x)
-    x = Dropout(0.3)(x)
+        x = LSTM(u, return_sequences=True, dropout=dropout_rate,
+                 kernel_regularizer=l2(l2_reg))(x)
+    x = LSTM(units[-1], return_sequences=False, dropout=dropout_rate,
+             kernel_regularizer=l2(l2_reg))(x)
+
+    x = Dense(64, activation='relu', kernel_regularizer=l2(l2_reg))(x)
+    x = Dropout(dropout_rate)(x)
     outputs = Dense(1)(x)
-    
+
     model = Model(inputs=inputs, outputs=outputs, name='LearnedWavelet_LSTM')
     model.compile(
         optimizer=Adam(learning_rate=lstm_params.get('learning_rate', 0.001)),
         loss='mse',
         metrics=['mae']
     )
-    
+
     return model
 
 

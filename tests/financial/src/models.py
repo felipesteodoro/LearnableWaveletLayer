@@ -21,51 +21,8 @@ try:
 except ImportError:
     raise ImportError("TensorFlow not found. Install tensorflow[and-cuda].")
 
-
-# ---------------------------------------------------------------------------
-# Positional encoding & Transformer block (same as synthetic)
-# ---------------------------------------------------------------------------
-
-class SinusoidalPositionalEncoding(layers.Layer):
-    def __init__(self, max_len: int = 512, **kw):
-        super().__init__(**kw)
-        self.max_len = max_len
-
-    def build(self, input_shape):
-        d_model = input_shape[-1]
-        pos = np.arange(self.max_len)[:, None]
-        i   = np.arange(d_model)[None, :]
-        angle = pos / np.power(10000, (2 * (i // 2)) / d_model)
-        angle[:, 0::2] = np.sin(angle[:, 0::2])
-        angle[:, 1::2] = np.cos(angle[:, 1::2])
-        self._encoding = tf.cast(angle[None, :, :], tf.float32)
-
-    def call(self, x):
-        seq_len = tf.shape(x)[1]
-        return x + self._encoding[:, :seq_len, :]
-
-
-class TransformerBlock(layers.Layer):
-    def __init__(self, head_size, num_heads, ff_dim, dropout=0.1, l2=1e-4, **kw):
-        super().__init__(**kw)
-        self.attn = layers.MultiHeadAttention(
-            num_heads=num_heads, key_dim=head_size,
-            kernel_regularizer=regularizers.l2(l2),
-        )
-        self.ff1  = layers.Dense(ff_dim, activation="relu",
-                                 kernel_regularizer=regularizers.l2(l2))
-        self.ff2  = layers.Dense(head_size * num_heads,
-                                 kernel_regularizer=regularizers.l2(l2))
-        self.ln1  = layers.LayerNormalization(epsilon=1e-6)
-        self.ln2  = layers.LayerNormalization(epsilon=1e-6)
-        self.drop1 = layers.Dropout(dropout)
-        self.drop2 = layers.Dropout(dropout)
-
-    def call(self, x, training=False):
-        attn_out = self.attn(x, x, training=training)
-        x = self.ln1(x + self.drop1(attn_out, training=training))
-        ff_out = self.ff2(self.ff1(x))
-        return self.ln2(x + self.drop2(ff_out, training=training))
+# Shared DL utilities (centralised in models/dl_utils.py)
+from models.dl_utils import SinusoidalPositionalEncoding, TransformerBlock  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -76,7 +33,7 @@ def _cnn_backbone(x, cfg: dict):
     l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
     dr = cfg.get("dropout_rate", 0.3)
     for f in cfg.get("filters", [64, 128, 256]):
-        x = layers.Conv1D(f, kernel_size=cfg.get("kernel_size", 3),
+        x = layers.Conv1D(f, kernel_size=cfg.get("cnn_kernel_size", 3),
                           padding="same", activation="relu",
                           kernel_regularizer=l2)(x)
         x = layers.BatchNormalization()(x)
@@ -129,7 +86,7 @@ def _transformer_backbone(x, cfg: dict):
             head_size=cfg.get("head_size", 32),
             num_heads=cfg.get("num_heads", 4),
             ff_dim=cfg.get("ff_dim", 128),
-            dropout=dr, l2=l2,
+            dropout=dr, l2_reg=l2,
         )(x)
     x = layers.GlobalAveragePooling1D()(x)
     x = layers.Dense(64, activation="relu")(x)
@@ -149,30 +106,57 @@ _BACKBONES = {
 # ---------------------------------------------------------------------------
 
 def _apply_wavelet_frontend(x, mode: str, cfg: dict):
-    """Prepend wavelet transform layer(s) to the input tensor."""
-    if mode == "raw":
-        return x
+    """
+    Prepend wavelet transform layer(s) to the input tensor.
 
-    if mode == "db4":
+    Após o frontend, aplica uma projeção linear (Dense) para mapear todos os modos
+    (raw, db4, learned_wavelet) para a mesma dimensionalidade (wavelet_projection_dim).
+
+    Motivação: sem essa projeção, raw=(N,L,F) e learned_wavelet=(N,L,(levels+1)*F)
+    chegam ao backbone com capacidades efetivas diferentes — o backbone wavelet tem
+    mais parâmetros na primeira camada, o que é um confundidor na comparação de modos.
+
+    Com a projeção, todos os modos entram no backbone com (N, L, proj_dim),
+    tornando a comparação mais justa.
+    """
+    if mode == "raw":
+        # Sem transformada; projeção ainda é aplicada para equalizar capacidade
+        x_out = x
+
+    elif mode == "db4":
         from models.LWT.fixed_db4_dwt import FixedDb4DWT1D
-        return FixedDb4DWT1D(
+        x_out = FixedDb4DWT1D(
             levels=cfg.get("wavelet_levels", 2),
-            output_mode="concat",
+            mode="concat",
+            # pad_to_first: sem interpolação bilinear = sem aliasing espectral
+            align=cfg.get("align", "pad_to_first"),
         )(x)
 
-    if mode == "learned_wavelet":
+    elif mode == "learned_wavelet":
         from models.LWT.learned_wavelet_dwt_qmf import LearnedWaveletDWT1D_QMF
-        return LearnedWaveletDWT1D_QMF(
+        x_out = LearnedWaveletDWT1D_QMF(
             levels=cfg.get("wavelet_levels", 2),
-            kernel_size=cfg.get("kernel_size", 32),
+            kernel_size=cfg.get("kernel_size", 8),
             wavelet_net_units=cfg.get("wavelet_net_units", 32),
             reg_energy=cfg.get("reg_energy", 1e-2),
             reg_high_dc=cfg.get("reg_high_dc", 1e-2),
             reg_smooth=cfg.get("reg_smooth", 1e-3),
-            output_mode="concat",
+            align=cfg.get("align", "pad_to_first"),
+            warm_start_db4=cfg.get("warm_start_db4", False),
+            mode="concat",
         )(x)
 
-    raise ValueError(f"Unknown mode: {mode}")
+    else:
+        raise ValueError(f"Unknown mode: {mode}")
+
+    # Projeção linear para dimensionalidade uniforme entre os modos.
+    # Sem isso, raw=(N,L,F) vs learned_wavelet=(N,L,3F) — a primeira camada
+    # do backbone teria número de parâmetros 3× maior para wavelet vs raw.
+    proj_dim = cfg.get("wavelet_projection_dim", 0)
+    if proj_dim and proj_dim > 0:
+        x_out = layers.Dense(proj_dim, use_bias=False, name=f"wavelet_proj_{mode}")(x_out)
+
+    return x_out
 
 
 # ---------------------------------------------------------------------------
@@ -211,10 +195,62 @@ def build_model(
     outputs = layers.Dense(n_classes, activation="softmax", name="output")(x)
 
     model = keras.Model(inputs, outputs, name=f"{model_name}_{mode}")
+
+    # Otimizador unificado: Adam com lr inicial igual para todas as arquiteturas.
+    # ReduceLROnPlateau é definido nos callbacks (get_callbacks), não aqui,
+    # para que o scheduler seja registrado no histórico de treino.
     model.compile(
         optimizer=keras.optimizers.Adam(cfg.get("learning_rate", 1e-3)),
         loss="sparse_categorical_crossentropy",
         metrics=["accuracy"],
+    )
+    return model
+
+
+def build_model_with_continuous_signal(
+    model_name: str,
+    mode: str,
+    input_shape: tuple,
+    cfg: Optional[dict] = None,
+) -> keras.Model:
+    """
+    Variante que produz sinal de posição contínuo em [-1, +1] em vez de softmax.
+
+    Saída: p_buy - p_sell ∈ [-1, +1]
+    - +1: compra forte (p_buy ≈ 1, p_sell ≈ 0)
+    - -1: venda forte
+    -  0: hold (equilíbrio ou dominância de hold)
+
+    Isso permite tamanho de posição fracionário no backtest, eliminando
+    o threshold binário que descarta confiança do modelo.
+    """
+    if cfg is None:
+        from config.experiment_config import DL_MODELS_CONFIG, DL_TRAINING_CONFIG, LEARNED_WAVELET_CONFIG
+        cfg = {**DL_MODELS_CONFIG.get(model_name, {}), **DL_TRAINING_CONFIG, **LEARNED_WAVELET_CONFIG}
+
+    backbone_fn = _BACKBONES.get(model_name)
+    if backbone_fn is None:
+        raise ValueError(f"Unknown model: {model_name}. Choose from {list(_BACKBONES)}")
+
+    inputs = keras.Input(shape=input_shape, name="input")
+    x = _apply_wavelet_frontend(inputs, mode, cfg)
+    x = backbone_fn(x, cfg)
+
+    # Softmax de 3 classes para obter probabilidades
+    probs = layers.Dense(3, activation="softmax", name="probs")(x)
+
+    # Sinal contínuo: diferença entre probabilidade de compra e venda
+    # Lambda não é serializável; em produção, substituir por uma Layer customizada
+    signal = layers.Lambda(
+        lambda p: p[:, 2:3] - p[:, 0:1],
+        name="position_signal",
+    )(probs)
+
+    model = keras.Model(inputs, [probs, signal], name=f"{model_name}_{mode}_continuous")
+    model.compile(
+        optimizer=keras.optimizers.Adam(cfg.get("learning_rate", 1e-3)),
+        loss={"probs": "sparse_categorical_crossentropy", "position_signal": None},
+        metrics={"probs": "accuracy"},
     )
     return model
 
@@ -226,6 +262,13 @@ def get_callbacks(
     lr_factor: float = 0.5,
     min_lr: float = 1e-6,
 ) -> list:
+    """
+    Callbacks padrão para todos os modelos.
+
+    ReduceLROnPlateau é aplicado uniformemente a CNN, LSTM, CNN_LSTM e Transformer,
+    garantindo que a comparação entre modos (raw/db4/learned) seja sobre o frontend
+    wavelet e não sobre diferenças no regime de learning rate.
+    """
     model_path.parent.mkdir(parents=True, exist_ok=True)
     return [
         keras.callbacks.EarlyStopping(

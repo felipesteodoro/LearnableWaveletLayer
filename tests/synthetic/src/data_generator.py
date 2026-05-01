@@ -342,6 +342,215 @@ class SyntheticSignalGenerator:
         return X, y, metadata
 
 
+class RandomWalkGenerator:
+    """
+    Gerador de random walk puro — sinal adversário para wavelets.
+
+    Um random walk não tem estrutura multi-escala nem transientes:
+    cada passo é independente dos anteriores (processo de Markov de ordem 0).
+
+    Por que é adversário?
+    ----------------------
+    Wavelets são projetados para capturar estrutura de frequência e escala.
+    Em um random walk, não há frequência dominante nem padrão de escala.
+    Um modelo que usa wavelet NÃO deveria ter vantagem aqui sobre um modelo
+    que usa a série bruta — se tiver, é evidência de overfitting ou confundidores.
+
+    Uso: validar que a vantagem observada do wavelet em dados reais não é
+    um artefato da pipeline, testando em dados onde não deveria existir vantagem.
+    """
+
+    def __init__(
+        self,
+        n_samples: int = 50000,
+        random_seed: int = 42,
+        drift: float = 0.0,       # tendência constante (retorno esperado por passo)
+        volatility: float = 1.0,  # desvio padrão dos incrementos
+    ):
+        self.n_samples   = n_samples
+        self.random_seed = random_seed
+        self.drift       = drift
+        self.volatility  = volatility
+        self.rng = np.random.default_rng(random_seed)
+
+    def generate(self) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Gera random walk com drift e volatilidade configuráveis.
+
+        Returns:
+            (X, y): X = random walk, y = próximo passo (previsão impossível = baseline)
+            O target é o próximo incremento — por construção, não é previsível.
+        """
+        increments = self.drift + self.volatility * self.rng.standard_normal(self.n_samples)
+        walk       = np.cumsum(increments)
+        # Normaliza para mesma escala do SyntheticSignalGenerator
+        walk       = (walk - walk.mean()) / (walk.std() + 1e-8)
+        return walk, increments  # X = walk, y = incrementos (noise puro)
+
+    def create_regression_dataset(
+        self,
+        sequence_length: int = 256,
+        horizon: int = 1,
+        stride: int = 1,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Dataset de regressão com janelas deslizantes no random walk."""
+        walk, increments = self.generate()
+        X, y = [], []
+        for i in range(0, len(walk) - sequence_length - horizon + 1, stride):
+            X.append(walk[i:i + sequence_length])
+            y.append(increments[i + sequence_length + horizon - 1])
+        return np.array(X), np.array(y)
+
+
+class RegimeOnlyGenerator:
+    """
+    Gerador de sinal apenas com mudanças de regime (sem harmônicos, sem transientes).
+
+    Motivação adversária
+    ---------------------
+    Se a vantagem do wavelet em dados reais viesse apenas da detecção de
+    regime-switching (bull/bear), então esse gerador deveria exibir uma vantagem
+    similar — mas de forma mais "pura" e controlada.
+
+    O sinal gerado alterna entre K regimes com médias e volatilidades distintas.
+    As transições são abruptas (Markov chain) — como choques de mercado.
+
+    Usos:
+    1. Teste de sensibilidade: quanto da vantagem do wavelet vem de regime detection?
+    2. Ablação: remover harmônicos do SyntheticSignalGenerator e ver impacto no wavelet
+    """
+
+    def __init__(
+        self,
+        n_samples: int = 50000,
+        random_seed: int = 42,
+        n_regimes: int = 3,
+        regime_means: Optional[list] = None,      # médias de cada regime
+        regime_stds: Optional[list] = None,       # volatilidades de cada regime
+        transition_prob: float = 0.01,            # prob. de mudar de regime a cada passo
+    ):
+        self.n_samples       = n_samples
+        self.random_seed     = random_seed
+        self.n_regimes       = n_regimes
+        self.transition_prob = transition_prob
+        self.rng = np.random.default_rng(random_seed)
+
+        # Defaults: regimes alternando entre bear (-0.5), neutral (0), bull (+0.5)
+        self.regime_means = regime_means or np.linspace(-0.5, 0.5, n_regimes).tolist()
+        self.regime_stds  = regime_stds  or [0.3 + 0.2 * i for i in range(n_regimes)]
+
+    def _generate_regime_sequence(self) -> np.ndarray:
+        """Gera sequência de regimes via Markov chain homogênea."""
+        regimes = np.zeros(self.n_samples, dtype=int)
+        regimes[0] = self.rng.integers(0, self.n_regimes)
+        for t in range(1, self.n_samples):
+            if self.rng.random() < self.transition_prob:
+                # Transição para outro regime aleatório
+                new_regime = self.rng.integers(0, self.n_regimes)
+                regimes[t] = new_regime
+            else:
+                regimes[t] = regimes[t - 1]
+        return regimes
+
+    def generate(self) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Gera sinal regime-only.
+
+        Returns:
+            (signal, regime_labels): signal = séries com regime variável,
+                                     regime_labels = qual regime em cada passo
+        """
+        regimes = self._generate_regime_sequence()
+        signal  = np.zeros(self.n_samples)
+
+        for t in range(self.n_samples):
+            r = regimes[t]
+            signal[t] = self.regime_means[r] + self.regime_stds[r] * self.rng.standard_normal()
+
+        signal = (signal - signal.mean()) / (signal.std() + 1e-8)
+        return signal, regimes.astype(np.float32)
+
+    def create_regression_dataset(
+        self,
+        sequence_length: int = 256,
+        horizon: int = 1,
+        stride: int = 1,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Dataset de regressão: prevê o valor do sinal horizon passos à frente."""
+        signal, _ = self.generate()
+        X, y = [], []
+        for i in range(0, len(signal) - sequence_length - horizon + 1, stride):
+            X.append(signal[i:i + sequence_length])
+            y.append(signal[i + sequence_length + horizon - 1])
+        return np.array(X), np.array(y)
+
+
+class WhiteNoiseGenerator:
+    """
+    Gerador de ruído branco puro — o caso mais adversário possível para wavelets.
+
+    Ruído branco é i.i.d. por definição — cada amostra é independente.
+    Qualquer transformada (wavelet ou não) preserva essa independência.
+    Um modelo que aprende com wavelet NÃO deveria ter nenhuma vantagem aqui.
+
+    Se a acurácia wavelet > acurácia raw em ruído branco, há um bug ou
+    um confundidor severo na pipeline experimental.
+
+    Distribuições disponíveis:
+    - 'gaussian': ruído gaussiano padrão (default)
+    - 'laplace':  ruído de Laplace — caudas pesadas como retornos financeiros
+    - 'uniform':  ruído uniforme
+    """
+
+    DISTRIBUTIONS = ("gaussian", "laplace", "uniform")
+
+    def __init__(
+        self,
+        n_samples: int = 50000,
+        random_seed: int = 42,
+        distribution: str = "gaussian",
+        scale: float = 1.0,
+    ):
+        assert distribution in self.DISTRIBUTIONS, f"distribution must be one of {self.DISTRIBUTIONS}"
+        self.n_samples    = n_samples
+        self.random_seed  = random_seed
+        self.distribution = distribution
+        self.scale        = scale
+        self.rng = np.random.default_rng(random_seed)
+
+    def generate(self) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Gera ruído branco.
+
+        Returns:
+            (noise, noise): X e y são noise independente — sem relação causal.
+            A target é outro vetor de noise (previsão impossível).
+        """
+        if self.distribution == "gaussian":
+            noise = self.scale * self.rng.standard_normal(self.n_samples)
+        elif self.distribution == "laplace":
+            noise = self.rng.laplace(scale=self.scale, size=self.n_samples)
+        else:  # uniform
+            noise = self.rng.uniform(-self.scale, self.scale, size=self.n_samples)
+
+        target = self.rng.standard_normal(self.n_samples)  # independente de noise
+        return noise.astype(np.float64), target.astype(np.float64)
+
+    def create_regression_dataset(
+        self,
+        sequence_length: int = 256,
+        horizon: int = 1,
+        stride: int = 1,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Dataset adversário: X = janelas de ruído, y = próximo ruído (independente)."""
+        noise, target = self.generate()
+        X, y = [], []
+        for i in range(0, len(noise) - sequence_length - horizon + 1, stride):
+            X.append(noise[i:i + sequence_length])
+            y.append(target[i + sequence_length + horizon - 1])
+        return np.array(X), np.array(y)
+
+
 class MultiScaleSyntheticGenerator(SyntheticSignalGenerator):
     """
     Extensão que gera sinais com características multi-escala bem definidas.

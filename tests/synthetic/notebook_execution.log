@@ -1,0 +1,38 @@
+========================================
+Parallel 2-GPU execution: dom 26 abr 2026 23:47:00 -03
+  EPOCHS_OVERRIDE=0
+  MAX_GRID_CONFIGS=0
+========================================
+
+── Fase 1: 02 (GPU 0) + 03 (GPU 1) ──
+[GPU 1] Starting: 03_dl_wavelet_experiments.ipynb at dom 26 abr 2026 23:47:00 -03
+[GPU 0] Starting: 02_dl_raw_experiments.ipynb at dom 26 abr 2026 23:47:00 -03
+[NbConvertApp] Converting notebook 02_dl_raw_experiments.ipynb to notebook
+[NbConvertApp] Converting notebook 03_dl_wavelet_experiments.ipynb to notebook
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1777258022.541835  397592 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1777258022.555343  397595 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+I0000 00:00:1777258024.400175  397592 gpu_device.cc:2043] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22289 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:01:00.0, compute capability: 8.9
+I0000 00:00:1777258024.406239  397595 gpu_device.cc:2043] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22289 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:04:00.0, compute capability: 8.9
+I0000 00:00:1777258025.796376  397592 generator_dataset_op.cc:213] Memory patch applied: M_TRIM_THRESHOLD=128 kb was set.
+I0000 00:00:1777258026.851992  397993 cuda_dnn.cc:461] Loaded cuDNN version 91900
+I0000 00:00:1777258033.282745  397595 generator_dataset_op.cc:213] Memory patch applied: M_TRIM_THRESHOLD=128 kb was set.
+I0000 00:00:1777258034.341699  398028 cuda_dnn.cc:461] Loaded cuDNN version 91900
+[GPU 1] FAILED:  03_dl_wavelet_experiments.ipynb (143s)
+[GPU 0] FAILED:  02_dl_raw_experiments.ipynb (143s)
+
+── Fase 2: 04 (GPU 0) ──
+[GPU 0] Starting: 04_learned_wavelet_experiments.ipynb at dom 26 abr 2026 23:49:23 -03
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+[NbConvertApp] Converting notebook 04_learned_wavelet_experiments.ipynb to notebook
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1777258165.533206  413803 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+I0000 00:00:1777258167.330557  413803 gpu_device.cc:2043] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22289 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:01:00.0, compute capability: 8.9
+I0000 00:00:1777258168.886975  413803 generator_dataset_op.cc:213] Memory patch applied: M_TRIM_THRESHOLD=128 kb was set.
+I0000 00:00:1777258171.405496  414129 cuda_dnn.cc:461] Loaded cuDNN version 91900
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.

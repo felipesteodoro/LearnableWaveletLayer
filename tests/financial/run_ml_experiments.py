@@ -2,25 +2,19 @@
 """
 Canonical ML experiments — Walk-Forward OOS + IS grid search.
 
-Methodology (all fixes applied)
---------------------------------
-Fix 1 — Features are causal (rolling lookback only); no future leakage.
-         RobustScaler is fit exclusively on each window's IS.
-Fix 3 — t1 estimated with BDay(time_horizon) instead of calendar days.
-Fix 4 — Real t1 (actual barrier-exit date) loaded from labels parquet when
-         available (requires re-running 00_data_preparation.ipynb); falls back
-         to BDay estimate.
-Fix 5 — Walk-forward OOS: total OOS is divided into `n_oos_windows` temporal
-         windows. For each window the IS grows (expanding window). Grid search
-         via PurgedKFold is re-run on each IS. Final metrics are the average
-         across all OOS windows.
+Cada execução salva resultados em results/YYYY-MM-DD/, agrupando todos os
+experimentos do dia. Resultados já existentes são pulados automaticamente
+(skip-if-done via metrics.json).
 
-Results: results/<ticker>/<model>_ml/metrics.json
-Existing results are skipped automatically.
+Usage:
+    # Nova execução (usa a pasta de hoje, retoma automaticamente se já existe)
+    python run_ml_experiments.py
 
-Usage: python run_ml_experiments.py
+    # Retomar ou analisar uma execução específica
+    python run_ml_experiments.py --run-id 2026-05-01
 """
-import sys, warnings, json, time, traceback
+import argparse, sys, warnings, json, time, traceback
+from datetime import datetime
 from pathlib import Path
 
 warnings.filterwarnings("ignore")
@@ -54,6 +48,10 @@ from src.backtest import simulate_strategy, buy_and_hold_returns
 
 RESULTS_DIR   = BASE / "results"
 N_OOS_WINDOWS = VALIDATION_CONFIG.get("n_oos_windows", 2)   # walk-forward splits
+
+
+def _run_id() -> str:
+    return datetime.now().strftime("%Y-%m-%d")
 
 
 
@@ -160,8 +158,8 @@ def _grid_search_is(X_is, y_is, dates_is, t1_is, model_name, pkf_cfg):
 
 
 # ── Single Job Runner ─────────────────────────────────────────────────────
-def run_ml_job(ticker: str, model_name: str) -> dict:
-    result_path = RESULTS_DIR / ticker / f"{model_name}_ml" / "metrics.json"
+def run_ml_job(ticker: str, model_name: str, results_dir: Path) -> dict:
+    result_path = results_dir / ticker / f"{model_name}_ml" / "metrics.json"
     if result_path.exists():
         return {"ticker": ticker, "model_name": model_name, "status": "skipped"}
 
@@ -329,14 +327,28 @@ def run_ml_job(ticker: str, model_name: str) -> dict:
 
 # ── Main ──────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="ML experiment runner")
+    parser.add_argument(
+        "--run-id",
+        default=None,
+        metavar="YYYY-MM-DD",
+        help="Run ID (pasta de resultados). Padrão: data de hoje.",
+    )
+    args = parser.parse_args()
+
+    run_id = args.run_id or _run_id()
+    dated_results_dir = RESULTS_DIR / run_id
+    dated_results_dir.mkdir(parents=True, exist_ok=True)
+
     ML_MODELS_TO_RUN = ["RandomForest", "XGBoost", "LightGBM", "CatBoost", "Stacking"]
     combos = [(t, m) for t in TICKERS for m in ML_MODELS_TO_RUN]
     n_jobs = ML_N_JOBS_OUTER
 
+    print(f"Run ID        : {run_id}")
     print(f"Total jobs    : {len(combos)}")
     print(f"n_jobs        : {n_jobs}")
     print(f"OOS windows   : {N_OOS_WINDOWS} (walk-forward)")
-    print(f"Results dir   : {RESULTS_DIR}")
+    print(f"Results dir   : {dated_results_dir}")
     print("=" * 60)
 
     t0 = time.time()
@@ -346,7 +358,7 @@ if __name__ == "__main__":
     import multiprocessing as mp
     ctx = mp.get_context("fork")
     with ProcessPoolExecutor(max_workers=n_jobs, mp_context=ctx) as pool:
-        futures = {pool.submit(run_ml_job, t, m): (t, m) for t, m in combos}
+        futures = {pool.submit(run_ml_job, t, m, dated_results_dir): (t, m) for t, m in combos}
         for fut in as_completed(futures):
             r = fut.result()
             results.append(r)
@@ -364,6 +376,7 @@ if __name__ == "__main__":
     elapsed = time.time() - t0
     print(f"\n{'=' * 60}")
     print(f"Completed {len(results)} jobs in {elapsed:.1f}s")
+    print(f"Results dir   : {dated_results_dir}")
 
     import pandas as _pd
     results_df = _pd.DataFrame(results)

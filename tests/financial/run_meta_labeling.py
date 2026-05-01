@@ -218,7 +218,7 @@ def _find_run_dir(run_id: str | None) -> Path:
         if not d.exists():
             raise FileNotFoundError(f"Run not found: {d}")
         return d
-    dated = sorted(_RESULTS_BASE.glob("????-??-??_??????"), reverse=True)
+    dated = sorted(_RESULTS_BASE.glob("????-??-??"), reverse=True)
     for folder in dated:
         if (folder / "queue_status.json").exists():
             return folder

@@ -38,7 +38,7 @@ def _find_latest_status() -> Path:
     criadas pelo novo run_dl_queue.py. Se não houver nenhuma, cai no caminho
     legado results/queue_status.json para compatibilidade com runs antigas.
     """
-    dated = sorted(_RESULTS_BASE.glob("????-??-??_??????"), reverse=True)
+    dated = sorted(_RESULTS_BASE.glob("????-??-??"), reverse=True)
     for folder in dated:
         candidate = folder / "queue_status.json"
         if candidate.exists():

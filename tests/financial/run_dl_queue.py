@@ -2,7 +2,7 @@
 Launch all DL financial experiments across 7 GPUs.
 
 Cada execução cria uma subpasta datada dentro de results/, por exemplo:
-    results/2026-04-27_143012/
+    results/2026-05-01/
 
 Isso permite múltiplas simulações do mesmo experimento sem sobrescrever resultados.
 
@@ -15,13 +15,13 @@ Usage:
     python run_dl_queue.py
 
     # Terminal 1 — retoma uma execução específica pelo run_id
-    python run_dl_queue.py --run-id 2026-04-27_143012
+    python run_dl_queue.py --run-id 2026-05-01
 
     # Terminal 2 — monitor dashboard (detecta automaticamente a run mais recente)
     python gpu_queue/dashboard.py
 
     # Terminal 2 — dashboard de uma run específica
-    python gpu_queue/dashboard.py --status results/2026-04-27_143012/queue_status.json
+    python gpu_queue/dashboard.py --status results/2026-05-01/queue_status.json
 
 Environment variables:
     N_GPUS          number of GPUs (default: 7)
@@ -95,8 +95,8 @@ def _latest_run_id() -> str | None:
     results = _BASE / "results"
     if not results.exists():
         return None
-    # Pastas no formato YYYY-MM-DD_HHMMSS, ordenadas da mais recente
-    dated = sorted(results.glob("????-??-??_??????"), reverse=True)
+    # Pastas no formato YYYY-MM-DD, ordenadas da mais recente
+    dated = sorted(results.glob("????-??-??"), reverse=True)
     for folder in dated:
         if (folder / "queue_status.json").exists():
             return folder.name
@@ -104,7 +104,7 @@ def _latest_run_id() -> str | None:
 
 
 def _new_run_id() -> str:
-    return datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    return datetime.now().strftime("%Y-%m-%d")
 
 
 # ---------------------------------------------------------------------------
@@ -122,8 +122,8 @@ def main():
     parser.add_argument(
         "--run-id",
         default=None,
-        metavar="YYYY-MM-DD_HHMMSS",
-        help="Retoma uma run específica pelo seu run_id (ex: 2026-04-27_143012)",
+        metavar="YYYY-MM-DD",
+        help="Retoma uma run específica pelo seu run_id (ex: 2026-05-01)",
     )
     args = parser.parse_args()
 

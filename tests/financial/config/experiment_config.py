@@ -61,7 +61,7 @@ FEATURE_CONFIG = {
 # ---------------------------------------------------------------------------
 
 LABELING_CONFIG = {
-    "pt_sl": [1.5, 1.0],    # take-profit / stop-loss multipliers of daily ATR
+    "pt_sl": [1.5, 1.5],    # take-profit / stop-loss multipliers of daily ATR (simétrico)
     "time_horizon": 10,      # max holding period in trading days
     "min_ret": 0.001,        # minimum return threshold to count a barrier
     "vol_span": 100,         # EWM span for daily volatility estimate

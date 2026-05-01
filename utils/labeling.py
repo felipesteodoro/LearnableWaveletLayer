@@ -57,17 +57,28 @@ def triple_barrier_labeling(
     if trgt.empty:
         return pd.DataFrame(columns=['ret', 'label'])
 
-    # Define barreiras verticais
-    t1 = trgt.index + pd.Timedelta(days=num_days)
-    t1 = t1.where(t1 < close.index[-1], close.index[-1])
-    t1 = pd.Series(t1, index=trgt.index)
+    # Define barreiras verticais em dias ÚTEIS (BDay), não corridos.
+    # pd.Timedelta(days=N) incluía fins de semana/feriados, fazendo end_time
+    # cair fora do índice de preços e descartando silenciosamente ~30% das amostras.
+    close_idx = close.index
+    idx_positions = {date: pos for pos, date in enumerate(close_idx)}
+
+    t1_list = []
+    for date in trgt.index:
+        if date not in idx_positions:
+            t1_list.append(close_idx[-1])
+            continue
+        pos = idx_positions[date]
+        end_pos = min(pos + num_days, len(close_idx) - 1)
+        t1_list.append(close_idx[end_pos])
+    t1 = pd.Series(t1_list, index=trgt.index)
 
     # Calcula retornos e aplica barreiras
     out = []
     for idx, end_time in zip(t1.index, t1.values):
-        if idx not in close.index or end_time not in close.index:
+        if idx not in idx_positions:
             continue
-        
+
         price_path = close.loc[idx:end_time]
         if price_path.empty:
             continue

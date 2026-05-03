@@ -298,7 +298,7 @@ def test_build_model():
     results = []
     for backbone in ["CNN", "LSTM"]:  # CNN e LSTM como amostra (mais rápido)
         for mode in ["raw", "db4", "learned_wavelet"]:
-            model = build_model(backbone, mode, input_shape, n_classes=3, cfg=cfg)
+            model = build_model(backbone, mode, input_shape, n_classes=2, cfg=cfg)
             n_params = model.count_params()
             results.append(f"{backbone}/{mode}={n_params}")
 
@@ -380,7 +380,7 @@ def test_mini_train():
             compute_class_weight("balanced", classes=np.unique(y_win[train_idx]), y=y_win[train_idx])
         ])}
 
-        model = build_model("CNN", "learned_wavelet", X_tr.shape[1:], n_classes=3, cfg=cfg)
+        model = build_model("CNN", "learned_wavelet", X_tr.shape[1:], n_classes=2, cfg=cfg)
         model.fit(
             X_tr, y_win[train_idx],
             validation_data=(X_v, y_win[val_idx]),

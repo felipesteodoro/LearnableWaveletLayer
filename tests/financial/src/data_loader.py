@@ -80,3 +80,33 @@ def available_tickers(data_dir: Optional[Path] = None) -> list[str]:
     return sorted(
         p.stem for p in (data_dir or DATA_DIR).glob("*.csv")
     )
+
+
+def load_ohlcv_signals(ticker: str, vol_window: int = 20, data_dir: Optional[Path] = None) -> pd.DataFrame:
+    """
+    Compute 5 stationary log-based OHLCV channels for one ticker.
+
+    Channels
+    --------
+    log_return : log(Close / Close.shift(1))
+    hl_range   : log(High / Low)
+    co_body    : log(Close / Open)
+    ho_ratio   : log(High / Open)
+    vol_ratio  : log(Volume / Volume.rolling(vol_window).mean())
+
+    Returns a float32 DataFrame with DatetimeIndex, after replacing \u00b1Inf with NaN
+    and dropping NaN rows.
+    """
+    import numpy as np
+
+    df = load_raw(ticker, data_dir)
+
+    signals = pd.DataFrame(index=df.index)
+    signals["log_return"] = np.log(df["Close"] / df["Close"].shift(1))
+    signals["hl_range"]   = np.log(df["High"] / df["Low"])
+    signals["co_body"]    = np.log(df["Close"] / df["Open"])
+    signals["ho_ratio"]   = np.log(df["High"] / df["Open"])
+    signals["vol_ratio"]  = np.log(df["Volume"] / df["Volume"].rolling(vol_window).mean())
+
+    signals = signals.replace([np.inf, -np.inf], float("nan")).dropna()
+    return signals.astype("float32")

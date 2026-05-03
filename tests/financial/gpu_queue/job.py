@@ -12,6 +12,7 @@ class ExperimentJob:
     model_name: str          # CNN | LSTM | CNN_LSTM | Transformer
     mode: str                # raw | db4 | learned_wavelet
     config: dict = field(default_factory=dict)
+    feature_mode: str = "features"  # features | ohlcv
     max_retries: int = 2
 
     # Runtime state — set by GPUJobQueueManager / GPUWorker

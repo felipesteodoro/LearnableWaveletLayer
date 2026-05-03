@@ -34,6 +34,7 @@ from sklearn.ensemble import RandomForestClassifier, StackingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score
 from sklearn.preprocessing import RobustScaler
+from sklearn.utils.class_weight import compute_sample_weight
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
@@ -46,8 +47,10 @@ from src.data_loader import load_processed, load_labels, load_t1
 from src.evaluation import ClassificationEvaluator, FinancialMetrics
 from src.backtest import simulate_strategy, buy_and_hold_returns
 
-RESULTS_DIR   = BASE / "results"
-N_OOS_WINDOWS = VALIDATION_CONFIG.get("n_oos_windows", 2)   # walk-forward splits
+RESULTS_DIR         = BASE / "results"
+N_OOS_WINDOWS       = VALIDATION_CONFIG.get("n_oos_windows", 2)   # walk-forward splits
+OOS_PROTOCOL        = VALIDATION_CONFIG.get("oos_protocol", "expanding")
+ROLLING_TRAIN_YEARS = float(VALIDATION_CONFIG.get("rolling_train_years", 5.0))
 
 
 def _run_id() -> str:
@@ -74,9 +77,9 @@ def build_model(model_name: str, overrides: dict | None = None):
     if model_name == "Stacking":
         n = overrides.get("base_n_estimators", 100)
         estimators = [
-            ("rf",  RandomForestClassifier(n_estimators=n, n_jobs=ML_N_JOBS_MODEL, random_state=42)),
+            ("rf",  RandomForestClassifier(n_estimators=n, n_jobs=ML_N_JOBS_MODEL, random_state=42, class_weight="balanced")),
             ("xgb", XGBClassifier(n_estimators=n, nthread=ML_N_JOBS_MODEL, verbosity=0, random_state=42)),
-            ("lgb", LGBMClassifier(n_estimators=n, num_threads=ML_N_JOBS_MODEL, verbose=-1, random_state=42)),
+            ("lgb", LGBMClassifier(n_estimators=n, num_threads=ML_N_JOBS_MODEL, verbose=-1, random_state=42, class_weight="balanced")),
         ]
         return StackingClassifier(
             estimators=estimators,
@@ -133,7 +136,7 @@ def _grid_search_is(X_is, y_is, dates_is, t1_is, model_name, pkf_cfg):
     for overrides in param_grid:
         fold_scores = []
         for train_val_idx, val_idx in pkf.split(X_is_df, y_is):
-            n_val_inner = max(1, int(len(train_val_idx) * 0.15))
+            n_val_inner = max(1, int(len(train_val_idx) * VALIDATION_CONFIG.get("val_split", 0.15)))
             train_idx   = train_val_idx[:-n_val_inner]
 
             scaler = RobustScaler()
@@ -141,7 +144,10 @@ def _grid_search_is(X_is, y_is, dates_is, t1_is, model_name, pkf_cfg):
             X_va = scaler.transform(X_is[val_idx])
 
             model = build_model(model_name, overrides)
-            model.fit(X_tr, y_is[train_idx])
+            fit_kwargs = {}
+            if model_name == "XGBoost":
+                fit_kwargs["sample_weight"] = compute_sample_weight("balanced", y_is[train_idx])
+            model.fit(X_tr, y_is[train_idx], **fit_kwargs)
             y_pred_va = np.asarray(model.predict(X_va)).ravel()
 
             fold_scores.append(
@@ -177,12 +183,11 @@ def run_ml_job(ticker: str, model_name: str, results_dir: Path) -> dict:
         y     = labels.values
         dates = features.index
 
-        # Synthetic price series for backtest (compound log-returns)
+        # Retornos simples para backtest: expm1(log_return) = pct_change exato.
         if "log_return_1" in features.columns:
-            lr = features["log_return_1"].values
-            price_series = pd.Series(np.exp(np.cumsum(lr)), index=dates)
+            log_returns = np.expm1(features["log_return_1"].values).astype(np.float32)
         else:
-            price_series = pd.Series(np.ones(len(dates)), index=dates)
+            log_returns = np.zeros(len(X), dtype=np.float32)
 
         time_horizon = LABELING_CONFIG.get("time_horizon", 10)
         t1_all = _build_t1(dates, t1_real, time_horizon)    # Fix 3 + 4
@@ -213,13 +218,19 @@ def run_ml_job(ticker: str, model_name: str, results_dir: Path) -> dict:
         wf_ml_results  = []
         wf_fin_results = []
         wf_info        = []
-        all_y_true, all_y_pred = [], []
+        all_y_true, all_y_pred   = [], []
+        all_strat_returns        = []   # acumula série de retornos da estratégia
+        all_bh_returns           = []   # acumula série buy-and-hold
 
         for w in range(N_OOS_WINDOWS):
             win_is_end  = window_boundaries[w]
             win_oos_end = window_boundaries[w + 1]
 
-            is_mask  = dates <= win_is_end
+            if OOS_PROTOCOL == "rolling":
+                rolling_start = win_is_end - pd.DateOffset(years=ROLLING_TRAIN_YEARS)
+                is_mask = (dates > rolling_start) & (dates <= win_is_end)
+            else:
+                is_mask  = dates <= win_is_end
             oos_mask = (dates > win_is_end) & (dates <= win_oos_end)
 
             if is_mask.sum() < 100 or oos_mask.sum() < 10:
@@ -227,7 +238,7 @@ def run_ml_job(ticker: str, model_name: str, results_dir: Path) -> dict:
 
             X_is,   y_is,   dates_is = X[is_mask],  y[is_mask],  dates[is_mask]
             X_oos,  y_oos            = X[oos_mask], y[oos_mask]
-            prices_oos               = price_series[oos_mask].reset_index(drop=True)
+            ret_oos                  = log_returns[oos_mask]
             t1_is = t1_all[is_mask]
 
             # ── 3. Grid search on this IS window ─────────────────────────
@@ -241,21 +252,34 @@ def run_ml_job(ticker: str, model_name: str, results_dir: Path) -> dict:
             X_oos_sc = final_scaler.transform(X_oos)
 
             final_model = build_model(model_name, best_overrides)
-            final_model.fit(X_is_sc, y_is)
+            fit_kwargs = {}
+            if model_name == "XGBoost":
+                fit_kwargs["sample_weight"] = compute_sample_weight("balanced", y_is)
+            final_model.fit(X_is_sc, y_is, **fit_kwargs)
 
             y_pred_oos = np.asarray(final_model.predict(X_oos_sc)).ravel()
 
-            oos_ml    = ClassificationEvaluator.evaluate(y_oos, y_pred_oos)
+            # y_proba para AUC — todos os estimadores sklearn têm predict_proba
+            y_proba_oos = None
+            if hasattr(final_model, "predict_proba"):
+                try:
+                    y_proba_oos = final_model.predict_proba(X_oos_sc)
+                except Exception:
+                    pass
+
+            oos_ml    = ClassificationEvaluator.evaluate(y_oos, y_pred_oos, y_proba=y_proba_oos)
             strat_oos = simulate_strategy(
-                y_pred_oos, prices_oos,
+                y_pred_oos, returns=ret_oos,
                 transaction_cost=BACKTEST_CONFIG["transaction_cost"],
                 allow_short=BACKTEST_CONFIG["allow_short"],
             )
-            bh_oos = buy_and_hold_returns(prices_oos)
+            bh_oos  = pd.Series(ret_oos)
             oos_fin = FinancialMetrics.compute(strat_oos, bh_oos)
 
             wf_ml_results.append(oos_ml)
             wf_fin_results.append(oos_fin)
+            all_strat_returns.append(strat_oos.reset_index(drop=True))
+            all_bh_returns.append(bh_oos.reset_index(drop=True))
             wf_info.append({
                 "window":    w + 1,
                 "is_end":    str(win_is_end.date()),
@@ -281,23 +305,50 @@ def run_ml_job(ticker: str, model_name: str, results_dir: Path) -> dict:
             except Exception:
                 return None
 
-        agg_ml  = {k: _safe(np.mean([w[k] for w in wf_ml_results]))
-                   for k in wf_ml_results[0]}
-        agg_fin = {k: _safe(np.mean([w[k] for w in wf_fin_results
-                                      if k in w and w[k] is not None]))
-                   for k in wf_fin_results[0]}
+        # Classificação: média + std entre janelas
+        agg_ml = {}
+        for k in wf_ml_results[0]:
+            vals = [w[k] for w in wf_ml_results if isinstance(w.get(k), (int, float))]
+            agg_ml[k]           = _safe(np.mean(vals)) if vals else None
+            agg_ml[f"{k}_std"]  = _safe(np.std(vals))  if vals else None
+
+        # Financeiras: média ± std entre janelas, com prefixo "fin_" para
+        # manter o mesmo formato do pipeline DL (FinancialMetrics.aggregate_cv).
+        agg_fin = FinancialMetrics.aggregate_cv(wf_fin_results)
+
+        # Sobrescreve métricas path-dependent com série OOS contínua
+        # (MDD, CAGR, Total Return e Calmar dependem da trajetória acumulada,
+        #  não da média de janelas isoladas)
+        if all_strat_returns:
+            full_strat = pd.concat(all_strat_returns, ignore_index=True)
+            full_bh    = pd.concat(all_bh_returns,    ignore_index=True)
+            full_fin   = FinancialMetrics.compute(full_strat, full_bh)
+            for k in ("max_drawdown", "cagr", "total_return", "calmar"):
+                if k in full_fin:
+                    agg_fin[k] = _safe(full_fin[k])
 
         # ── 6. Persist ───────────────────────────────────────────────────
+        # Rename financial OOS metrics to oos_* prefix so that load_all_results
+        # produces oos_fin_sharpe etc. — the same keys DL uses for its OOS metrics
+        # (_evaluate_oos saves them as oos_fin_*). This ensures notebooks compare
+        # ML OOS vs DL OOS (not ML OOS vs DL IS folds).
+        agg_fin_oos = {f"oos_{k}": v for k, v in agg_fin.items()}
+
         result_path.parent.mkdir(parents=True, exist_ok=True)
         payload = {
+            "ticker":      ticker,
+            "model_name":  model_name,
+            "mode":        "ml",
             "ml_metrics":  agg_ml,
-            "fin_metrics": agg_fin,
+            "fin_metrics": agg_fin_oos,
             "walk_forward_windows": wf_info,
             "split_info": {
-                "oos_start":       str(oos_start.date()),
-                "test_years":      test_years,
-                "n_oos_windows":   N_OOS_WINDOWS,
-                "t1_source":       "real" if t1_real is not None else "bday_estimate",
+                "oos_start":          str(oos_start.date()),
+                "test_years":         test_years,
+                "n_oos_windows":      N_OOS_WINDOWS,
+                "oos_protocol":       OOS_PROTOCOL,
+                "rolling_train_years": ROLLING_TRAIN_YEARS,
+                "t1_source":          "real" if t1_real is not None else "bday_estimate",
             },
         }
         result_path.write_text(json.dumps(payload, indent=2))

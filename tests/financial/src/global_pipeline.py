@@ -195,7 +195,7 @@ def build_global_dataset(
         X_raw = features.values.astype(np.float32)
         y_raw = labels.values.astype(np.int32)
         ret_raw = (
-            features["log_return_1"].values.astype(np.float32)
+            np.expm1(features["log_return_1"].values).astype(np.float32)
             if "log_return_1" in features.columns
             else np.zeros(len(X_raw), dtype=np.float32)
         )

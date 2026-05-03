@@ -30,6 +30,11 @@ Environment variables:
     TICKERS         comma-separated subset, e.g. "PETR4.SA,VALE3.SA"
     DL_MODELS       comma-separated subset, e.g. "CNN,LSTM"
     MODES           comma-separated subset, e.g. "raw,learned_wavelet"
+                    Use "learned_wavelet_no_warmup" to run learned_wavelet with warm_start_db4=False
+    FEATURE_MODES   comma-separated subset, e.g. "features,ohlcv" (default: both)
+    OOS_PROTOCOL    expanding|rolling (optional override)
+    OOS_BLOCK_YEARS retraining cadence for OOS blocks, e.g. "1.0"
+    ROLLING_TRAIN_YEARS train window size for rolling protocol, e.g. "5.0"
     EPOCHS_OVERRIDE override epoch count for all jobs, e.g. "3" for smoke test
 """
 from __future__ import annotations
@@ -66,12 +71,32 @@ ALL_TICKERS = [
     "MULT3.SA", "PETR4.SA",  "RADL3.SA", "RENT3.SA", "SUZB3.SA",
     "UGPA3.SA", "USIM5.SA",  "VALE3.SA", "VIVT3.SA", "WEGE3.SA",
 ]
-ALL_MODELS = ["CNN", "LSTM", "CNN_LSTM", "Transformer"]
-ALL_MODES  = ["raw", "db4", "learned_wavelet"]
+ALL_MODELS        = ["CNN", "LSTM", "CNN_LSTM", "MLP", "Transformer"]
+ALL_MODES         = ["raw", "db4", "learned_wavelet", "learned_wavelet_no_warmup"]
+ALL_FEATURE_MODES = ["features", "ohlcv"]
 
-# BASE_CONFIG is intentionally empty: all hyperparameters are defined in
-# config/experiment_config.py and loaded by FinancialExperimentPipeline.__init__().
-BASE_CONFIG: dict = {}
+def _base_config_from_env() -> dict:
+    cfg: dict = {}
+
+    oos_protocol = os.environ.get("OOS_PROTOCOL", "").strip()
+    if oos_protocol:
+        cfg["oos_protocol"] = oos_protocol
+
+    oos_block_years = os.environ.get("OOS_BLOCK_YEARS", "").strip()
+    if oos_block_years:
+        cfg["oos_block_years"] = float(oos_block_years)
+
+    rolling_train_years = os.environ.get("ROLLING_TRAIN_YEARS", "").strip()
+    if rolling_train_years:
+        cfg["rolling_train_years"] = float(rolling_train_years)
+
+    if os.environ.get("RETRAIN_OOS", "").strip() in ("1", "true", "True", "yes"):
+        cfg["retrain_oos"] = True
+
+    return cfg
+
+
+BASE_CONFIG: dict = _base_config_from_env()
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -107,6 +132,21 @@ def _new_run_id() -> str:
     return datetime.now().strftime("%Y-%m-%d")
 
 
+def _is_valid(model: str, mode: str, feature_mode: str) -> bool:
+    """Returns False for scientifically unsound combinations.
+
+    - features + wavelet: features (EMA, MACD, BB, RSI) are already frequency
+      filters, so applying wavelet decomposition on top confounds the comparison.
+    - MLP + wavelet: _mlp_backbone does Flatten() before any dense layer,
+      destroying the temporal structure that the wavelet frontend organises.
+    """
+    if feature_mode == "features" and mode != "raw":
+        return False
+    if model == "MLP" and mode != "raw":
+        return False
+    return True
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -127,20 +167,23 @@ def main():
     )
     args = parser.parse_args()
 
-    tickers    = _from_env("TICKERS", ALL_TICKERS)
-    models     = _from_env("DL_MODELS", ALL_MODELS)
-    modes      = _from_env("MODES", ALL_MODES)
-    gpu_ids    = _gpu_ids()
-    retry_wait = int(os.environ.get("RETRY_WAIT", "60"))
+    tickers      = _from_env("TICKERS", ALL_TICKERS)
+    models       = _from_env("DL_MODELS", ALL_MODELS)
+    modes        = _from_env("MODES", ALL_MODES)
+    feature_modes = _from_env("FEATURE_MODES", ALL_FEATURE_MODES)
+    gpu_ids      = _gpu_ids()
+    retry_wait   = int(os.environ.get("RETRY_WAIT", "60"))
 
     all_jobs = [
         ExperimentJob(
             ticker=ticker,
             model_name=model,
             mode=mode,
+            feature_mode=feature_mode,
             config=BASE_CONFIG.copy(),
         )
-        for ticker, model, mode in itertools.product(tickers, models, modes)
+        for ticker, model, mode, feature_mode in itertools.product(tickers, models, modes, feature_modes)
+        if _is_valid(model, mode, feature_mode)
     ]
 
     # Determina o run_id e results_dir
@@ -168,6 +211,7 @@ def main():
         f"  Tickers     : {len(tickers)}\n"
         f"  Models      : {models}\n"
         f"  Modes       : {modes}\n"
+        f"  Feature modes: {feature_modes}\n"
         f"  Retry wait  : {retry_wait}s  |  max retries: 2\n"
         f"{'='*62}\n"
         f"  Dashboard   : python gpu_queue/dashboard.py\n"

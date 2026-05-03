@@ -60,6 +60,15 @@ def _load(path: Path) -> Optional[dict]:
         return None
 
 
+def _is_valid(model: str, mode: str, feature_mode: str) -> bool:
+    """Mirror of run_dl_queue._is_valid — True if combination is scientifically sound."""
+    if feature_mode == "features" and mode != "raw":
+        return False  # features are already frequency filters; wavelet on top = confounded
+    if model == "MLP" and mode != "raw":
+        return False  # MLP flattens temporal structure, wavelet frontend is meaningless
+    return True
+
+
 def _fmt_elapsed(seconds: Optional[float]) -> str:
     if seconds is None:
         return "—"
@@ -72,9 +81,95 @@ def _fmt_ts(ts: Optional[float]) -> str:
     return datetime.fromtimestamp(ts).strftime("%H:%M:%S")
 
 
+def _load_oos_metrics(results_dir: Path, job: dict) -> dict:
+    """Lê metrics.json do job e retorna oos_sharpe, oos_accuracy e oos_bh_sharpe (ou None)."""
+    fmode = job.get("feature_mode", "features")
+    ticker = job.get("ticker", "")
+    key = f"{job.get('model_name', '')}_{job.get('mode', '')}"
+    path = results_dir / fmode / ticker / key / "metrics.json"
+    try:
+        with open(path) as f:
+            m = json.load(f)
+        fin = m.get("fin_metrics", {})
+        return {
+            "oos_sharpe":    fin.get("oos_sharpe"),
+            "oos_accuracy":  fin.get("oos_accuracy"),
+            "oos_bh_sharpe": fin.get("oos_bh_sharpe"),
+        }
+    except (FileNotFoundError, json.JSONDecodeError, KeyError):
+        return {"oos_sharpe": None, "oos_accuracy": None, "oos_bh_sharpe": None}
+
+
+def _fmt_sharpe(v: Optional[float]) -> Text:
+    if v is None:
+        return Text("—", style="dim")
+    color = "green" if v > 0 else "red"
+    return Text(f"{v:+.2f}", style=color)
+
+
+def _fmt_acc(v: Optional[float]) -> Text:
+    if v is None:
+        return Text("—", style="dim")
+    color = "green" if v >= 0.45 else ("yellow" if v >= 0.38 else "red")
+    return Text(f"{v*100:.1f}%", style=color)
+
+
 # ---------------------------------------------------------------------------
 # Render helpers
 # ---------------------------------------------------------------------------
+
+
+def _render_validity_stats(data: dict) -> Panel:
+    jobs = data["jobs"]
+    total = len(jobs)
+
+    valid_jobs   = [j for j in jobs if _is_valid(j["model_name"], j["mode"], j["feature_mode"])]
+    invalid_jobs = [j for j in jobs if not _is_valid(j["model_name"], j["mode"], j["feature_mode"])]
+
+    n_valid   = len(valid_jobs)
+    n_invalid = len(invalid_jobs)
+    pct_valid   = 100 * n_valid   / total if total else 0
+    pct_invalid = 100 * n_invalid / total if total else 0
+
+    n_feat_wavelet_total = sum(
+        1 for j in invalid_jobs if j["feature_mode"] == "features" and j["mode"] != "raw"
+    )
+    n_mlp_wavelet_total = sum(
+        1 for j in invalid_jobs if j["model_name"] == "MLP" and j["mode"] != "raw"
+    )
+    n_both = sum(
+        1 for j in invalid_jobs
+        if j["feature_mode"] == "features" and j["model_name"] == "MLP" and j["mode"] != "raw"
+    )
+
+    v_done    = sum(1 for j in valid_jobs if j["status"] == "done")
+    v_running = sum(1 for j in valid_jobs if j["status"] == "running")
+    v_failed  = sum(1 for j in valid_jobs if j["status"] == "failed")
+    v_pending = sum(1 for j in valid_jobs if j["status"] in ("pending", "retrying"))
+
+    row1 = Text()
+    row1.append(f"Total: {total}   ", style="bold")
+    row1.append(f"✓ Valid: {n_valid} ({pct_valid:.0f}%)   ", style="bold green")
+    row1.append(f"✗ Invalid: {n_invalid} ({pct_invalid:.0f}%)", style="bold red")
+
+    row2 = Text()
+    row2.append("  Invalid reasons: ", style="dim")
+    row2.append(f"features+wavelet = {n_feat_wavelet_total}", style="red")
+    row2.append("  (EMA/MACD/BB são filtros de freq. — confundidor)", style="dim")
+    row2.append(f"   MLP+wavelet = {n_mlp_wavelet_total}", style="red")
+    row2.append("  (MLP faz Flatten — estrutura temporal ignorada)", style="dim")
+    if n_both:
+        row2.append(f"   ambos = {n_both}", style="dim red")
+
+    row3 = Text()
+    row3.append("  Valid progress: ", style="dim")
+    row3.append(f"done {v_done}  ", style="green")
+    row3.append(f"running {v_running}  ", style="yellow")
+    row3.append(f"failed {v_failed}  ", style="red")
+    row3.append(f"pending {v_pending}", style="dim")
+
+    from rich.console import Group
+    return Panel(Group(row1, row2, row3), title="[bold]Experiment Validity[/bold]", border_style="magenta")
 
 
 def _render_header(data: dict) -> Panel:
@@ -169,7 +264,7 @@ def _render_gpu_table(data: dict) -> Panel:
     return Panel(table, title="[bold]GPU Status[/bold]", border_style="cyan")
 
 
-def _render_recent(data: dict, n: int = 10) -> Panel:
+def _render_recent(data: dict, results_dir: Path, n: int = 12) -> Panel:
     finished = sorted(
         [j for j in data["jobs"] if j["status"] in ("done", "failed")],
         key=lambda j: j.get("end_time") or 0,
@@ -178,16 +273,21 @@ def _render_recent(data: dict, n: int = 10) -> Panel:
 
     table = Table(box=box.SIMPLE, expand=True, show_header=True)
     table.add_column("", width=2)
-    table.add_column("Job", width=32)
+    table.add_column("Job", width=36)
     table.add_column("GPU", width=4, justify="center")
     table.add_column("Duration", width=9, justify="right")
+    table.add_column("OOS Sharpe", width=11, justify="right")
+    table.add_column("BH Sharpe", width=10, justify="right")
+    table.add_column("OOS Acc", width=9, justify="right")
     table.add_column("Ended", width=9, justify="right", style="dim")
 
     for j in finished:
         if j["status"] == "done":
             icon, style = "✓", "green"
+            oos = _load_oos_metrics(results_dir, j)
         else:
             icon, style = "✗", "red"
+            oos = {"oos_sharpe": None, "oos_accuracy": None}
 
         start = j.get("start_time") or 0
         end = j.get("end_time") or 0
@@ -198,6 +298,9 @@ def _render_recent(data: dict, n: int = 10) -> Panel:
             f"[{style}]{j['name']}[/]",
             str(j["gpu_id"] if j["gpu_id"] is not None else "—"),
             _fmt_elapsed(duration),
+            _fmt_sharpe(oos["oos_sharpe"]),
+            _fmt_sharpe(oos["oos_bh_sharpe"]),
+            _fmt_acc(oos["oos_accuracy"]),
             _fmt_ts(j.get("end_time")),
         )
 
@@ -235,16 +338,17 @@ def _render_errors(data: dict) -> Panel:
 # ---------------------------------------------------------------------------
 
 
-def _build_layout(data: dict) -> Layout:
+def _build_layout(data: dict, results_dir: Path) -> Layout:
     layout = Layout()
     layout.split_column(
         Layout(_render_header(data), name="header", size=3),
+        Layout(_render_validity_stats(data), name="validity", size=7),
         Layout(name="body"),
         Layout(_render_errors(data), name="errors", size=14),
     )
     layout["body"].split_row(
         Layout(_render_gpu_table(data), name="gpus", ratio=3),
-        Layout(_render_recent(data), name="recent", ratio=2),
+        Layout(_render_recent(data, results_dir), name="recent", ratio=2),
     )
     return layout
 
@@ -266,13 +370,14 @@ def _waiting_panel() -> Panel:
 def run_dashboard(status_file: Path | None = None, refresh: float = REFRESH_RATE):
     if status_file is None:
         status_file = _find_latest_status()
+    results_dir = status_file.parent
     console = Console()
 
     def render():
         data = _load(status_file)
         if data is None:
             return _waiting_panel()
-        return _build_layout(data)
+        return _build_layout(data, results_dir)
 
     with Live(render(), refresh_per_second=1 / refresh, screen=True, console=console) as live:
         try:

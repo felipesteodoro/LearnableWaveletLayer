@@ -47,8 +47,15 @@ def label_asset(
 
     labels = labeled["label"].map(_LABEL_MAP).dropna().astype(int)
 
+    n_classes = cfg.get("n_classes", 3)
+    if n_classes == 2:
+        # Meta-labeling binário: mantém apenas barreiras de preço (sell=0, buy=2), descarta holds (1)
+        labels = labels[labels != 1]
+        # Remapeia: sell=0 → 0 (down/SL), buy=2 → 1 (up/TP)
+        labels = labels.map({0: 0, 2: 1})
+
     if "t1" in labeled.columns:
-        t1 = labeled.loc[labels.index, "t1"]
+        t1 = labeled.loc[labels.index, "t1"].reindex(labels.index)
     else:
         # Fallback: estimate t1 as date + time_horizon business days
         bdays = cfg.get("time_horizon", 10)

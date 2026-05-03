@@ -31,13 +31,13 @@ FINANCIAL_DIR = Path(__file__).parent.parent
 RESULTS_DIR = Path(os.environ.get("RESULTS_DIR", str(FINANCIAL_DIR / "results")))
 
 
-def _results_exist(ticker: str, model_name: str, mode: str) -> bool:
+def _results_exist(ticker: str, model_name: str, mode: str, feature_mode: str = "features") -> bool:
     """
     Second line of defense against re-running finished jobs.
     Checks for a complete metrics.json in the expected results directory.
     This protects against crashes that corrupted queue_status.json.
     """
-    metrics_file = RESULTS_DIR / ticker / f"{model_name}_{mode}" / "metrics.json"
+    metrics_file = RESULTS_DIR / feature_mode / ticker / f"{model_name}_{mode}" / "metrics.json"
     return metrics_file.exists()
 
 
@@ -53,11 +53,12 @@ def main() -> int:
     ticker: str = job["ticker"]
     model_name: str = job["model_name"]
     mode: str = job["mode"]
+    feature_mode: str = job.get("feature_mode", "features")
     config: dict = job.get("config", {})
     gpu: str = os.environ.get("CUDA_VISIBLE_DEVICES", "0")
 
     # Skip-if-done: results already on disk from a previous successful run
-    if _results_exist(ticker, model_name, mode):
+    if _results_exist(ticker, model_name, mode, feature_mode):
         logger.info(
             "SKIP (results exist): %s / %s_%s — marking done without re-running.",
             ticker, model_name, mode,
@@ -65,24 +66,24 @@ def main() -> int:
         return 0
 
     logger.info(
-        "Job start | ticker=%-10s  model=%-12s  mode=%-16s  GPU=%s",
-        ticker, model_name, mode, gpu,
+        "Job start | ticker=%-10s  model=%-12s  mode=%-16s  feature_mode=%-8s  GPU=%s",
+        ticker, model_name, mode, feature_mode, gpu,
     )
 
     try:
-        _run_experiment(ticker, model_name, mode, config)
+        _run_experiment(ticker, model_name, mode, config, feature_mode)
     except Exception:
         logger.error("Experiment failed:\n%s", traceback.format_exc())
         return 1
 
     logger.info(
-        "Job done  | ticker=%-10s  model=%-12s  mode=%-16s",
-        ticker, model_name, mode,
+        "Job done  | ticker=%-10s  model=%-12s  mode=%-16s  feature_mode=%-8s",
+        ticker, model_name, mode, feature_mode,
     )
     return 0
 
 
-def _run_experiment(ticker: str, model_name: str, mode: str, config: dict) -> None:
+def _run_experiment(ticker: str, model_name: str, mode: str, config: dict, feature_mode: str = "features") -> None:
     # Add tests/financial to path so src/ is importable
     sys.path.insert(0, str(FINANCIAL_DIR))
 
@@ -94,6 +95,7 @@ def _run_experiment(ticker: str, model_name: str, mode: str, config: dict) -> No
         mode=mode,
         config=config,
         results_dir=str(RESULTS_DIR),
+        feature_mode=feature_mode,
     )
     pipeline.run()
 

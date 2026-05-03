@@ -18,19 +18,20 @@ TICKERS = [
     "UGPA3.SA", "USIM5.SA",  "VALE3.SA", "VIVT3.SA", "WEGE3.SA",
 ]
 
-DL_MODELS  = ["CNN", "LSTM", "CNN_LSTM", "Transformer"]
-ML_MODELS  = ["RandomForest", "XGBoost", "LightGBM", "CatBoost", "Stacking"]
-MODES      = ["raw", "db4", "learned_wavelet"]
+DL_MODELS     = ["CNN", "LSTM", "CNN_LSTM", "MLP", "Transformer"]
+ML_MODELS     = ["RandomForest", "XGBoost", "LightGBM", "CatBoost", "Stacking"]
+MODES         = ["raw", "db4", "learned_wavelet"]
+FEATURE_MODES = ["features", "ohlcv"]
 
 # ---------------------------------------------------------------------------
 # Feature engineering
 # ---------------------------------------------------------------------------
 
 FEATURE_CONFIG = {
-    # sequence_length=60 garante que kernel_size=8 seja válido até o nível 2:
-    # nível 1 → L/2 = 30 amostras (>= kernel_size=8 OK)
-    # nível 2 → L/4 = 15 amostras (>= kernel_size=8 OK)
-    "sequence_length": 60,           # sliding window (trading days)
+    # sequence_length=20 garante que kernel_size=4 seja válido até o nível 2:
+    # nível 1 → L/2 = 10 amostras (>= kernel_size=4 OK)
+    # nível 2 → L/4 =  5 amostras (>= kernel_size=4 OK)
+    "sequence_length": 20,           # sliding window (trading days)
     # Distribution-quality thresholds — features failing these are dropped
     "adf_max_failing_pct": 0.30,     # drop if non-stationary in >30% of assets
     "max_kurtosis": 20.0,            # after 1%-99% winsorisation
@@ -61,12 +62,18 @@ FEATURE_CONFIG = {
 # ---------------------------------------------------------------------------
 
 LABELING_CONFIG = {
-    "pt_sl": [1.5, 1.5],    # take-profit / stop-loss multipliers of daily ATR (simétrico)
+    # pt_sl=[2.0,2.0] produz distribuição quase balanceada: ~31% sell / 29% hold / 40% buy
+    # (imbalance 1.4x vs 3.1x com [1.5,1.5]). Barreiras mais afastadas também são mais
+    # alinhadas com movimentos significativos de médio prazo (2× vol = ~2 ATR diários).
+    "pt_sl": [2.0, 2.0],    # take-profit / stop-loss multipliers of daily EWM vol
     "time_horizon": 10,      # max holding period in trading days
     "min_ret": 0.001,        # minimum return threshold to count a barrier
     "vol_span": 100,         # EWM span for daily volatility estimate
-    # Label mapping: {-1 → 0 (sell), 0 → 1 (hold), 1 → 2 (buy)}
-    "n_classes": 3,
+    # Label mapping para n_classes=3: {-1 → 0 (sell), 0 → 1 (hold), 1 → 2 (buy)}
+    # Label mapping para n_classes=2 (meta-labeling): mantém apenas barreiras de preço
+    #   {sell=-1 → 0 (down/SL), buy=+1 → 1 (up/TP)}; holds descartados.
+    "n_classes": 2,
+    "drop_holds": True,   # descarta label 'hold' para meta-labeling binário
 }
 
 # ---------------------------------------------------------------------------
@@ -78,7 +85,10 @@ VALIDATION_CONFIG = {
     "embargo_days": 10,       # trading days embargo between train and test
     "val_split": 0.15,        # fraction of training fold used as validation
     "test_years": 6,          # last N years reserved as out-of-sample test
-    "n_oos_windows": 2,       # walk-forward OOS windows (Fix 5)
+    "n_oos_windows": 6,       # walk-forward OOS windows (Fix 5)
+    "oos_protocol": "rolling",    # expanding | rolling
+    "oos_block_years": 1.0,   # retraining cadence for forward OOS blocks
+    "rolling_train_years": 3.0,  # janela de treino para oos_protocol="rolling"
 }
 
 # ---------------------------------------------------------------------------
@@ -95,12 +105,12 @@ WAVELET_CONFIG = {
 
 LEARNED_WAVELET_CONFIG = {
     "levels": 2,
-    # kernel_size=8 é compatível com seq_len=60:
-    #   nível 1: 60//2=30 amostras > 8 coeficientes → overlap bem definido
-    #   nível 2: 30//2=15 amostras > 8 coeficientes → mesma garantia
-    # kernel_size=32 era problemático pois no nível 2 tínhamos ~7 amostras
-    # com 32 coeficientes — quase tudo padding, sem informação de wavelet real.
-    "kernel_size": 8,
+    # kernel_size=4 é compatível com seq_len=20:
+    #   nível 1: 20//2=10 amostras > 4 coeficientes → overlap bem definido
+    #   nível 2: 10//2= 5 amostras > 4 coeficientes → mesma garantia
+    # kernel_size=8 seria inválido com seq_len=20: nível 2 teria apenas 5 amostras
+    # para um filtro de 8 coeficientes — quase tudo padding, sem informação real.
+    "kernel_size": 4,
     "wavelet_net_units": 32,
     "reg_energy": 1e-2,
     "reg_high_dc": 1e-2,
@@ -123,18 +133,18 @@ DL_TRAINING_CONFIG = {
     # EPOCHS_OVERRIDE permite validação rápida: EPOCHS_OVERRIDE=3 python run.py
     "epochs": int(os.environ.get("EPOCHS_OVERRIDE", "100")),
     "batch_size": 64,
-    "early_stopping_patience": 15,
+    "early_stopping_patience": 25,  # era 15; aumentado para permitir convergência com menor regularização
     # ReduceLROnPlateau unificado para todas as arquiteturas:
     # garante que CNN, LSTM, CNN_LSTM e Transformer usem o mesmo scheduler,
     # tornando a comparação entre modos (raw/db4/learned) mais justa.
-    "reduce_lr_patience": 7,
+    "reduce_lr_patience": 12,  # era 7
     "reduce_lr_factor": 0.5,
     "min_lr": 1e-6,
     "learning_rate": 1e-3,
     # Projeção linear após o frontend wavelet para controlar capacidade:
     # raw=(N,L,F) vs learned_wavelet=(N,L,(levels+1)*F) — sem projeção,
     # o backbone vê dimensionalidades diferentes e tem capacidades distintas.
-    "wavelet_projection_dim": 32,
+    "wavelet_projection_dim": 16,
     # sequence_length aqui para que pipeline.py possa importar via DL_TRAINING_CONFIG
     # sem depender do config dict passado pelo job (que não deve sobrescrever defaults).
     "sequence_length": FEATURE_CONFIG["sequence_length"],
@@ -142,30 +152,35 @@ DL_TRAINING_CONFIG = {
 
 DL_MODELS_CONFIG = {
     "CNN": {
-        "filters": [64, 128, 256],
-        "kernel_size": 3,
-        "dropout_rate": 0.3,
-        "l2_reg": 1e-3,
+        "filters": [32, 64, 128],
+        "cnn_kernel_size": 3,   # lido por _cnn_backbone via cfg.get("cnn_kernel_size", 3)
+        "dropout_rate": 0.1,   # era 0.3; reduzido para combater underfitting (val_loss > log(3))
+        "l2_reg": 1e-4,        # era 1e-3
     },
     "LSTM": {
-        "units": [128, 64],
-        "dropout_rate": 0.3,
-        "recurrent_dropout": 0.1,
-        "l2_reg": 1e-3,
+        "units": [64, 32],
+        "dropout_rate": 0.1,   # era 0.3
+        "recurrent_dropout": 0.0,  # era 0.1
+        "l2_reg": 1e-4,        # era 1e-3
     },
     "CNN_LSTM": {
-        "filters": [64, 128],
-        "lstm_units": [64, 32],
-        "dropout_rate": 0.3,
-        "l2_reg": 1e-3,
+        "filters": [32, 64],
+        "lstm_units": [32, 16],
+        "dropout_rate": 0.1,   # era 0.3
+        "l2_reg": 1e-4,        # era 1e-3
     },
     "Transformer": {
         "num_heads": 4,
-        "head_size": 32,
-        "ff_dim": 128,
-        "num_blocks": 2,
-        "dropout_rate": 0.2,
+        "head_size": 16,
+        "ff_dim": 64,
+        "num_blocks": 1,
+        "dropout_rate": 0.1,   # era 0.2
         "l2_reg": 1e-4,
+    },
+    "MLP": {
+        "mlp_units": [128, 64, 32],
+        "dropout_rate": 0.1,   # era 0.3
+        "l2_reg": 1e-4,        # era 1e-3
     },
 }
 
@@ -176,23 +191,28 @@ DL_MODELS_CONFIG = {
 # enquanto as maiores são sub-amostradas de forma desigual.
 DL_GRID_AXES = {
     "CNN": {
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
+        "dropout_rate": [0.05, 0.1, 0.2],   # reduzido: center em 0.1
+        "l2_reg": [1e-5, 1e-4, 1e-3],       # reduzido: center em 1e-4
         "filters": [[32, 64, 128], [64, 128, 256]],
     },
     "LSTM": {
-        "dropout_rate": [0.2, 0.3],
-        "l2_reg": [1e-4, 1e-3],
+        "dropout_rate": [0.05, 0.1, 0.2],
+        "l2_reg": [1e-5, 1e-4, 1e-3],
         "units": [[64, 32], [128, 64]],
     },
     "CNN_LSTM": {
-        "dropout_rate": [0.2, 0.3],
-        "l2_reg": [1e-4, 1e-3],
+        "dropout_rate": [0.05, 0.1, 0.2],
+        "l2_reg": [1e-5, 1e-4, 1e-3],
     },
     "Transformer": {
-        "dropout_rate": [0.1, 0.2],
+        "dropout_rate": [0.05, 0.1, 0.2],
         "num_heads": [2, 4],
         "ff_dim": [64, 128],
+    },
+    "MLP": {
+        "dropout_rate": [0.05, 0.1, 0.2],
+        "l2_reg": [1e-5, 1e-4, 1e-3],
+        "mlp_units": [[128, 64], [256, 128, 64]],
     },
 }
 
@@ -203,6 +223,7 @@ MAX_GRID_CONFIGS = {
     "CNN": 6,
     "LSTM": 6,
     "CNN_LSTM": 4,
+    "MLP": 6,
     "Transformer": 6,
 }
 
@@ -413,6 +434,15 @@ ML_MODELS_CONFIG = {
 BACKTEST_CONFIG = {
     "transaction_cost": 0.001,   # 0.1% per trade (round-trip = 0.2%)
     "allow_short": True,         # True: sell=short; False: sell=flat
+    # Taxa Selic anualizada usada como risk-free rate no Sharpe, Sortino e Alpha.
+    # Valor constante representando média histórica brasileira; ajustar conforme
+    # período analisado (Selic variou entre ~2% em 2020 e ~13.75% em 2022-25).
+    "annual_risk_free": 0.1075,
+    # Backtest multi-day: cada predição captura o retorno acumulado do dia de entrada
+    # até t1 (quando a barreira foi atingida), em vez de apenas o retorno do dia seguinte.
+    # Alinha a avaliação com o significado do label: "buy" significa que a barreira
+    # superior foi atingida em algum momento nos próximos time_horizon dias.
+    "use_event_returns": True,
 }
 
 # ---------------------------------------------------------------------------

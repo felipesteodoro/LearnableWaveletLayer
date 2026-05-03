@@ -44,7 +44,7 @@ except ImportError:
 # ---------------------------------------------------------------------------
 
 class ClassificationEvaluator:
-    """Compute classification metrics for 3-class buy/sell/hold predictions."""
+    """Compute classification metrics for 2-class or 3-class predictions."""
 
     CLASS_NAMES = ["sell", "hold", "buy"]
 
@@ -57,20 +57,37 @@ class ClassificationEvaluator:
     ) -> dict[str, float]:
         p = f"{prefix}_" if prefix else ""
 
-        # Per-class F1
-        f1_per_class = f1_score(y_true, y_pred, average=None, labels=[0, 1, 2], zero_division=0)
-        f1_dict = {
-            f"{p}f1_sell": float(f1_per_class[0]),
-            f"{p}f1_hold": float(f1_per_class[1]),
-            f"{p}f1_buy":  float(f1_per_class[2]),
-        }
+        # Detectar número de classes a partir dos dados
+        unique_labels = sorted(set(np.unique(y_true)) | set(np.unique(y_pred)))
+        is_binary = len(unique_labels) <= 2
 
-        # ROC-AUC (one-vs-rest) — requires probability scores, not hard labels
+        # Per-class F1 — usa apenas as classes presentes
+        f1_per_class = f1_score(y_true, y_pred, average=None, labels=unique_labels, zero_division=0)
+        if is_binary:
+            # Meta-labeling binário: 0=down(sell), 1=up(buy); hold=0.0
+            f1_dict = {
+                f"{p}f1_sell": float(f1_per_class[0]) if len(f1_per_class) > 0 else 0.0,
+                f"{p}f1_hold": 0.0,
+                f"{p}f1_buy":  float(f1_per_class[1]) if len(f1_per_class) > 1 else 0.0,
+            }
+        else:
+            f1_dict = {
+                f"{p}f1_sell": float(f1_per_class[0]),
+                f"{p}f1_hold": float(f1_per_class[1]),
+                f"{p}f1_buy":  float(f1_per_class[2]),
+            }
+
+        # ROC-AUC — binário: AUC padrão; 3-class: one-vs-rest
         roc_auc = float("nan")
         if y_proba is not None:
             try:
-                y_true_oh = np.eye(3)[y_true.astype(int)]
-                roc_auc = float(roc_auc_score(y_true_oh, y_proba, multi_class="ovr"))
+                if is_binary:
+                    # Para binário usa apenas probabilidade da classe positiva (col 1)
+                    proba_pos = y_proba[:, 1] if y_proba.ndim == 2 else y_proba
+                    roc_auc = float(roc_auc_score(y_true, proba_pos))
+                else:
+                    y_true_oh = np.eye(3)[y_true.astype(int)]
+                    roc_auc = float(roc_auc_score(y_true_oh, y_proba, multi_class="ovr"))
             except Exception:
                 roc_auc = float("nan")
 
@@ -127,13 +144,28 @@ class FinancialMetrics:
         strategy_returns: pd.Series,
         benchmark_returns: Optional[pd.Series] = None,
         risk_free: float = 0.0,
+        return_horizon: float = 1.0,
     ) -> dict[str, float]:
+        """
+        Parameters
+        ----------
+        return_horizon : average number of trading days each return observation spans.
+            1.0 for daily returns (default).
+            For event-based returns (multi-day holds), pass avg_event_duration so
+            annualization and risk-free scaling use the effective number of
+            observations per year instead of assuming daily data.
+        """
         r = strategy_returns.fillna(0).replace([np.inf, -np.inf], 0)
+        r = r.clip(lower=-0.99)  # previne (1+r) <= 0 no cumprod (overflow)
 
         if len(r) < 5:
             return cls._empty()
 
-        ann_factor = cls.TRADING_DAYS
+        horizon = max(float(return_horizon), 1e-9)
+        ann_factor = cls.TRADING_DAYS / horizon
+
+        # Risk-free per observation (scaled for multi-day event returns)
+        rf_per_obs = risk_free * horizon / cls.TRADING_DAYS
 
         # Cumulative return
         cum_ret   = float((1 + r).prod() - 1)
@@ -144,13 +176,14 @@ class FinancialMetrics:
         vol_ann = float(r.std() * np.sqrt(ann_factor))
 
         # Sharpe
-        excess = r - risk_free / ann_factor
+        excess = r - rf_per_obs
         sharpe = float(excess.mean() / excess.std() * np.sqrt(ann_factor)) if excess.std() > 0 else 0.0
 
-        # Sortino
-        downside = r[r < 0]
+        # Sortino: (R_p - R_f) / σ_downside
+        daily_rf = rf_per_obs
+        downside = r[r < daily_rf]
         sortino_denom = float(downside.std() * np.sqrt(ann_factor)) if len(downside) > 1 else 1e-9
-        sortino = float(r.mean() * ann_factor / sortino_denom) if sortino_denom > 0 else 0.0
+        sortino = float((r.mean() - daily_rf) * ann_factor / sortino_denom) if sortino_denom > 0 else 0.0
 
         # Max drawdown
         cum = (1 + r).cumprod()
@@ -191,14 +224,21 @@ class FinancialMetrics:
             "total_return":   cum_ret,
         }
 
-        # Alpha / Beta vs benchmark
+        # Alpha de Jensen vs benchmark: α = (R_p - R_f) - β(R_bm - R_f)
         if benchmark_returns is not None and len(benchmark_returns) == len(r):
             bm = benchmark_returns.fillna(0)
             cov_matrix = np.cov(r, bm)
             beta = float(cov_matrix[0, 1] / cov_matrix[1, 1]) if cov_matrix[1, 1] > 0 else 0.0
-            alpha = float(r.mean() - beta * bm.mean()) * ann_factor
+            alpha = float((r.mean() - rf_per_obs) - beta * (bm.mean() - rf_per_obs)) * ann_factor
             result["beta"]  = beta
             result["alpha"] = alpha
+
+            # BH Sharpe: Sharpe do benchmark (buy-and-hold) com mesma rf_per_obs
+            bh_excess = bm - rf_per_obs
+            result["bh_sharpe"] = (
+                float(bh_excess.mean() / bh_excess.std() * np.sqrt(ann_factor))
+                if bh_excess.std() > 0 else 0.0
+            )
 
         return result
 
@@ -209,8 +249,8 @@ class FinancialMetrics:
         for key in results_list[0]:
             values = [r[key] for r in results_list if not np.isnan(r.get(key, float("nan")))]
             if values:
-                aggregated[f"fin_{key}"]      = float(np.mean(values))
-                aggregated[f"fin_{key}_std"]  = float(np.std(values))
+                aggregated[key]           = float(np.mean(values))
+                aggregated[f"{key}_std"]  = float(np.std(values))
         return aggregated
 
     @classmethod
@@ -231,8 +271,8 @@ class ResultsManager:
         self.results_dir = Path(results_dir)
         self.results_dir.mkdir(parents=True, exist_ok=True)
 
-    def _job_dir(self, ticker: str, model_name: str, mode: str) -> Path:
-        d = self.results_dir / ticker / f"{model_name}_{mode}"
+    def _job_dir(self, ticker: str, model_name: str, mode: str, feature_mode: str = "features") -> Path:
+        d = self.results_dir / feature_mode / ticker / f"{model_name}_{mode}"
         d.mkdir(parents=True, exist_ok=True)
         return d
 
@@ -244,17 +284,19 @@ class ResultsManager:
         ml_metrics: dict,
         financial_metrics: dict,
         config: dict,
+        feature_mode: str = "features",
         extra: Optional[dict] = None,
     ) -> Path:
-        job_dir = self._job_dir(ticker, model_name, mode)
+        job_dir = self._job_dir(ticker, model_name, mode, feature_mode)
         record = {
-            "ticker":      ticker,
-            "model_name":  model_name,
-            "mode":        mode,
-            "timestamp":   time.strftime("%Y-%m-%dT%H:%M:%S"),
-            "config":      config,
-            "ml_metrics":  ml_metrics,
-            "fin_metrics": financial_metrics,
+            "ticker":       ticker,
+            "model_name":   model_name,
+            "mode":         mode,
+            "feature_mode": feature_mode,
+            "timestamp":    time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "config":       config,
+            "ml_metrics":   ml_metrics,
+            "fin_metrics":  financial_metrics,
             **(extra or {}),
         }
         metrics_file = job_dir / "metrics.json"
@@ -279,20 +321,61 @@ class ResultsManager:
             y_pred=y_pred,
         )
 
+    @staticmethod
+    def _norm_fin_key(k: str) -> str:
+        """
+        Normalise a fin_metrics key to a uniform `fin_*` column name.
+
+        Handles two on-disk formats:
+          Legacy (aggregate_cv used to add fin_ prefix itself):
+            fin_sharpe       → fin_sharpe
+            oos_fin_sharpe   → fin_oos_sharpe
+            oos_f1_macro     → fin_oos_f1_macro
+          New (aggregate_cv returns raw keys, load_all_results adds fin_):
+            sharpe           → fin_sharpe
+            oos_sharpe       → fin_oos_sharpe
+            oos_f1_macro     → fin_oos_f1_macro
+        """
+        # Legacy: oos_fin_* → rewrite to oos_* before adding fin_
+        if k.startswith("oos_fin_"):
+            k = "oos_" + k[len("oos_fin_"):]
+        # Strip leading fin_ to avoid double prefix (legacy IS metrics)
+        elif k.startswith("fin_"):
+            k = k[len("fin_"):]
+        return f"fin_{k}"
+
     def load_all_results(self) -> pd.DataFrame:
-        """Aggregate all metrics.json files into a summary DataFrame."""
+        """Aggregate all metrics.json files into a summary DataFrame.
+
+        Handles both legacy format (fin_metrics keys already contain fin_ prefix)
+        and new format (fin_metrics keys are raw, e.g. 'sharpe').
+        """
         records = []
         for metrics_file in self.results_dir.rglob("metrics.json"):
             try:
                 with open(metrics_file) as f:
                     data = json.load(f)
                 flat = {
-                    "ticker":     data["ticker"],
-                    "model_name": data["model_name"],
-                    "mode":       data["mode"],
+                    "ticker":       data["ticker"],
+                    "model_name":   data["model_name"],
+                    "mode":         data["mode"],
+                    "feature_mode": data.get("feature_mode", "features"),
+                    "best_fold":    data.get("best_fold"),
+                    "best_fold_sharpe": data.get("best_fold_sharpe"),
+                    "retrain_oos":  data.get("retrain_oos", False),
                     **{f"ml_{k}": v for k, v in data.get("ml_metrics", {}).items()},
-                    **{f"fin_{k}": v for k, v in data.get("fin_metrics", {}).items()},
+                    **{self._norm_fin_key(k): v for k, v in data.get("fin_metrics", {}).items()},
                 }
+                # Merge meta_metrics.json if it exists alongside metrics.json
+                meta_file = metrics_file.parent / "meta_metrics.json"
+                if meta_file.exists():
+                    try:
+                        with open(meta_file) as mf:
+                            meta = json.load(mf)
+                        flat.update({f"meta_{k}": v for k, v in meta.items()
+                                     if not isinstance(v, (dict, list))})
+                    except Exception:
+                        pass
                 records.append(flat)
             except Exception:
                 pass

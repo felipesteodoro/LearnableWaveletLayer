@@ -13,6 +13,7 @@ def simulate_strategy(
     returns: np.ndarray | pd.Series | None = None,
     transaction_cost: float = 0.001,
     allow_short: bool = True,
+    position_lag: int = 1,
 ) -> pd.Series:
     """
     Convert label predictions to a daily return series.
@@ -34,11 +35,17 @@ def simulate_strategy(
                        At least one of prices / returns must be provided.
     transaction_cost : one-way cost fraction (default 0.1%)
     allow_short      : if False, sell signals produce 0 instead of -1
+    position_lag     : number of observations between signal and return realization.
+                       Use 1 for next-bar daily returns and 0 for event returns
+                       already aligned to the entry signal.
 
     Returns
     -------
     pd.Series of daily strategy returns
     """
+    if position_lag < 0:
+        raise ValueError("position_lag must be non-negative.")
+
     if returns is None and prices is not None:
         asset_returns = pd.Series(prices).reset_index(drop=True).pct_change().fillna(0)
     elif returns is not None:
@@ -48,16 +55,26 @@ def simulate_strategy(
 
     preds = pd.Series(predictions).reset_index(drop=True)
 
-    # Map labels to position: buy=1, hold=0, sell=-1 (or 0 if no short)
-    pos_map   = {2: 1, 1: 0, 0: -1 if allow_short else 0}
+    # Map labels to position: detecta 2-class vs 3-class automaticamente
+    all_preds = set(preds.unique())
+    if all_preds.issubset({0, 1}):  # meta-labeling binário: 0=down, 1=up
+        pos_map = {0: -1 if allow_short else 0, 1: 1}
+    else:  # 3-class: sell=0, hold=1, buy=2
+        pos_map = {2: 1, 1: 0, 0: -1 if allow_short else 0}
     positions = preds.map(pos_map).fillna(0).astype(float)
 
-    # Strategy return = position(t-1) × asset_return(t)
-    strategy_returns = positions.shift(1).fillna(0) * asset_returns
+    # Strategy return uses the position that is actually live for the return interval.
+    if position_lag == 0:
+        live_positions = positions
+    else:
+        live_positions = positions.shift(position_lag).fillna(0)
+    strategy_returns = live_positions * asset_returns
 
-    # Transaction costs at position changes
-    position_changes  = (positions.diff().abs() > 0).astype(float)
+    # One-way transaction cost is charged on every unit of turnover.
+    # First entry costs |position|, and long<->short flips cost 2x.
+    position_changes = positions.diff().abs().fillna(positions.abs())
     strategy_returns -= position_changes * transaction_cost
+    strategy_returns = strategy_returns.clip(lower=-0.99)  # previne overflow no cumprod
 
     return strategy_returns
 

@@ -27,7 +27,9 @@ def triple_barrier_labeling(
     trgt: pd.Series, 
     pt_sl: list = [1.5, 1.5], 
     min_ret: float = 0.001, 
-    num_days: int = 10
+    num_days: int = 10,
+    high: pd.Series | None = None,
+    low: pd.Series | None = None,
 ) -> pd.DataFrame:
     """
     Rotulagem de barreira tripla para séries temporais financeiras.
@@ -48,6 +50,8 @@ def triple_barrier_labeling(
         pt_sl: [pt, sl] multiplicadores para take profit e stop loss
         min_ret: Retorno mínimo para considerar evento
         num_days: Horizonte da barreira vertical em dias
+        high: Série opcional de máximas para detectar toques intraday na barreira superior
+        low: Série opcional de mínimas para detectar toques intraday na barreira inferior
     
     Returns:
         DataFrame com colunas ['ret', 'label']
@@ -73,6 +77,11 @@ def triple_barrier_labeling(
         t1_list.append(close_idx[end_pos])
     t1 = pd.Series(t1_list, index=trgt.index)
 
+    if high is not None:
+        high = high.reindex(close.index)
+    if low is not None:
+        low = low.reindex(close.index)
+
     # Calcula retornos e aplica barreiras
     out = []
     for idx, end_time in zip(t1.index, t1.values):
@@ -82,6 +91,9 @@ def triple_barrier_labeling(
         price_path = close.loc[idx:end_time]
         if price_path.empty:
             continue
+
+        high_path = high.loc[idx:end_time] if high is not None else None
+        low_path = low.loc[idx:end_time] if low is not None else None
         
         start_price = close.loc[idx]
         thresh_up = start_price * (1 + pt_sl[0] * trgt.loc[idx])
@@ -89,21 +101,32 @@ def triple_barrier_labeling(
         
         label = 0
         ret = (price_path.iloc[-1] / start_price) - 1
-        
-        for t, price in price_path.items():
-            if price >= thresh_up:
-                label = 1
-                ret = (price / start_price) - 1
-                break
-            elif price <= thresh_down:
-                label = -1
-                ret = (price / start_price) - 1
-                break
-        
-        # record the actual date the event ended (first barrier hit or vertical)
         t1_actual = price_path.index[-1]
+        
         for t, price in price_path.items():
-            if price >= thresh_up or price <= thresh_down:
+            high_t = high_path.loc[t] if high_path is not None else price
+            low_t = low_path.loc[t] if low_path is not None else price
+
+            hit_up = pd.notna(high_t) and high_t >= thresh_up
+            hit_down = pd.notna(low_t) and low_t <= thresh_down
+
+            if hit_up and hit_down:
+                close_t = price_path.loc[t]
+                if close_t > start_price:
+                    hit_down = False
+                elif close_t < start_price:
+                    hit_up = False
+                else:
+                    hit_up = hit_down = False
+
+            if hit_up:
+                label = 1
+                ret = (thresh_up / start_price) - 1
+                t1_actual = t
+                break
+            if hit_down:
+                label = -1
+                ret = (thresh_down / start_price) - 1
                 t1_actual = t
                 break
 
@@ -135,7 +158,9 @@ def apply_labeling(df: pd.DataFrame, pt_sl: list = [1.5, 1.5], min_ret: float = 
         trgt=df['trgt'],
         pt_sl=pt_sl,
         min_ret=min_ret,
-        num_days=num_days
+        num_days=num_days,
+        high=df['High'] if 'High' in df.columns else None,
+        low=df['Low'] if 'Low' in df.columns else None,
     )
     labels['label'] = labels['label'].astype(int)
 

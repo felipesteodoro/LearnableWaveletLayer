@@ -107,6 +107,65 @@ def _is_oos_split(
     return max(min_is, n_total - oos_size)
 
 
+def _compute_event_returns(
+    daily_returns: np.ndarray,
+    t1: "pd.Series | None",
+    dates: "pd.Index",
+    max_hold: int = 10,
+) -> tuple[np.ndarray, float]:
+    """
+    Para cada dia d, retorna o retorno simples composto de d+1 até t1[d].
+
+    Recebe `daily_returns` em retorno SIMPLES (não log). Combina via produto:
+        R_evento = prod(1 + r_k, k=d+1..t1) - 1
+
+    Isso alinha o backtest com o significado do label triple-barrier: um label "buy"
+    significa que a barreira superior foi atingida em algum momento até t1 — não
+    necessariamente no dia seguinte. Usar o retorno composto até t1 captura o P&L
+    real da trade se ela for executada no dia d e encerrada em t1[d].
+
+    Leakage prevention: `dates` deve conter apenas as datas do segmento atual
+    (IS ou OOS). Eventos cujo t1 cai fora desse segmento são truncados no último
+    dia do segmento via fallback `end_pos = min(i + max_hold, n - 1)`.
+
+    Returns
+    -------
+    event_returns : array com retornos acumulados por evento
+    avg_duration  : duração média dos eventos em dias de trading (para escalar RF no Sharpe)
+    """
+    n = len(dates)
+    event_rets = daily_returns.copy().astype(np.float32)
+
+    if t1 is None or t1.isna().all():
+        return event_rets, 1.0
+
+    date_to_pos = {d: i for i, d in enumerate(dates)}
+    durations: list[int] = []
+
+    for i, date in enumerate(dates):
+        if date not in t1.index or pd.isna(t1.loc[date]):
+            durations.append(1)
+            continue
+
+        t1_date = t1.loc[date]
+        if t1_date in date_to_pos:
+            end_pos = date_to_pos[t1_date]
+        else:
+            # t1 cai além do segmento — trunca ao último dia disponível
+            end_pos = min(i + max_hold, n - 1)
+
+        if end_pos > i:
+            # Retorno composto simples: prod(1+r) - 1  (não soma de log-returns)
+            event_rets[i] = float(np.prod(1.0 + daily_returns[i + 1: end_pos + 1]) - 1.0)
+            durations.append(end_pos - i + 1)
+        else:
+            event_rets[i] = 0.0
+            durations.append(1)
+
+    avg_duration = float(np.mean(durations)) if durations else 1.0
+    return event_rets, avg_duration
+
+
 def _class_weights(y: np.ndarray) -> dict:
     """
     Pesos de classe balanceados para combater desbalanceamento sell/hold/buy.
@@ -190,10 +249,12 @@ class FinancialExperimentPipeline:
         mode: str,
         config: Optional[dict] = None,
         results_dir: Optional[str] = None,
+        feature_mode: str = "features",
     ):
-        self.ticker     = ticker
-        self.model_name = model_name
-        self.mode       = mode
+        self.ticker       = ticker
+        self.model_name   = model_name
+        self.mode         = mode
+        self.feature_mode = feature_mode
 
         from config.experiment_config import (
             DL_MODELS_CONFIG,
@@ -221,7 +282,7 @@ class FinancialExperimentPipeline:
         }
 
         self.results_dir = Path(results_dir or (_FINANCIAL_DIR / "results"))
-        self.models_dir  = _FINANCIAL_DIR / "saved_models"
+        self.models_dir  = self.results_dir / "saved_models"
 
     # ── Public ──────────────────────────────────────────────────────────────
 
@@ -231,7 +292,7 @@ class FinancialExperimentPipeline:
 
     @property
     def job_results_dir(self) -> Path:
-        return self.results_dir / self.ticker / self.job_key
+        return self.results_dir / self.feature_mode / self.ticker / self.job_key
 
     def is_done(self) -> bool:
         return (self.job_results_dir / "metrics.json").exists()
@@ -260,8 +321,26 @@ class FinancialExperimentPipeline:
             seq_len=seq_len,
             n_folds=self.cfg.get("n_folds", 5),
         )
-        X_is, y_is, ret_is, t1_is     = X[:cut], y[:cut], returns[:cut], (t1.iloc[:cut] if t1 is not None else None)
-        X_oos, y_oos, ret_oos, t1_oos = X[cut:], y[cut:], returns[cut:], (t1.iloc[cut:] if t1 is not None else None)
+        X_is, y_is, t1_is     = X[:cut], y[:cut], (t1.iloc[:cut] if t1 is not None else None)
+        X_oos, y_oos, t1_oos  = X[cut:], y[cut:], (t1.iloc[cut:] if t1 is not None else None)
+
+        # Retornos por evento: retorno acumulado de d até t1[d] (backtest multi-day).
+        # Computados separadamente em IS e OOS para evitar leakage na fronteira.
+        # Fallback para retornos diários quando use_event_returns=False ou t1 ausente.
+        use_ev = self.cfg.get("use_event_returns", True)
+        horizon = self.cfg.get("time_horizon", 10)
+        if use_ev and t1 is not None and hasattr(self, "_dates"):
+            is_dates  = self._dates[:cut]
+            oos_dates = self._dates[cut:]
+            ret_is,  avg_dur_is  = _compute_event_returns(returns[:cut],  t1_is,  is_dates,  horizon)
+            ret_oos, avg_dur_oos = _compute_event_returns(returns[cut:],  t1_oos, oos_dates, horizon)
+        else:
+            ret_is  = returns[:cut]
+            ret_oos = returns[cut:]
+            avg_dur_is = avg_dur_oos = 1.0
+        # Durações médias dos eventos por segmento → escalam o custo de capital no Sharpe
+        self._avg_event_duration     = avg_dur_is
+        self._avg_oos_event_duration = avg_dur_oos
 
         logger.info("  IS: %d amostras, OOS: %d amostras (split em %d)", cut, len(X) - cut, cut)
 
@@ -277,7 +356,8 @@ class FinancialExperimentPipeline:
 
         ml_fold_metrics:  list[dict] = []
         fin_fold_metrics: list[dict] = []
-        last_model = None   # guarda o modelo do último fold IS para avaliação OOS
+        # (fold_idx, model, scaler) — best Sharpe fold selected after loop
+        fold_models: list[tuple] = []
 
         for fold_idx, (train_val_idx, test_idx) in enumerate(pkf.split(X_win, y_win)):
             logger.info("  Fold %d/%d", fold_idx + 1, self.cfg["n_folds"])
@@ -299,7 +379,7 @@ class FinancialExperimentPipeline:
             model = self._build_model(X_tr.shape[1:])
             callbacks = self._callbacks(fold_idx)
 
-            model.fit(
+            history = model.fit(
                 X_tr, y_tr,
                 validation_data=(X_v, y_v),
                 class_weight=cw,
@@ -308,6 +388,7 @@ class FinancialExperimentPipeline:
                 callbacks=callbacks,
                 verbose=0,
             )
+            best_val_loss = float(min(history.history.get("val_loss", [float("inf")])))
 
             y_proba     = model.predict(X_te, verbose=0)  # (N_test, 3) softmax
             y_pred      = np.argmax(y_proba, axis=1)
@@ -323,29 +404,93 @@ class FinancialExperimentPipeline:
                 returns=ret_win[test_idx],
                 transaction_cost=self.cfg.get("transaction_cost", 0.001),
                 allow_short=self.cfg.get("allow_short", True),
+                position_lag=0 if use_ev else 1,
             )
             bh_ret      = pd.Series(ret_win[test_idx])
-            fin_metrics = FinancialMetrics.compute(strat_ret, bh_ret)
+            fin_metrics = FinancialMetrics.compute(
+                strat_ret, bh_ret,
+                risk_free=self.cfg.get("annual_risk_free", 0.0),
+                return_horizon=self._avg_event_duration,
+            )
 
             ml_fold_metrics.append(ml_metrics)
             fin_fold_metrics.append(fin_metrics)
 
             self._save_predictions(
                 y_true=y_te, y_pred=y_pred, y_proba=y_proba,
-                fold_idx=fold_idx,
+                filename=f"predictions_fold{fold_idx}.npz",
                 X_val=X_v, y_val=y_v, y_proba_val=y_proba_val,
                 ret_test=ret_win[test_idx],
             )
-            last_model = (model, scaler)  # guarda para avaliação OOS
+            fold_models.append((fold_idx, model, scaler, best_val_loss))
 
-        # 4. Avaliação OOS walk-forward (sem retreino)
+        # 4. Seleciona o melhor fold por Sharpe IS e avalia OOS
+        # Scaler fit no IS inteiro (para consistência com OOS — não só no último fold)
+        n_feat = X_win.shape[-1] if len(X_win) > 0 else 0
+        full_is_scaler = RobustScaler()
+        if n_feat > 0:
+            full_is_scaler.fit(_replace_inf(X_win).reshape(-1, n_feat))
+
+        # Best fold: menor val_loss de validação (critério de treino, sem snooping financeiro)
+        best_fold_idx = len(fold_models) - 1  # default = último fold
+        if fold_models:
+            val_losses = [(i, fm[3]) for i, fm in enumerate(fold_models) if np.isfinite(fm[3])]
+            if val_losses:
+                best_fold_idx = min(val_losses, key=lambda x: x[1])[0]
+        best_fold_val_loss = fold_models[best_fold_idx][3] if fold_models else float("nan")
+        best_fold_sharpe = fin_fold_metrics[best_fold_idx].get("sharpe", float("nan")) if fin_fold_metrics else float("nan")
+
+        # Carrega modelo do melhor fold do checkpoint em disco.
+        # custom_objects é necessário para classes não registradas no serializer
+        # padrão do Keras (SinusoidalPositionalEncoding, TransformerBlock, wavelets).
+        best_model_obj = None
+        if fold_models:
+            best_keras_path = (
+                self.models_dir / self.feature_mode / self.ticker
+                / self.job_key / f"fold_{best_fold_idx}.keras"
+            )
+            if best_keras_path.exists():
+                try:
+                    from models.dl_utils import SinusoidalPositionalEncoding, TransformerBlock
+                    from models.LWT.fixed_db4_dwt import FixedDb4DWT1D
+                    from models.LWT.learned_wavelet_dwt_qmf import LearnedWaveletDWT1D_QMF
+                    best_model_obj = tf.keras.models.load_model(
+                        str(best_keras_path),
+                        custom_objects={
+                            "SinusoidalPositionalEncoding": SinusoidalPositionalEncoding,
+                            "TransformerBlock": TransformerBlock,
+                            "FixedDb4DWT1D": FixedDb4DWT1D,
+                            "LearnedWaveletDWT1D_QMF": LearnedWaveletDWT1D_QMF,
+                        },
+                    )
+                except Exception as e:
+                    logger.warning("load_model falhou (%s) — usando modelo em memória.", e)
+                    _, best_model_obj, _, _ = fold_models[best_fold_idx]
+            else:
+                # Fallback: modelo ainda em memória (fold_models[best_fold_idx])
+                _, best_model_obj, _, _ = fold_models[best_fold_idx]
+            logger.info(
+                "  Best fold: %d/%d  Sharpe=%.3f",
+                best_fold_idx + 1, len(fold_models), best_fold_sharpe,
+            )
+
         oos_metrics = {}
-        if last_model is not None and len(X_oos) > seq_len:
-            oos_metrics = self._evaluate_oos(last_model, X_oos, y_oos, ret_oos, t1_oos)
+        if best_model_obj is not None and n_feat > 0 and len(X_oos) > seq_len:
+            if self.cfg.get("retrain_oos", False):
+                oos_metrics = self._evaluate_oos_retrain(
+                    X_is, y_is, ret_is, X_oos, y_oos, ret_oos
+                )
+            else:
+                best_model_scaler = (best_model_obj, full_is_scaler)
+                oos_metrics = self._evaluate_oos(best_model_scaler, X_oos, y_oos, ret_oos, t1_oos)
 
         from src.evaluation import FinancialMetrics, ResultsManager
         agg_ml  = _aggregate_dicts(ml_fold_metrics)
         agg_fin = FinancialMetrics.aggregate_cv(fin_fold_metrics)
+        # agg_fin has raw keys (e.g. 'sharpe'). Add fin_ prefix only for the return
+        # value so notebook cell 3 can still filter on k.startswith('fin_').
+        # The JSON stores raw keys; load_all_results adds fin_ prefix once cleanly.
+        agg_fin_prefixed = {f"fin_{k}": v for k, v in agg_fin.items()}
 
         elapsed = time.time() - t0
         rm = ResultsManager(self.results_dir)
@@ -353,42 +498,68 @@ class FinancialExperimentPipeline:
             ticker=self.ticker,
             model_name=self.model_name,
             mode=self.mode,
+            feature_mode=self.feature_mode,
             ml_metrics=agg_ml,
             financial_metrics={**agg_fin, **{f"oos_{k}": v for k, v in oos_metrics.items()}},
             config=self.cfg,
-            extra={"elapsed_seconds": elapsed, "n_folds": self.cfg["n_folds"]},
+            extra={
+                "elapsed_seconds": elapsed,
+                "n_folds": self.cfg["n_folds"],
+                "best_fold": best_fold_idx,
+                "best_fold_val_loss": best_fold_val_loss,
+                "best_fold_sharpe": best_fold_sharpe,
+                "retrain_oos": self.cfg.get("retrain_oos", False),
+                "avg_event_duration_is":  round(getattr(self, "_avg_event_duration", 1.0), 2),
+                "avg_event_duration_oos": round(getattr(self, "_avg_oos_event_duration", 1.0), 2),
+                "fold_ml_metrics": ml_fold_metrics,
+                "fold_fin_metrics": fin_fold_metrics,
+            },
         )
 
         logger.info("Done: %s / %s  (%.1fs)", self.ticker, self.job_key, elapsed)
-        return {**agg_ml, **agg_fin, **{f"oos_{k}": v for k, v in oos_metrics.items()}}
+        return {**agg_ml, **agg_fin_prefixed, **{f"oos_{k}": v for k, v in oos_metrics.items()}}
 
     # ── Private ─────────────────────────────────────────────────────────────
 
     def _load_data(self) -> tuple[np.ndarray, np.ndarray, np.ndarray, pd.Series | None]:
-        from src.data_loader import load_processed, load_labels, load_t1
+        from src.data_loader import load_labels, load_t1
 
-        features = load_processed(self.ticker)
-        labels   = load_labels(self.ticker)
-        t1       = load_t1(self.ticker)
+        if self.feature_mode == "ohlcv":
+            from src.data_loader import load_ohlcv_signals
+            features = load_ohlcv_signals(self.ticker)
+        else:
+            from src.data_loader import load_processed
+            features = load_processed(self.ticker)
+
+        labels = load_labels(self.ticker)
+        t1     = load_t1(self.ticker)
 
         # Alinha features e labels pelo índice temporal
         common   = features.index.intersection(labels.index)
         features = features.loc[common]
         labels   = labels.loc[common]
 
-        X       = features.values.astype(np.float32)
-        y       = labels.values.astype(np.int32)
+        X = features.values.astype(np.float32)
+        y = labels.values.astype(np.int32)
 
-        # log_return_1 já é retorno diário — usar diretamente evita pct_change() em log-retornos
-        returns = (
-            features["log_return_1"].values.astype(np.float32)
-            if "log_return_1" in features.columns
-            else np.zeros(len(X), dtype=np.float32)
-        )
+        # Retornos simples diários para backtest — expm1(log_return) = pct_change exato.
+        # Todas as métricas financeiras (Sharpe, CAGR, MDD) assumem retorno simples.
+        if self.feature_mode == "ohlcv":
+            returns = np.expm1(features["log_return"].values).astype(np.float32)
+        else:
+            returns = (
+                np.expm1(features["log_return_1"].values).astype(np.float32)
+                if "log_return_1" in features.columns
+                else np.zeros(len(X), dtype=np.float32)
+            )
 
         # Alinha t1 ao índice comum
         if t1 is not None:
             t1 = t1.reindex(common)
+
+        # Guarda o DatetimeIndex completo para que run() possa computar
+        # event_returns por segmento (IS/OOS) sem leakage na fronteira.
+        self._dates = common
 
         return X, y, returns, t1
 
@@ -448,14 +619,14 @@ class FinancialExperimentPipeline:
             model_name=self.model_name,
             mode=self.mode,
             input_shape=input_shape,
-            n_classes=3,
+            n_classes=self.cfg.get("n_classes", 2),
             cfg=self.cfg,
         )
 
     def _callbacks(self, fold_idx: int) -> list:
         from src.models import get_callbacks
         model_path = (
-            self.models_dir / self.ticker / self.job_key / f"fold_{fold_idx}.keras"
+            self.models_dir / self.feature_mode / self.ticker / self.job_key / f"fold_{fold_idx}.keras"
         )
         return get_callbacks(
             model_path=model_path,
@@ -464,6 +635,145 @@ class FinancialExperimentPipeline:
             lr_factor=self.cfg.get("reduce_lr_factor", 0.5),
             min_lr=self.cfg.get("min_lr", 1e-6),
         )
+
+    def _evaluate_oos_retrain(
+        self,
+        X_is: np.ndarray,
+        y_is: np.ndarray,
+        ret_is: np.ndarray,
+        X_oos: np.ndarray,
+        y_oos: np.ndarray,
+        ret_oos: np.ndarray,
+    ) -> dict:
+        """
+        OOS walk-forward com retreino expanding-window.
+
+        Para cada janela OOS `i`:
+          - IS expandido = IS_original ∪ OOS[0 : w_i_start]  (expanding window)
+          - Refit scaler no IS expandido completo (sem leakage)
+          - Retreina modelo do zero com early stopping (val = últimos 15%)
+          - Prediz apenas a janela OOS atual — sem overlap, sem leakage
+
+        Ativado via RETRAIN_OOS=1 (config["retrain_oos"] = True).
+        Custo: ~n_oos_windows × custo de treino normal.
+        """
+        import tensorflow as tf
+        from src.evaluation import ClassificationEvaluator, FinancialMetrics
+        from src.backtest import simulate_strategy
+
+        seq_len = self.cfg["sequence_length"]
+        n_oos_windows = self.cfg.get("n_oos_windows", 2)
+
+        X_oos_win, y_oos_win, ret_oos_win, _ = _make_windows(X_oos, y_oos, ret_oos, seq_len)
+        if len(X_oos_win) == 0:
+            return {}
+
+        window_size = len(X_oos_win) // n_oos_windows
+        if window_size < 5:
+            windows = [slice(0, len(X_oos_win))]
+        else:
+            windows = [slice(i * window_size, (i + 1) * window_size) for i in range(n_oos_windows)]
+
+        # raw OOS cut points (original array, before windowing)
+        raw_window_size = len(X_oos) // n_oos_windows if n_oos_windows > 0 else len(X_oos)
+
+        oos_ml_metrics:  list[dict] = []
+        oos_fin_metrics: list[dict] = []
+        cw = _class_weights(y_oos_win)  # approximate; recomputed per window in loop
+
+        for w_idx, w_slice in enumerate(windows):
+            # Expanding IS: IS_original + raw OOS data up to this window
+            raw_oos_end = min(w_idx * raw_window_size, len(X_oos))
+            X_exp = np.concatenate([X_is, X_oos[:raw_oos_end]], axis=0) if raw_oos_end > 0 else X_is
+            y_exp = np.concatenate([y_is, y_oos[:raw_oos_end]], axis=0) if raw_oos_end > 0 else y_is
+            ret_exp = np.concatenate([ret_is, ret_oos[:raw_oos_end]], axis=0) if raw_oos_end > 0 else ret_is
+
+            # Rolling IS: limita a janela de treino ao último rolling_train_years * 252 dias
+            if self.cfg.get("oos_protocol", "expanding") == "rolling":
+                roll_size = int(self.cfg.get("rolling_train_years", 3.0) * 252)
+                if len(X_exp) > roll_size:
+                    X_exp   = X_exp[-roll_size:]
+                    y_exp   = y_exp[-roll_size:]
+                    ret_exp = ret_exp[-roll_size:]
+
+            X_exp_win, y_exp_win, _, _ = _make_windows(X_exp, y_exp, ret_exp, seq_len)
+            if len(X_exp_win) < 10:
+                continue  # não há dados suficientes para treinar
+
+            n_feat = X_exp_win.shape[-1]
+            n_val  = max(1, int(len(X_exp_win) * self.cfg.get("val_split", 0.15)))
+            n_train = len(X_exp_win) - n_val
+
+            X_tr_raw = X_exp_win[:n_train]
+            X_v_raw  = X_exp_win[n_train:]
+            y_tr_exp = y_exp_win[:n_train]
+            y_v_exp  = y_exp_win[n_train:]
+
+            # Refit scaler no IS expandido — sem leakage de OOS
+            scaler_exp = RobustScaler()
+            X_tr_s = scaler_exp.fit_transform(_replace_inf(X_tr_raw).reshape(-1, n_feat)).reshape(X_tr_raw.shape)
+            X_v_s  = scaler_exp.transform(_replace_inf(X_v_raw).reshape(-1, n_feat)).reshape(X_v_raw.shape)
+
+            tf.keras.backend.clear_session()
+            tf.random.set_seed(42)
+            model_exp = self._build_model(X_tr_s.shape[1:])
+            cw_exp = _class_weights(y_tr_exp)
+
+            # Usa temporary path para não sobrescrever checkpoints IS
+            retrain_path = (
+                self.models_dir / self.feature_mode / self.ticker
+                / self.job_key / f"retrain_w{w_idx}.keras"
+            )
+            retrain_path.parent.mkdir(parents=True, exist_ok=True)
+            from src.models import get_callbacks
+            cb = get_callbacks(
+                model_path=retrain_path,
+                early_patience=self.cfg["early_stopping_patience"],
+                lr_patience=self.cfg["reduce_lr_patience"],
+                lr_factor=self.cfg.get("reduce_lr_factor", 0.5),
+                min_lr=self.cfg.get("min_lr", 1e-6),
+            )
+            model_exp.fit(
+                X_tr_s, y_tr_exp,
+                validation_data=(X_v_s, y_v_exp),
+                class_weight=cw_exp,
+                epochs=self.cfg["epochs"],
+                batch_size=self.cfg["batch_size"],
+                callbacks=cb,
+                verbose=0,
+            )
+
+            # Predict on this OOS window
+            X_w = X_oos_win[w_slice]
+            y_w = y_oos_win[w_slice]
+            r_w = ret_oos_win[w_slice]
+
+            X_w_scaled = scaler_exp.transform(_replace_inf(X_w).reshape(-1, n_feat)).reshape(X_w.shape)
+            y_proba = model_exp.predict(X_w_scaled, verbose=0)
+            y_pred  = np.argmax(y_proba, axis=1)
+
+            ml_m = ClassificationEvaluator.evaluate(y_w, y_pred, y_proba=y_proba)
+            strat_ret = simulate_strategy(
+                y_pred, returns=r_w,
+                transaction_cost=self.cfg.get("transaction_cost", 0.001),
+                allow_short=self.cfg.get("allow_short", True),
+                position_lag=0 if self.cfg.get("use_event_returns", True) else 1,
+            )
+            fin_m = FinancialMetrics.compute(
+                strat_ret, pd.Series(r_w),
+                risk_free=self.cfg.get("annual_risk_free", 0.0),
+                return_horizon=getattr(self, "_avg_event_duration", 1.0),
+            )
+
+            oos_ml_metrics.append(ml_m)
+            oos_fin_metrics.append(fin_m)
+            logger.info("  OOS retrain window %d/%d done", w_idx + 1, len(windows))
+
+        if not oos_ml_metrics:
+            return {}
+        agg_ml  = _aggregate_dicts(oos_ml_metrics)
+        agg_fin = FinancialMetrics.aggregate_cv(oos_fin_metrics)
+        return {**agg_ml, **agg_fin}
 
     def _evaluate_oos(
         self,
@@ -474,16 +784,14 @@ class FinancialExperimentPipeline:
         t1_oos: pd.Series | None,
     ) -> dict:
         """
-        Avalia o modelo do último fold IS em janelas walk-forward no OOS.
+        Avalia o modelo do melhor fold IS em janelas walk-forward no OOS.
 
         Walk-forward: divide o OOS em n_oos_windows janelas temporais,
         avalia sequencialmente sem retreino. Isso simula o uso real do modelo
         onde ele foi treinado em dados históricos e usado em dados futuros.
 
-        O scaler do último fold IS é reutilizado — assumimos que a distribuição
-        IS é uma boa aproximação da distribuição OOS (stationarity assumption).
-        Para datasets com mudanças de regime severas, considere refit do scaler
-        em janelas deslizantes.
+        O scaler fit no IS inteiro é reutilizado — sem leakage de OOS.
+        Para retreino expanding-window, use RETRAIN_OOS=1 (config['retrain_oos']).
         """
         import tensorflow as tf
         from src.evaluation import ClassificationEvaluator, FinancialMetrics
@@ -508,6 +816,11 @@ class FinancialExperimentPipeline:
 
         oos_ml_metrics:  list[dict] = []
         oos_fin_metrics: list[dict] = []
+        all_strat_rets:  list[pd.Series] = []
+        all_bh_rets:     list[pd.Series] = []
+        all_y_true:      list[np.ndarray] = []
+        all_y_pred:      list[np.ndarray] = []
+        all_y_proba:     list[np.ndarray] = []
 
         n_feat = X_win.shape[-1]
         for w_idx, w_slice in enumerate(windows):
@@ -521,31 +834,77 @@ class FinancialExperimentPipeline:
             y_proba = model.predict(X_w_scaled, verbose=0)
             y_pred  = np.argmax(y_proba, axis=1)
 
-            ml_metrics  = ClassificationEvaluator.evaluate(y_w, y_pred, y_proba=y_proba)
-            strat_ret   = simulate_strategy(
+            strat_ret = simulate_strategy(
                 y_pred, returns=r_w,
                 transaction_cost=self.cfg.get("transaction_cost", 0.001),
                 allow_short=self.cfg.get("allow_short", True),
+                position_lag=0 if self.cfg.get("use_event_returns", True) else 1,
             )
-            fin_metrics = FinancialMetrics.compute(strat_ret, pd.Series(r_w))
 
+            # Métricas por janela (para _std de consistência entre janelas)
+            ml_metrics  = ClassificationEvaluator.evaluate(y_w, y_pred, y_proba=y_proba)
+            _oos_rh = getattr(self, "_avg_oos_event_duration", getattr(self, "_avg_event_duration", 1.0))
+            fin_metrics = FinancialMetrics.compute(
+                strat_ret, pd.Series(r_w),
+                risk_free=self.cfg.get("annual_risk_free", 0.0),
+                return_horizon=_oos_rh,
+            )
             oos_ml_metrics.append(ml_metrics)
             oos_fin_metrics.append(fin_metrics)
 
-        agg_ml  = _aggregate_dicts(oos_ml_metrics)
-        agg_fin = FinancialMetrics.aggregate_cv(oos_fin_metrics)
-        return {**agg_ml, **agg_fin}
+            self._save_predictions(
+                y_true=y_w, y_pred=y_pred, y_proba=y_proba,
+                filename=f"predictions_oos_w{w_idx}.npz",
+                ret_test=r_w, strat_ret=strat_ret,
+            )
+
+            # Acumula séries completas para métricas sobre o OOS inteiro
+            all_strat_rets.append(strat_ret)
+            all_bh_rets.append(pd.Series(r_w))
+            all_y_true.append(y_w)
+            all_y_pred.append(y_pred)
+            all_y_proba.append(y_proba)
+
+        # Métricas headline calculadas sobre o OOS concatenado completo.
+        # mean(Sharpe_janela) ≠ Sharpe(retornos_concatenados) — o segundo é o
+        # número correto para um walk-forward pois reflete a curva de equity real.
+        full_strat_ret = pd.concat(all_strat_rets, ignore_index=True)
+        full_bh_ret    = pd.concat(all_bh_rets,    ignore_index=True)
+        full_y_true    = np.concatenate(all_y_true)
+        full_y_pred    = np.concatenate(all_y_pred)
+        full_y_proba   = np.concatenate(all_y_proba)
+
+        global_ml  = ClassificationEvaluator.evaluate(full_y_true, full_y_pred, y_proba=full_y_proba)
+        _oos_rh = getattr(self, "_avg_oos_event_duration", getattr(self, "_avg_event_duration", 1.0))
+        global_fin = FinancialMetrics.compute(
+            full_strat_ret, full_bh_ret,
+            risk_free=self.cfg.get("annual_risk_free", 0.0),
+            return_horizon=_oos_rh,
+        )
+
+        self._save_predictions(
+            y_true=full_y_true, y_pred=full_y_pred, y_proba=full_y_proba,
+            filename="predictions_oos_full.npz",
+            ret_test=np.asarray(full_bh_ret), strat_ret=np.asarray(full_strat_ret),
+        )
+
+        # _std vem da variação entre janelas (consistência do modelo ao longo do tempo)
+        window_std_ml  = {k: v for k, v in _aggregate_dicts(oos_ml_metrics).items() if k.endswith("_std")}
+        window_std_fin = {k: v for k, v in FinancialMetrics.aggregate_cv(oos_fin_metrics).items() if k.endswith("_std")}
+
+        return {**global_ml, **window_std_ml, **global_fin, **window_std_fin}
 
     def _save_predictions(
         self,
         y_true: np.ndarray,
         y_pred: np.ndarray,
         y_proba: np.ndarray,
-        fold_idx: int,
+        filename: str,
         X_val: np.ndarray | None = None,
         y_val: np.ndarray | None = None,
         y_proba_val: np.ndarray | None = None,
         ret_test: np.ndarray | None = None,
+        strat_ret: np.ndarray | None = None,
     ) -> None:
         out_dir = self.job_results_dir
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -562,10 +921,9 @@ class FinancialExperimentPipeline:
             arrays["y_proba_val"] = y_proba_val
         if ret_test is not None:
             arrays["ret_test"] = ret_test
-        np.savez_compressed(
-            out_dir / f"predictions_fold{fold_idx}.npz",
-            **arrays,
-        )
+        if strat_ret is not None:
+            arrays["strat_ret"] = np.asarray(strat_ret)
+        np.savez_compressed(out_dir / filename, **arrays)
 
 
 # ---------------------------------------------------------------------------

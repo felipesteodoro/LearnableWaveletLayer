@@ -39,7 +39,7 @@ def _cnn_backbone(x, cfg: dict):
         x = layers.BatchNormalization()(x)
         x = layers.Dropout(dr)(x)
     x = layers.GlobalAveragePooling1D()(x)
-    x = layers.Dense(128, activation="relu", kernel_regularizer=l2)(x)
+    x = layers.Dense(64, activation="relu", kernel_regularizer=l2)(x)
     x = layers.Dropout(dr)(x)
     return x
 
@@ -48,13 +48,13 @@ def _lstm_backbone(x, cfg: dict):
     l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
     dr = cfg.get("dropout_rate", 0.3)
     rdr = cfg.get("recurrent_dropout", 0.1)
-    units = cfg.get("units", [128, 64])
+    units = cfg.get("units", [64, 32])
     for i, u in enumerate(units):
         return_seq = i < len(units) - 1
         x = layers.LSTM(u, return_sequences=return_seq,
                         dropout=dr, recurrent_dropout=rdr,
                         kernel_regularizer=l2)(x)
-    x = layers.Dense(64, activation="relu", kernel_regularizer=l2)(x)
+    x = layers.Dense(32, activation="relu", kernel_regularizer=l2)(x)
     x = layers.Dropout(dr)(x)
     return x
 
@@ -62,35 +62,47 @@ def _lstm_backbone(x, cfg: dict):
 def _cnn_lstm_backbone(x, cfg: dict):
     l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
     dr = cfg.get("dropout_rate", 0.3)
-    for f in cfg.get("filters", [64, 128]):
+    for f in cfg.get("filters", [32, 64]):
         x = layers.Conv1D(f, 3, padding="same", activation="relu",
                           kernel_regularizer=l2)(x)
         x = layers.BatchNormalization()(x)
-    for i, u in enumerate(cfg.get("lstm_units", [64, 32])):
-        return_seq = i < len(cfg.get("lstm_units", [64, 32])) - 1
+    for i, u in enumerate(cfg.get("lstm_units", [32, 16])):
+        return_seq = i < len(cfg.get("lstm_units", [32, 16])) - 1
         x = layers.LSTM(u, return_sequences=return_seq,
                         dropout=dr, kernel_regularizer=l2)(x)
-    x = layers.Dense(64, activation="relu", kernel_regularizer=l2)(x)
+    x = layers.Dense(32, activation="relu", kernel_regularizer=l2)(x)
     x = layers.Dropout(dr)(x)
     return x
 
 
 def _transformer_backbone(x, cfg: dict):
-    d_model = cfg.get("head_size", 32) * cfg.get("num_heads", 4)
+    d_model = cfg.get("head_size", 16) * cfg.get("num_heads", 4)
     l2 = cfg.get("l2_reg", 1e-4)
     dr = cfg.get("dropout_rate", 0.2)
     x = layers.Dense(d_model)(x)
     x = SinusoidalPositionalEncoding()(x)
-    for _ in range(cfg.get("num_blocks", 2)):
+    for _ in range(cfg.get("num_blocks", 1)):
         x = TransformerBlock(
-            head_size=cfg.get("head_size", 32),
+            head_size=cfg.get("head_size", 16),
             num_heads=cfg.get("num_heads", 4),
-            ff_dim=cfg.get("ff_dim", 128),
+            ff_dim=cfg.get("ff_dim", 64),
             dropout=dr, l2_reg=l2,
         )(x)
     x = layers.GlobalAveragePooling1D()(x)
-    x = layers.Dense(64, activation="relu")(x)
+    x = layers.Dense(32, activation="relu")(x)
     x = layers.Dropout(dr)(x)
+    return x
+
+
+def _mlp_backbone(x, cfg: dict):
+    """Flatten temporal input then apply stacked dense layers (MLP baseline)."""
+    l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
+    dr = cfg.get("dropout_rate", 0.3)
+    x = layers.Flatten()(x)
+    for units in cfg.get("mlp_units", [128, 64, 32]):
+        x = layers.Dense(units, activation="relu", kernel_regularizer=l2)(x)
+        x = layers.BatchNormalization()(x)
+        x = layers.Dropout(dr)(x)
     return x
 
 
@@ -98,6 +110,7 @@ _BACKBONES = {
     "CNN":         _cnn_backbone,
     "LSTM":        _lstm_backbone,
     "CNN_LSTM":    _cnn_lstm_backbone,
+    "MLP":         _mlp_backbone,
     "Transformer": _transformer_backbone,
 }
 
@@ -132,8 +145,10 @@ def _apply_wavelet_frontend(x, mode: str, cfg: dict):
             align=cfg.get("align", "pad_to_first"),
         )(x)
 
-    elif mode == "learned_wavelet":
+    elif mode in ("learned_wavelet", "learned_wavelet_no_warmup"):
         from models.LWT.learned_wavelet_dwt_qmf import LearnedWaveletDWT1D_QMF
+        # learned_wavelet_no_warmup: mesma arquitetura, mas sem inicialização db4
+        warm = False if mode == "learned_wavelet_no_warmup" else cfg.get("warm_start_db4", False)
         x_out = LearnedWaveletDWT1D_QMF(
             levels=cfg.get("wavelet_levels", 2),
             kernel_size=cfg.get("kernel_size", 8),
@@ -142,7 +157,7 @@ def _apply_wavelet_frontend(x, mode: str, cfg: dict):
             reg_high_dc=cfg.get("reg_high_dc", 1e-2),
             reg_smooth=cfg.get("reg_smooth", 1e-3),
             align=cfg.get("align", "pad_to_first"),
-            warm_start_db4=cfg.get("warm_start_db4", False),
+            warm_start_db4=warm,
             mode="concat",
         )(x)
 

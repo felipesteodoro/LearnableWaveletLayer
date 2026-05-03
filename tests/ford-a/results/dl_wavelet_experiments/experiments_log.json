@@ -1,0 +1,4970 @@
+[
+  {
+    "id": "DL_Wavelet_Wav_CNN_g0_2026-03-09T15-14-28.100217",
+    "timestamp": "2026-03-09T15:14:28.100217",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g0",
+    "metrics": {
+      "accuracy": 0.9401515151515152,
+      "f1": 0.9387121799844841,
+      "precision": 0.9307692307692308,
+      "recall": 0.94679186228482,
+      "auc_roc": 0.9877194312883337,
+      "log_loss": 0.1500192675231394,
+      "specificity": 0.933920704845815
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g1_2026-03-09T15-14-51.339964",
+    "timestamp": "2026-03-09T15:14:51.339964",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g1",
+    "metrics": {
+      "accuracy": 0.9371212121212121,
+      "f1": 0.9361046959199384,
+      "precision": 0.9212121212121213,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9850974011797986,
+      "log_loss": 0.1668220345612934,
+      "specificity": 0.9236417033773862
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g2_2026-03-09T15-15-15.268528",
+    "timestamp": "2026-03-09T15:15:15.268528",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g2",
+    "metrics": {
+      "accuracy": 0.9378787878787879,
+      "f1": 0.9375,
+      "precision": 0.9138187221396731,
+      "recall": 0.9624413145539906,
+      "auc_roc": 0.9860694596687648,
+      "log_loss": 0.15997098063561427,
+      "specificity": 0.9148311306901615
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g3_2026-03-09T15-15-40.928734",
+    "timestamp": "2026-03-09T15:15:40.928734",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g3",
+    "metrics": {
+      "accuracy": 0.9333333333333333,
+      "f1": 0.9329268292682927,
+      "precision": 0.9093610698365527,
+      "recall": 0.9577464788732394,
+      "auc_roc": 0.9841598128500156,
+      "log_loss": 0.18847107503904992,
+      "specificity": 0.9104258443465492
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g4_2026-03-09T15-16-29.709355",
+    "timestamp": "2026-03-09T15:16:29.709355",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g4",
+    "metrics": {
+      "accuracy": 0.9492424242424242,
+      "f1": 0.947615324472244,
+      "precision": 0.946875,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.9901760046327894,
+      "log_loss": 0.1379318426579953,
+      "specificity": 0.9500734214390602
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g5_2026-03-09T15-17-12.956995",
+    "timestamp": "2026-03-09T15:17:12.956995",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g5",
+    "metrics": {
+      "accuracy": 0.9424242424242424,
+      "f1": 0.9415384615384615,
+      "precision": 0.9258698940998488,
+      "recall": 0.9577464788732394,
+      "auc_roc": 0.9858856188197878,
+      "log_loss": 0.15888708884397154,
+      "specificity": 0.9280469897209985
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g6_2026-03-09T15-18-05.790493",
+    "timestamp": "2026-03-09T15:18:05.790493",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g6",
+    "metrics": {
+      "accuracy": 0.956060606060606,
+      "f1": 0.9550387596899225,
+      "precision": 0.946236559139785,
+      "recall": 0.9640062597809077,
+      "auc_roc": 0.988985635135663,
+      "log_loss": 0.16296630061588718,
+      "specificity": 0.9486049926578561
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g7_2026-03-09T15-18-49.223169",
+    "timestamp": "2026-03-09T15:18:49.223169",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g7",
+    "metrics": {
+      "accuracy": 0.9401515151515152,
+      "f1": 0.939463601532567,
+      "precision": 0.9204204204204204,
+      "recall": 0.9593114241001565,
+      "auc_roc": 0.9862831746557006,
+      "log_loss": 0.18343295427422818,
+      "specificity": 0.922173274596182
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g8_2026-03-09T15-19-51.112398",
+    "timestamp": "2026-03-09T15:19:51.112398",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g8",
+    "metrics": {
+      "accuracy": 0.9537878787878787,
+      "f1": 0.9525291828793774,
+      "precision": 0.9473684210526315,
+      "recall": 0.9577464788732394,
+      "auc_roc": 0.9902288588768703,
+      "log_loss": 0.13227294208861484,
+      "specificity": 0.9500734214390602
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g9_2026-03-09T15-20-54.586232",
+    "timestamp": "2026-03-09T15:20:54.586232",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g9",
+    "metrics": {
+      "accuracy": 0.9401515151515152,
+      "f1": 0.9385214007782101,
+      "precision": 0.93343653250774,
+      "recall": 0.9436619718309859,
+      "auc_roc": 0.9859706452124396,
+      "log_loss": 0.1547237228822267,
+      "specificity": 0.9368575624082232
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g10_2026-03-09T15-21-55.402764",
+    "timestamp": "2026-03-09T15:21:55.402764",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g10",
+    "metrics": {
+      "accuracy": 0.9484848484848485,
+      "f1": 0.9470404984423676,
+      "precision": 0.9426356589147287,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9906195206809464,
+      "log_loss": 0.128433258109198,
+      "specificity": 0.9456681350954479
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g11_2026-03-09T15-22-45.305758",
+    "timestamp": "2026-03-09T15:22:45.305758",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g11",
+    "metrics": {
+      "accuracy": 0.9431818181818182,
+      "f1": 0.9410840534171249,
+      "precision": 0.944794952681388,
+      "recall": 0.9374021909233177,
+      "auc_roc": 0.9860740556899892,
+      "log_loss": 0.15194293248300877,
+      "specificity": 0.9486049926578561
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g12_2026-03-09T15-23-11.283145",
+    "timestamp": "2026-03-09T15:23:11.283145",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g12",
+    "metrics": {
+      "accuracy": 0.9409090909090909,
+      "f1": 0.9397217928902627,
+      "precision": 0.9282442748091603,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9872115709430346,
+      "log_loss": 0.14767829999847265,
+      "specificity": 0.9309838472834068
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g13_2026-03-09T15-23-37.203450",
+    "timestamp": "2026-03-09T15:23:37.203450",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g13",
+    "metrics": {
+      "accuracy": 0.9431818181818182,
+      "f1": 0.9416342412451362,
+      "precision": 0.9365325077399381,
+      "recall": 0.94679186228482,
+      "auc_roc": 0.9854995530369359,
+      "log_loss": 0.15554602336425713,
+      "specificity": 0.9397944199706314
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g14_2026-03-09T15-24-04.106700",
+    "timestamp": "2026-03-09T15:24:04.106700",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g14",
+    "metrics": {
+      "accuracy": 0.9424242424242424,
+      "f1": 0.9414483821263482,
+      "precision": 0.9271623672230652,
+      "recall": 0.9561815336463224,
+      "auc_roc": 0.9875195043650712,
+      "log_loss": 0.1524944097409867,
+      "specificity": 0.9295154185022027
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g15_2026-03-09T15-24-30.858993",
+    "timestamp": "2026-03-09T15:24:30.858993",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g15",
+    "metrics": {
+      "accuracy": 0.9363636363636364,
+      "f1": 0.9342723004694836,
+      "precision": 0.9342723004694836,
+      "recall": 0.9342723004694836,
+      "auc_roc": 0.9838438363908365,
+      "log_loss": 0.18347212852616362,
+      "specificity": 0.9383259911894273
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g16_2026-03-09T15-25-31.274777",
+    "timestamp": "2026-03-09T15:25:31.274777",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g16",
+    "metrics": {
+      "accuracy": 0.9522727272727273,
+      "f1": 0.9506656225528582,
+      "precision": 0.95141065830721,
+      "recall": 0.9499217527386542,
+      "auc_roc": 0.9900794881870765,
+      "log_loss": 0.13548358592901347,
+      "specificity": 0.9544787077826725
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g17_2026-03-09T15-26-23.787855",
+    "timestamp": "2026-03-09T15:26:23.787855",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g17",
+    "metrics": {
+      "accuracy": 0.9431818181818182,
+      "f1": 0.9412685982772122,
+      "precision": 0.9420062695924765,
+      "recall": 0.9405320813771518,
+      "auc_roc": 0.9867726509161019,
+      "log_loss": 0.15593554465109738,
+      "specificity": 0.9456681350954479
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g18_2026-03-09T15-27-07.356031",
+    "timestamp": "2026-03-09T15:27:07.356031",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g18",
+    "metrics": {
+      "accuracy": 0.9515151515151515,
+      "f1": 0.9503105590062112,
+      "precision": 0.9429892141756548,
+      "recall": 0.9577464788732394,
+      "auc_roc": 0.9902196668344214,
+      "log_loss": 0.12932993630832917,
+      "specificity": 0.9456681350954479
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g19_2026-03-09T15-27-45.277199",
+    "timestamp": "2026-03-09T15:27:45.277199",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g19",
+    "metrics": {
+      "accuracy": 0.9378787878787879,
+      "f1": 0.9365325077399381,
+      "precision": 0.9264931087289433,
+      "recall": 0.94679186228482,
+      "auc_roc": 0.9843666338051149,
+      "log_loss": 0.16366897157348925,
+      "specificity": 0.9295154185022027
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g20_2026-03-09T15-29-00.031399",
+    "timestamp": "2026-03-09T15:29:00.031399",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g20",
+    "metrics": {
+      "accuracy": 0.9492424242424242,
+      "f1": 0.9483423284502699,
+      "precision": 0.9346504559270516,
+      "recall": 0.9624413145539906,
+      "auc_roc": 0.989826707019733,
+      "log_loss": 0.13102012303035987,
+      "specificity": 0.9368575624082232
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g21_2026-03-09T15-30-00.897516",
+    "timestamp": "2026-03-09T15:30:00.897516",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g21",
+    "metrics": {
+      "accuracy": 0.9431818181818182,
+      "f1": 0.9413604378420641,
+      "precision": 0.940625,
+      "recall": 0.9420970266040689,
+      "auc_roc": 0.9860487775732548,
+      "log_loss": 0.14990660758855354,
+      "specificity": 0.9441997063142438
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g22_2026-03-09T15-31-14.363694",
+    "timestamp": "2026-03-09T15:31:14.363694",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g22",
+    "metrics": {
+      "accuracy": 0.9507575757575758,
+      "f1": 0.9494949494949495,
+      "precision": 0.9429012345679012,
+      "recall": 0.9561815336463224,
+      "auc_roc": 0.9905298982670702,
+      "log_loss": 0.12880022121467613,
+      "specificity": 0.9456681350954479
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g23_2026-03-09T15-32-21.329062",
+    "timestamp": "2026-03-09T15:32:21.329062",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g23",
+    "metrics": {
+      "accuracy": 0.9378787878787879,
+      "f1": 0.9360374414976599,
+      "precision": 0.9331259720062208,
+      "recall": 0.9389671361502347,
+      "auc_roc": 0.9857523342042792,
+      "log_loss": 0.15853461339908742,
+      "specificity": 0.9368575624082232
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g24_2026-03-09T15-33-12.004869",
+    "timestamp": "2026-03-09T15:33:12.004869",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g24",
+    "metrics": {
+      "accuracy": 0.95,
+      "f1": 0.9489164086687306,
+      "precision": 0.9387442572741195,
+      "recall": 0.9593114241001565,
+      "auc_roc": 0.9891350058254569,
+      "log_loss": 0.13801660799646545,
+      "specificity": 0.9412628487518355
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g25_2026-03-09T15-33-56.727976",
+    "timestamp": "2026-03-09T15:33:56.727976",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g25",
+    "metrics": {
+      "accuracy": 0.9431818181818182,
+      "f1": 0.9420849420849421,
+      "precision": 0.9298780487804879,
+      "recall": 0.9546165884194053,
+      "auc_roc": 0.986255598528354,
+      "log_loss": 0.15010183721637815,
+      "specificity": 0.9324522760646109
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g26_2026-03-09T15-34-25.498356",
+    "timestamp": "2026-03-09T15:34:25.498356",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g26",
+    "metrics": {
+      "accuracy": 0.943939393939394,
+      "f1": 0.9422776911076443,
+      "precision": 0.9393468118195957,
+      "recall": 0.945226917057903,
+      "auc_roc": 0.9868691673618148,
+      "log_loss": 0.15204872015260443,
+      "specificity": 0.9427312775330396
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g27_2026-03-09T15-34-54.865971",
+    "timestamp": "2026-03-09T15:34:54.865971",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g27",
+    "metrics": {
+      "accuracy": 0.9378787878787879,
+      "f1": 0.9368258859784283,
+      "precision": 0.9226100151745068,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9862992607299861,
+      "log_loss": 0.15547126580842097,
+      "specificity": 0.9251101321585903
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g28_2026-03-09T15-35-48.842583",
+    "timestamp": "2026-03-09T15:35:48.842583",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g28",
+    "metrics": {
+      "accuracy": 0.9507575757575758,
+      "f1": 0.9490196078431372,
+      "precision": 0.9512578616352201,
+      "recall": 0.94679186228482,
+      "auc_roc": 0.9898496871258551,
+      "log_loss": 0.13071263418251539,
+      "specificity": 0.9544787077826725
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g29_2026-03-09T15-36-58.043823",
+    "timestamp": "2026-03-09T15:36:58.043823",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g29",
+    "metrics": {
+      "accuracy": 0.9416666666666667,
+      "f1": 0.9400778210116731,
+      "precision": 0.934984520123839,
+      "recall": 0.945226917057903,
+      "auc_roc": 0.9872368490597689,
+      "log_loss": 0.14935889415326656,
+      "specificity": 0.9383259911894273
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g30_2026-03-09T15-37-51.624051",
+    "timestamp": "2026-03-09T15:37:51.624051",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g30",
+    "metrics": {
+      "accuracy": 0.9545454545454546,
+      "f1": 0.953125,
+      "precision": 0.9516380655226209,
+      "recall": 0.9546165884194053,
+      "auc_roc": 0.9904839380548259,
+      "log_loss": 0.13303710531307456,
+      "specificity": 0.9544787077826725
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g31_2026-03-09T15-38-50.570791",
+    "timestamp": "2026-03-09T15:38:50.570791",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g31",
+    "metrics": {
+      "accuracy": 0.943939393939394,
+      "f1": 0.942457231726283,
+      "precision": 0.9366306027820711,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.9874505640467047,
+      "log_loss": 0.15479053361659809,
+      "specificity": 0.9397944199706314
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g32_2026-03-09T15-40-05.570770",
+    "timestamp": "2026-03-09T15:40:05.570770",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g32",
+    "metrics": {
+      "accuracy": 0.953030303030303,
+      "f1": 0.9520123839009288,
+      "precision": 0.9418070444104135,
+      "recall": 0.9624413145539906,
+      "auc_roc": 0.990343759407481,
+      "log_loss": 0.1257039927776911,
+      "specificity": 0.9441997063142438
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g33_2026-03-09T15-41-11.767792",
+    "timestamp": "2026-03-09T15:41:11.767792",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g33",
+    "metrics": {
+      "accuracy": 0.9409090909090909,
+      "f1": 0.9395348837209302,
+      "precision": 0.9308755760368663,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.985242175848368,
+      "log_loss": 0.15060394430529594,
+      "specificity": 0.933920704845815
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g34_2026-03-09T15-42-27.888793",
+    "timestamp": "2026-03-09T15:42:27.888793",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g34",
+    "metrics": {
+      "accuracy": 0.9492424242424242,
+      "f1": 0.9475332811276429,
+      "precision": 0.9482758620689655,
+      "recall": 0.94679186228482,
+      "auc_roc": 0.990334567365032,
+      "log_loss": 0.1273506934638139,
+      "specificity": 0.9515418502202643
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_g35_2026-03-09T15-43-43.802593",
+    "timestamp": "2026-03-09T15:43:43.802593",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_g35",
+    "metrics": {
+      "accuracy": 0.9371212121212121,
+      "f1": 0.9344909234411997,
+      "precision": 0.9426751592356688,
+      "recall": 0.9264475743348983,
+      "auc_roc": 0.9861820621887631,
+      "log_loss": 0.15464547149902297,
+      "specificity": 0.947136563876652
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g0_2026-03-09T15-44-55.852530",
+    "timestamp": "2026-03-09T15:44:55.852530",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g0",
+    "metrics": {
+      "accuracy": 0.6659090909090909,
+      "f1": 0.7413489736070381,
+      "precision": 0.5928705440900562,
+      "recall": 0.9890453834115805,
+      "auc_roc": 0.711248072543599,
+      "log_loss": 0.5771265808039576,
+      "specificity": 0.36270190895741555
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g1_2026-03-09T15-45-29.912799",
+    "timestamp": "2026-03-09T15:45:29.912799",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g1",
+    "metrics": {
+      "accuracy": 0.6992424242424242,
+      "f1": 0.7523393636930755,
+      "precision": 0.6255186721991701,
+      "recall": 0.9436619718309859,
+      "auc_roc": 0.7174354661169825,
+      "log_loss": 0.5603098886152011,
+      "specificity": 0.4698972099853157
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g2_2026-03-09T15-46-15.024948",
+    "timestamp": "2026-03-09T15:46:15.024948",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g2",
+    "metrics": {
+      "accuracy": 0.6348484848484849,
+      "f1": 0.7245714285714285,
+      "precision": 0.5706570657065707,
+      "recall": 0.9921752738654147,
+      "auc_roc": 0.6588488345639181,
+      "log_loss": 0.6035081635796328,
+      "specificity": 0.29955947136563876
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g3_2026-03-09T15-47-04.205145",
+    "timestamp": "2026-03-09T15:47:04.205145",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g3",
+    "metrics": {
+      "accuracy": 0.6015151515151516,
+      "f1": 0.6097922848664689,
+      "precision": 0.5796897038081805,
+      "recall": 0.6431924882629108,
+      "auc_roc": 0.6382230403140002,
+      "log_loss": 0.6552141155625979,
+      "specificity": 0.5624082232011748
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g4_2026-03-09T15-47-51.157594",
+    "timestamp": "2026-03-09T15:47:51.157594",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g4",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926681300418733,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g5_2026-03-09T15-48-48.219303",
+    "timestamp": "2026-03-09T15:48:48.219303",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g5",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926671417945723,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g6_2026-03-09T15-49-21.811330",
+    "timestamp": "2026-03-09T15:49:21.811330",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g6",
+    "metrics": {
+      "accuracy": 0.6075757575757575,
+      "f1": 0.6128550074738416,
+      "precision": 0.586552217453505,
+      "recall": 0.6416275430359938,
+      "auc_roc": 0.6115776072653905,
+      "log_loss": 0.6694984475544004,
+      "specificity": 0.5756240822320118
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g7_2026-03-09T15-50-02.956222",
+    "timestamp": "2026-03-09T15:50:02.956222",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g7",
+    "metrics": {
+      "accuracy": 0.6477272727272727,
+      "f1": 0.7298082510168507,
+      "precision": 0.5804066543438078,
+      "recall": 0.9827856025039123,
+      "auc_roc": 0.6892698990483938,
+      "log_loss": 0.6080692432668325,
+      "specificity": 0.3333333333333333
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g8_2026-03-09T15-50-52.545023",
+    "timestamp": "2026-03-09T15:50:52.545023",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g8",
+    "metrics": {
+      "accuracy": 0.6734848484848485,
+      "f1": 0.7445168938944873,
+      "precision": 0.5992366412213741,
+      "recall": 0.9827856025039123,
+      "auc_roc": 0.6902752786912368,
+      "log_loss": 0.5751106319760113,
+      "specificity": 0.3832599118942731
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g9_2026-03-09T15-53-20.026569",
+    "timestamp": "2026-03-09T15:53:20.026569",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g9",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926592426588816,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g10_2026-03-09T15-54-25.846911",
+    "timestamp": "2026-03-09T15:54:25.846911",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g10",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926634510939936,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g11_2026-03-09T15-55-23.986067",
+    "timestamp": "2026-03-09T15:55:23.986067",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g11",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926677779610451,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g12_2026-03-09T15-56-24.661950",
+    "timestamp": "2026-03-09T15:56:24.661950",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g12",
+    "metrics": {
+      "accuracy": 0.7053030303030303,
+      "f1": 0.7579340385812072,
+      "precision": 0.6291322314049587,
+      "recall": 0.9530516431924883,
+      "auc_roc": 0.7093223396505645,
+      "log_loss": 0.5618370180792638,
+      "specificity": 0.47283406754772395
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g13_2026-03-09T15-57-02.893865",
+    "timestamp": "2026-03-09T15:57:02.893865",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g13",
+    "metrics": {
+      "accuracy": 0.6909090909090909,
+      "f1": 0.7456359102244389,
+      "precision": 0.6196891191709845,
+      "recall": 0.9358372456964006,
+      "auc_roc": 0.7177847637300389,
+      "log_loss": 0.5842749534526096,
+      "specificity": 0.461086637298091
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g14_2026-03-09T15-59-35.985718",
+    "timestamp": "2026-03-09T15:59:35.985718",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g14",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.48749537525364295,
+      "log_loss": 0.6926611895607228,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g15_2026-03-09T16-02-04.120717",
+    "timestamp": "2026-03-09T16:02:04.120717",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g15",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926581855503544,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g16_2026-03-09T16-03-04.311857",
+    "timestamp": "2026-03-09T16:03:04.311857",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g16",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926680631672703,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_LSTM_g17_2026-03-09T16-04-15.783219",
+    "timestamp": "2026-03-09T16:04:15.783219",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_LSTM_g17",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926690802807374,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g0_2026-03-09T16-05-24.204891",
+    "timestamp": "2026-03-09T16:05:24.204891",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g0",
+    "metrics": {
+      "accuracy": 0.9431818181818182,
+      "f1": 0.9417249417249417,
+      "precision": 0.9351851851851852,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.9869220216058958,
+      "log_loss": 0.1657863096873336,
+      "specificity": 0.9383259911894273
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g1_2026-03-09T16-06-19.943106",
+    "timestamp": "2026-03-09T16:06:19.943106",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g1",
+    "metrics": {
+      "accuracy": 0.9424242424242424,
+      "f1": 0.9419847328244275,
+      "precision": 0.9195230998509687,
+      "recall": 0.9655712050078247,
+      "auc_roc": 0.986839293223856,
+      "log_loss": 0.1689629999218434,
+      "specificity": 0.920704845814978
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g2_2026-03-09T16-06-57.418918",
+    "timestamp": "2026-03-09T16:06:57.418918",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g2",
+    "metrics": {
+      "accuracy": 0.9378787878787879,
+      "f1": 0.9375951293759512,
+      "precision": 0.9125925925925926,
+      "recall": 0.9640062597809077,
+      "auc_roc": 0.982468477039427,
+      "log_loss": 0.1838690110831414,
+      "specificity": 0.9133627019089574
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g3_2026-03-09T16-07-29.565172",
+    "timestamp": "2026-03-09T16:07:29.565172",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g3",
+    "metrics": {
+      "accuracy": 0.9356060606060606,
+      "f1": 0.9346656418139893,
+      "precision": 0.918429003021148,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9825167352622834,
+      "log_loss": 0.18099368704352,
+      "specificity": 0.920704845814978
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g4_2026-03-09T16-08-38.790267",
+    "timestamp": "2026-03-09T16:08:38.790267",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g4",
+    "metrics": {
+      "accuracy": 0.946969696969697,
+      "f1": 0.9457364341085271,
+      "precision": 0.9370199692780338,
+      "recall": 0.9546165884194053,
+      "auc_roc": 0.9853157121879589,
+      "log_loss": 0.17821669643137883,
+      "specificity": 0.9397944199706314
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g5_2026-03-09T16-09-27.710712",
+    "timestamp": "2026-03-09T16:09:27.710712",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g5",
+    "metrics": {
+      "accuracy": 0.9454545454545454,
+      "f1": 0.9439252336448598,
+      "precision": 0.9395348837209302,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.9863429229316181,
+      "log_loss": 0.17085436207151164,
+      "specificity": 0.9427312775330396
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g6_2026-03-09T16-10-51.570694",
+    "timestamp": "2026-03-09T16:10:51.570694",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g6",
+    "metrics": {
+      "accuracy": 0.9424242424242424,
+      "f1": 0.9411764705882353,
+      "precision": 0.9310872894333844,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9847871697471499,
+      "log_loss": 0.1985760133069863,
+      "specificity": 0.933920704845815
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g7_2026-03-09T16-11-29.770981",
+    "timestamp": "2026-03-09T16:11:29.770981",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g7",
+    "metrics": {
+      "accuracy": 0.9409090909090909,
+      "f1": 0.9399075500770416,
+      "precision": 0.9256449165402124,
+      "recall": 0.9546165884194053,
+      "auc_roc": 0.9862578965389661,
+      "log_loss": 0.15603788531682686,
+      "specificity": 0.9280469897209985
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g8_2026-03-09T16-12-19.103237",
+    "timestamp": "2026-03-09T16:12:19.103237",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g8",
+    "metrics": {
+      "accuracy": 0.9409090909090909,
+      "f1": 0.9401840490797546,
+      "precision": 0.9218045112781955,
+      "recall": 0.9593114241001565,
+      "auc_roc": 0.9848078518426597,
+      "log_loss": 0.16120632675779334,
+      "specificity": 0.9236417033773862
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g9_2026-03-09T16-13-16.750063",
+    "timestamp": "2026-03-09T16:13:16.750063",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g9",
+    "metrics": {
+      "accuracy": 0.9507575757575758,
+      "f1": 0.9490994518402506,
+      "precision": 0.9498432601880877,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.9874597560891535,
+      "log_loss": 0.1477398309976328,
+      "specificity": 0.9530102790014684
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g10_2026-03-09T16-14-01.115602",
+    "timestamp": "2026-03-09T16:14:01.115602",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g10",
+    "metrics": {
+      "accuracy": 0.9409090909090909,
+      "f1": 0.9398148148148148,
+      "precision": 0.9269406392694064,
+      "recall": 0.9530516431924883,
+      "auc_roc": 0.9869174255846713,
+      "log_loss": 0.15057409719283674,
+      "specificity": 0.9295154185022027
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g11_2026-03-09T16-14-31.676257",
+    "timestamp": "2026-03-09T16:14:31.676257",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g11",
+    "metrics": {
+      "accuracy": 0.9325757575757576,
+      "f1": 0.9312741312741313,
+      "precision": 0.9192073170731707,
+      "recall": 0.9436619718309859,
+      "auc_roc": 0.9825305233259568,
+      "log_loss": 0.17059318837651946,
+      "specificity": 0.922173274596182
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g12_2026-03-09T16-15-20.302076",
+    "timestamp": "2026-03-09T16:15:20.302076",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g12",
+    "metrics": {
+      "accuracy": 0.9431818181818182,
+      "f1": 0.9421742482652274,
+      "precision": 0.9285714285714286,
+      "recall": 0.9561815336463224,
+      "auc_roc": 0.9848515140442918,
+      "log_loss": 0.17565368233546197,
+      "specificity": 0.9309838472834068
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g13_2026-03-09T16-16-19.713158",
+    "timestamp": "2026-03-09T16:16:19.713158",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g13",
+    "metrics": {
+      "accuracy": 0.9462121212121212,
+      "f1": 0.9449185415050426,
+      "precision": 0.936923076923077,
+      "recall": 0.9530516431924883,
+      "auc_roc": 0.9859729432230517,
+      "log_loss": 0.16234498448585713,
+      "specificity": 0.9397944199706314
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g14_2026-03-09T16-17-03.847426",
+    "timestamp": "2026-03-09T16:17:03.847426",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g14",
+    "metrics": {
+      "accuracy": 0.9371212121212121,
+      "f1": 0.936006168080185,
+      "precision": 0.9224924012158054,
+      "recall": 0.9499217527386542,
+      "auc_roc": 0.9837094027700221,
+      "log_loss": 0.16848783493908925,
+      "specificity": 0.9251101321585903
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g15_2026-03-09T16-17-55.508762",
+    "timestamp": "2026-03-09T16:17:55.508762",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g15",
+    "metrics": {
+      "accuracy": 0.9424242424242424,
+      "f1": 0.9418070444104135,
+      "precision": 0.9220389805097451,
+      "recall": 0.9624413145539906,
+      "auc_roc": 0.9855409172279557,
+      "log_loss": 0.17436702349837346,
+      "specificity": 0.9236417033773862
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g16_2026-03-09T16-18-46.378426",
+    "timestamp": "2026-03-09T16:18:46.378426",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g16",
+    "metrics": {
+      "accuracy": 0.9371212121212121,
+      "f1": 0.935408560311284,
+      "precision": 0.9303405572755418,
+      "recall": 0.9405320813771518,
+      "auc_roc": 0.9841690048924645,
+      "log_loss": 0.16440644223702425,
+      "specificity": 0.933920704845815
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g17_2026-03-09T16-20-23.602425",
+    "timestamp": "2026-03-09T16:20:23.602425",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g17",
+    "metrics": {
+      "accuracy": 0.946969696969697,
+      "f1": 0.9457364341085271,
+      "precision": 0.9370199692780338,
+      "recall": 0.9546165884194053,
+      "auc_roc": 0.9887650261168907,
+      "log_loss": 0.15371694978364378,
+      "specificity": 0.9397944199706314
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g18_2026-03-09T16-21-36.676383",
+    "timestamp": "2026-03-09T16:21:36.676383",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g18",
+    "metrics": {
+      "accuracy": 0.9446969696969697,
+      "f1": 0.9435421500386698,
+      "precision": 0.9327217125382263,
+      "recall": 0.9546165884194053,
+      "auc_roc": 0.9860120094034595,
+      "log_loss": 0.1753340989810547,
+      "specificity": 0.9353891336270191
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g19_2026-03-09T16-22-24.555136",
+    "timestamp": "2026-03-09T16:22:24.555136",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g19",
+    "metrics": {
+      "accuracy": 0.9325757575757576,
+      "f1": 0.9318007662835249,
+      "precision": 0.9129129129129129,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9833141449447214,
+      "log_loss": 0.18245536637341853,
+      "specificity": 0.9148311306901615
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g20_2026-03-09T16-23-30.501964",
+    "timestamp": "2026-03-09T16:23:30.501964",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g20",
+    "metrics": {
+      "accuracy": 0.9386363636363636,
+      "f1": 0.9377401998462721,
+      "precision": 0.9214501510574018,
+      "recall": 0.9546165884194053,
+      "auc_roc": 0.9867335847356944,
+      "log_loss": 0.1619134403181641,
+      "specificity": 0.9236417033773862
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g21_2026-03-09T16-24-46.307946",
+    "timestamp": "2026-03-09T16:24:46.307946",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g21",
+    "metrics": {
+      "accuracy": 0.9477272727272728,
+      "f1": 0.9461358313817331,
+      "precision": 0.9439252336448598,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.9881123911030222,
+      "log_loss": 0.14989921466086256,
+      "specificity": 0.947136563876652
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g22_2026-03-09T16-25-59.706150",
+    "timestamp": "2026-03-09T16:25:59.706150",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g22",
+    "metrics": {
+      "accuracy": 0.9409090909090909,
+      "f1": 0.9398148148148148,
+      "precision": 0.9269406392694064,
+      "recall": 0.9530516431924883,
+      "auc_roc": 0.9863590090059036,
+      "log_loss": 0.158143197712369,
+      "specificity": 0.9295154185022027
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g23_2026-03-09T16-27-05.930017",
+    "timestamp": "2026-03-09T16:27:05.930017",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g23",
+    "metrics": {
+      "accuracy": 0.9409090909090909,
+      "f1": 0.9401840490797546,
+      "precision": 0.9218045112781955,
+      "recall": 0.9593114241001565,
+      "auc_roc": 0.9880848149756756,
+      "log_loss": 0.14827823331321777,
+      "specificity": 0.9236417033773862
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g24_2026-03-09T16-27-59.492358",
+    "timestamp": "2026-03-09T16:27:59.492358",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g24",
+    "metrics": {
+      "accuracy": 0.9325757575757576,
+      "f1": 0.9306313328137179,
+      "precision": 0.9270186335403726,
+      "recall": 0.9342723004694836,
+      "auc_roc": 0.982640827835343,
+      "log_loss": 0.18351336873615412,
+      "specificity": 0.9309838472834068
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g25_2026-03-09T16-28-46.885204",
+    "timestamp": "2026-03-09T16:28:46.885204",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g25",
+    "metrics": {
+      "accuracy": 0.9401515151515152,
+      "f1": 0.9388071262587142,
+      "precision": 0.9294478527607362,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.9849273483944949,
+      "log_loss": 0.17187094906145717,
+      "specificity": 0.9324522760646109
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g26_2026-03-09T16-30-26.011342",
+    "timestamp": "2026-03-09T16:30:26.011342",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g26",
+    "metrics": {
+      "accuracy": 0.9371212121212121,
+      "f1": 0.936006168080185,
+      "precision": 0.9224924012158054,
+      "recall": 0.9499217527386542,
+      "auc_roc": 0.9874689481316025,
+      "log_loss": 0.16767798968748138,
+      "specificity": 0.9251101321585903
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g27_2026-03-09T16-31-31.658519",
+    "timestamp": "2026-03-09T16:31:31.658519",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g27",
+    "metrics": {
+      "accuracy": 0.9416666666666667,
+      "f1": 0.940814757878555,
+      "precision": 0.9244712990936556,
+      "recall": 0.9577464788732394,
+      "auc_roc": 0.9869059355316103,
+      "log_loss": 0.15572206983972117,
+      "specificity": 0.9265785609397944
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g28_2026-03-09T16-33-05.716633",
+    "timestamp": "2026-03-09T16:33:05.716633",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g28",
+    "metrics": {
+      "accuracy": 0.9515151515151515,
+      "f1": 0.95,
+      "precision": 0.9485179407176287,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9876160208107841,
+      "log_loss": 0.14812928500181483,
+      "specificity": 0.9515418502202643
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g29_2026-03-09T16-34-39.548864",
+    "timestamp": "2026-03-09T16:34:39.548864",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g29",
+    "metrics": {
+      "accuracy": 0.9484848484848485,
+      "f1": 0.9470404984423676,
+      "precision": 0.9426356589147287,
+      "recall": 0.9514866979655712,
+      "auc_roc": 0.9861315059552944,
+      "log_loss": 0.16231644443163662,
+      "specificity": 0.9456681350954479
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g30_2026-03-09T16-35-54.313991",
+    "timestamp": "2026-03-09T16:35:54.313991",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g30",
+    "metrics": {
+      "accuracy": 0.9484848484848485,
+      "f1": 0.9475308641975309,
+      "precision": 0.9345509893455098,
+      "recall": 0.9608763693270735,
+      "auc_roc": 0.9860878437536624,
+      "log_loss": 0.15903141780883487,
+      "specificity": 0.9368575624082232
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g31_2026-03-09T16-36-57.776275",
+    "timestamp": "2026-03-09T16:36:57.776275",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g31",
+    "metrics": {
+      "accuracy": 0.9371212121212121,
+      "f1": 0.9353078721745908,
+      "precision": 0.9316770186335404,
+      "recall": 0.9389671361502347,
+      "auc_roc": 0.9856627117904031,
+      "log_loss": 0.15755228718824923,
+      "specificity": 0.9353891336270191
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g32_2026-03-09T16-38-24.027408",
+    "timestamp": "2026-03-09T16:38:24.027408",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g32",
+    "metrics": {
+      "accuracy": 0.9484848484848485,
+      "f1": 0.9467084639498433,
+      "precision": 0.9481946624803768,
+      "recall": 0.945226917057903,
+      "auc_roc": 0.9886317415013822,
+      "log_loss": 0.14172195418476435,
+      "specificity": 0.9515418502202643
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g33_2026-03-09T16-39-56.735282",
+    "timestamp": "2026-03-09T16:39:56.735282",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g33",
+    "metrics": {
+      "accuracy": 0.9507575757575758,
+      "f1": 0.9490994518402506,
+      "precision": 0.9498432601880877,
+      "recall": 0.9483568075117371,
+      "auc_roc": 0.9890453834115807,
+      "log_loss": 0.13821436623985506,
+      "specificity": 0.9530102790014684
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g34_2026-03-09T16-40-50.468776",
+    "timestamp": "2026-03-09T16:40:50.468776",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g34",
+    "metrics": {
+      "accuracy": 0.9378787878787879,
+      "f1": 0.9372128637059725,
+      "precision": 0.9175412293853074,
+      "recall": 0.9577464788732394,
+      "auc_roc": 0.9869450017120178,
+      "log_loss": 0.1562099520792609,
+      "specificity": 0.9192364170337739
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_CNN_LSTM_g35_2026-03-09T16-42-17.371103",
+    "timestamp": "2026-03-09T16:42:17.371103",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_CNN_LSTM_g35",
+    "metrics": {
+      "accuracy": 0.9484848484848485,
+      "f1": 0.9474497681607419,
+      "precision": 0.9358778625954198,
+      "recall": 0.9593114241001565,
+      "auc_roc": 0.9892200322181087,
+      "log_loss": 0.14809688564648868,
+      "specificity": 0.9383259911894273
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g0_2026-03-09T16-43-19.113685",
+    "timestamp": "2026-03-09T16:43:19.113685",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g0",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926646165747938,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g1_2026-03-09T16-44-07.774587",
+    "timestamp": "2026-03-09T16:44:07.774587",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g1",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926616813206014,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g2_2026-03-09T16-45-16.307080",
+    "timestamp": "2026-03-09T16:45:16.307080",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g2",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926579910034725,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g3_2026-03-09T16-46-09.155358",
+    "timestamp": "2026-03-09T16:46:09.155358",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g3",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926682036597429,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g4_2026-03-09T16-47-27.425157",
+    "timestamp": "2026-03-09T16:47:27.425157",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g4",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926621917991261,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g5_2026-03-09T16-48-09.811532",
+    "timestamp": "2026-03-09T16:48:09.811532",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g5",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926584878266211,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g6_2026-03-09T16-49-09.742125",
+    "timestamp": "2026-03-09T16:49:09.742125",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g6",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.692665155404326,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g7_2026-03-09T16-49-56.103527",
+    "timestamp": "2026-03-09T16:49:56.103527",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g7",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926595659547525,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g8_2026-03-09T16-50-56.538800",
+    "timestamp": "2026-03-09T16:50:56.538800",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g8",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926594830495679,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g9_2026-03-09T16-51-51.825444",
+    "timestamp": "2026-03-09T16:51:51.825444",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g9",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926680514289649,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g10_2026-03-09T16-53-12.411453",
+    "timestamp": "2026-03-09T16:53:12.411453",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g10",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926635522248027,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g11_2026-03-09T16-54-27.323412",
+    "timestamp": "2026-03-09T16:54:27.323412",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g11",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926651442890386,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g12_2026-03-09T16-55-20.729746",
+    "timestamp": "2026-03-09T16:55:20.729746",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g12",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926666910742654,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g13_2026-03-09T16-56-33.605031",
+    "timestamp": "2026-03-09T16:56:33.605031",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g13",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926667759304022,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g14_2026-03-09T16-57-55.072854",
+    "timestamp": "2026-03-09T16:57:55.072854",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g14",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926644969470722,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g15_2026-03-09T16-59-27.278916",
+    "timestamp": "2026-03-09T16:59:27.278916",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g15",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926669736087243,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g16_2026-03-09T17-00-19.249615",
+    "timestamp": "2026-03-09T17:00:19.249615",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g16",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926596818663513,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g17_2026-03-09T17-01-14.440550",
+    "timestamp": "2026-03-09T17:01:14.440550",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g17",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.692660701823853,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g18_2026-03-09T17-02-43.660965",
+    "timestamp": "2026-03-09T17:02:43.660965",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g18",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926668102552258,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g19_2026-03-09T17-03-35.387087",
+    "timestamp": "2026-03-09T17:03:35.387087",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g19",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926614763414622,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g20_2026-03-09T17-04-23.007045",
+    "timestamp": "2026-03-09T17:04:23.007045",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g20",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926631430250924,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g21_2026-03-09T17-05-05.638615",
+    "timestamp": "2026-03-09T17:05:05.638615",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g21",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926586807334615,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g22_2026-03-09T17-06-17.268571",
+    "timestamp": "2026-03-09T17:06:17.268571",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g22",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926592188157873,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g23_2026-03-09T17-07-14.724584",
+    "timestamp": "2026-03-09T17:07:14.724584",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g23",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926627845737886,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g24_2026-03-09T17-08-36.835222",
+    "timestamp": "2026-03-09T17:08:36.835222",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g24",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926575721055473,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g25_2026-03-09T17-09-37.195747",
+    "timestamp": "2026-03-09T17:09:37.195747",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g25",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.692666414116453,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g26_2026-03-09T17-10-56.858749",
+    "timestamp": "2026-03-09T17:10:56.858749",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g26",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926696896157015,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g27_2026-03-09T17-12-34.383098",
+    "timestamp": "2026-03-09T17:12:34.383098",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g27",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926685590411198,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g28_2026-03-09T17-13-35.652486",
+    "timestamp": "2026-03-09T17:13:35.652486",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g28",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.692664321036891,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g29_2026-03-09T17-14-30.865337",
+    "timestamp": "2026-03-09T17:14:30.865337",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g29",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926594737791878,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g30_2026-03-09T17-15-56.567480",
+    "timestamp": "2026-03-09T17:15:56.567480",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g30",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926625197228828,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g31_2026-03-09T17-17-14.376403",
+    "timestamp": "2026-03-09T17:17:14.376403",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g31",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.692668501423276,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g32_2026-03-09T17-18-23.966074",
+    "timestamp": "2026-03-09T17:18:23.966074",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g32",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926633918700539,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g33_2026-03-09T17-19-20.179939",
+    "timestamp": "2026-03-09T17:19:20.179939",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g33",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926697674835132,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g34_2026-03-09T17-20-26.902306",
+    "timestamp": "2026-03-09T17:20:26.902306",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g34",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926650309052913,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g35_2026-03-09T17-21-18.861226",
+    "timestamp": "2026-03-09T17:21:18.861226",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g35",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926653485927149,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g36_2026-03-09T17-22-12.707131",
+    "timestamp": "2026-03-09T17:22:12.707131",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g36",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926664942035644,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g37_2026-03-09T17-23-08.784734",
+    "timestamp": "2026-03-09T17:23:08.784734",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g37",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926688767136799,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g38_2026-03-09T17-24-11.869898",
+    "timestamp": "2026-03-09T17:24:11.869898",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g38",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926718148798517,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g39_2026-03-09T17-25-11.996446",
+    "timestamp": "2026-03-09T17:25:11.996446",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g39",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926677262929957,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g40_2026-03-09T17-26-10.378650",
+    "timestamp": "2026-03-09T17:26:10.378650",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g40",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926650969816373,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g41_2026-03-09T17-27-07.149149",
+    "timestamp": "2026-03-09T17:27:07.149149",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g41",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926648356742628,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g42_2026-03-09T17-28-20.144936",
+    "timestamp": "2026-03-09T17:28:20.144936",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g42",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926683775272785,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g43_2026-03-09T17-29-59.021993",
+    "timestamp": "2026-03-09T17:29:59.021993",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g43",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926725012335193,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g44_2026-03-09T17-31-09.729669",
+    "timestamp": "2026-03-09T17:31:09.729669",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g44",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926675511280853,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g45_2026-03-09T17-32-05.359143",
+    "timestamp": "2026-03-09T17:32:05.359143",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g45",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926637986603793,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g46_2026-03-09T17-33-27.545977",
+    "timestamp": "2026-03-09T17:33:27.545977",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g46",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926720399354112,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wav_Transformer_g47_2026-03-09T17-34-44.747246",
+    "timestamp": "2026-03-09T17:34:44.747246",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wav_Transformer_g47",
+    "metrics": {
+      "accuracy": 0.5159090909090909,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "auc_roc": 0.5,
+      "log_loss": 0.6926625667646451,
+      "specificity": 1.0
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 4,
+        "ff_dim": 128,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      }
+    },
+    "additional_info": {}
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "primary": {
+    "total_return": 1.5825453584966294,
+    "sharpe": 2.095224765285376,
+    "max_drawdown": -0.5991760315508008,
+    "bh_return": 54.5965576171875
+  },
+  "meta": {
+    "total_return": 0.5945968489768929,
+    "sharpe": 2.0972105012789526,
+    "max_drawdown": -0.33712392357372667,
+    "bh_return": 54.5965576171875
+  },
+  "abstention": {
+    "total_return": 0.0,
+    "sharpe": NaN,
+    "max_drawdown": 0.0,
+    "bh_return": 54.5965576171875
+  },
+  "mean_tau": 0.43500000000000005,
+  "trade_coverage": 0.0
+}

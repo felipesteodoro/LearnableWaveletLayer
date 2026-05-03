@@ -112,7 +112,7 @@ class ValidationReport:
 # Dados sintéticos para validação (sem dados reais B3)
 # ---------------------------------------------------------------------------
 
-def _make_synthetic_data(n: int = 500, seq_len: int = 60, n_feat: int = 10):
+def _make_synthetic_data(n: int = 500, seq_len: int = 40, n_feat: int = 10):
     """
     Gera dados sintéticos simples para validar a pipeline sem depender de dados B3.
 
@@ -145,7 +145,7 @@ def test_imports():
         TICKERS, DL_MODELS, MODES, FEATURE_CONFIG, LEARNED_WAVELET_CONFIG,
         DL_TRAINING_CONFIG, VALIDATION_CONFIG, MAX_GRID_CONFIGS,
     )
-    assert FEATURE_CONFIG["sequence_length"] == 60, "sequence_length deve ser 60"
+    assert FEATURE_CONFIG["sequence_length"] == 40, "sequence_length deve ser 40"
     assert LEARNED_WAVELET_CONFIG["kernel_size"] == 8, "kernel_size deve ser 8"
     assert LEARNED_WAVELET_CONFIG["align"] == "pad_to_first", "align deve ser pad_to_first"
     assert DL_TRAINING_CONFIG["epochs"] == _EPOCHS, f"EPOCHS_OVERRIDE={_EPOCHS} não aplicado"
@@ -158,7 +158,7 @@ def test_wavelet_shapes():
     from models.LWT.fixed_db4_dwt import FixedDb4DWT1D
     from models.LWT.learned_wavelet_dwt_qmf import LearnedWaveletDWT1D_QMF
 
-    B, L, C = 4, 60, 3
+    B, L, C = 4, 40, 3
     x = tf.random.normal((B, L, C))
 
     # db4 concat mode
@@ -179,7 +179,7 @@ def test_warm_start():
     import tensorflow as tf
     from models.LWT.learned_wavelet_dwt_qmf import LearnedWaveletDWT1D_QMF
 
-    B, L, C = 2, 60, 1
+    B, L, C = 2, 40, 1
     x = tf.random.normal((B, L, C))
 
     # Sem warm-start
@@ -200,7 +200,7 @@ def test_wavelet_projection():
     from tensorflow import keras
     from src.models import _apply_wavelet_frontend
 
-    B, L, F = 4, 60, 5
+    B, L, F = 4, 40, 5
     cfg = {
         "wavelet_projection_dim": 32,
         "wavelet_levels": 2,
@@ -239,7 +239,7 @@ def test_make_windows():
     """Verifica shapes e alinhamento das janelas deslizantes."""
     from src.pipeline import _make_windows
 
-    n, F, seq_len = 200, 5, 60
+    n, F, seq_len = 200, 5, 40
     X   = np.random.randn(n, F).astype(np.float32)
     y   = np.random.randint(0, 3, n).astype(np.int32)
     ret = np.random.randn(n).astype(np.float32)
@@ -294,7 +294,7 @@ def test_build_model():
         "wavelet_projection_dim": 8,
     }
 
-    input_shape = (60, 5)
+    input_shape = (40, 5)
     results = []
     for backbone in ["CNN", "LSTM"]:  # CNN e LSTM como amostra (mais rápido)
         for mode in ["raw", "db4", "learned_wavelet"]:
@@ -324,8 +324,8 @@ def test_mini_train():
 
     tf.random.set_seed(42)
     # n=500 para que IS/OOS split com test_years=1.0 deixe IS suficiente:
-    # oos=252, IS=248 amostras, IS-seq_len=188 janelas (>0)
-    n, F, seq_len = 500, 8, 60
+    # oos=252, IS=248 amostras, IS-seq_len=208 janelas (>0)
+    n, F, seq_len = 500, 8, 40
     X, y, ret, t1 = _make_synthetic_data(n, seq_len=seq_len, n_feat=F)
 
     # IS/OOS split — com n=500 e test_years=1.0: cut=max(60, 500-252)=248
@@ -400,7 +400,7 @@ def test_meta_labeling():
     """Treina MetaLabelingPipeline em dados sintéticos."""
     from src.meta_labeling import MetaLabelingPipeline, make_meta_labels
 
-    X, y, ret, t1 = _make_synthetic_data(400, seq_len=60, n_feat=8)
+    X, y, ret, t1 = _make_synthetic_data(400, seq_len=40, n_feat=8)
 
     # Treina em dados 2D (sem janelas — meta-labeling usa features brutas)
     pipeline = MetaLabelingPipeline(n_folds=2, meta_threshold=0.5, use_fractional_sizing=True)
@@ -445,7 +445,7 @@ def test_global_model_build():
 
     model = build_global_model(
         n_tickers=5,
-        input_shape=(60, 8),
+        input_shape=(40, 8),
         mode="learned_wavelet",
         backbone="CNN",
         emb_dim=4,
@@ -454,7 +454,7 @@ def test_global_model_build():
 
     # Treino mínimo com dados sintéticos
     B = 16
-    X_syn   = np.random.randn(B, 60, 8).astype(np.float32)
+    X_syn   = np.random.randn(B, 40, 8).astype(np.float32)
     tid_syn = np.random.randint(0, 5, B).astype(np.int32)
     y_syn   = np.random.randint(0, 3, B).astype(np.int32)
 

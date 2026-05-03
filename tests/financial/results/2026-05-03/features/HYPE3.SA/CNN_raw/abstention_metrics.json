@@ -1,0 +1,22 @@
+{
+  "primary": {
+    "total_return": -0.6258223322544308,
+    "bh_return": 5.456067657470703,
+    "sharpe": -1.2212846766686292,
+    "max_drawdown": -0.7902985998685494
+  },
+  "meta": {
+    "total_return": -0.4438368518102731,
+    "bh_return": 5.456067657470703,
+    "sharpe": -1.267740207749537,
+    "max_drawdown": -0.6256934532259957
+  },
+  "abstention": {
+    "total_return": -0.4257114006845841,
+    "bh_return": 5.456067657470703,
+    "sharpe": -1.271550151272434,
+    "max_drawdown": -0.5509483252611801
+  },
+  "mean_tau": 0.385,
+  "trade_coverage": 0.6
+}

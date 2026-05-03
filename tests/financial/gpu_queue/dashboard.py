@@ -188,11 +188,15 @@ def _render_header(data: dict) -> Panel:
 
     queue_elapsed = time.time() - data["queue_start_time"]
     eta_str = "—"
-    if done > 0 and pending + running + retrying > 0:
-        rate = done / queue_elapsed          # jobs/sec
-        remaining = pending + running + retrying
-        eta_sec = remaining / rate
-        eta_str = _fmt_elapsed(eta_sec)
+    if done > 0:
+        rate = done / queue_elapsed          # jobs/sec (parallel throughput)
+        unstarted = pending + retrying
+        if unstarted > 0:
+            # Only count jobs not yet started — running ones are already in flight
+            eta_sec = unstarted / rate
+            eta_str = _fmt_elapsed(eta_sec)
+        elif running > 0:
+            eta_str = "finishing…"
 
     row = Text(justify="center")
     row.append(f" [{bar}] {pct:.1f}%   ", style="bold cyan")

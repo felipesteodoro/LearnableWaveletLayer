@@ -1,0 +1,226 @@
+[
+  {
+    "id": "ml_experiments_LinearSVC_2026-03-09T02-14-37.857244",
+    "timestamp": "2026-03-09T02:14:37.857244",
+    "experiment_name": "ml_experiments",
+    "model_name": "LinearSVC",
+    "metrics": {
+      "accuracy": 0.8204545454545454,
+      "f1": 0.8200455580865603,
+      "precision": 0.7964601769911505,
+      "recall": 0.8450704225352113,
+      "auc_roc": 0.9148173426264883,
+      "log_loss": 0.3718797163442234,
+      "specificity": 0.7973568281938326
+    },
+    "config": {
+      "best_params": "{'estimator__C': np.float64(11.435780278433395), 'estimator__loss': 'hinge'}",
+      "cv_score": 0.8247684543072893
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_SGDClassifier_2026-03-09T02-14-43.137405",
+    "timestamp": "2026-03-09T02:14:43.137405",
+    "experiment_name": "ml_experiments",
+    "model_name": "SGDClassifier",
+    "metrics": {
+      "accuracy": 0.8234848484848485,
+      "f1": 0.8267657992565056,
+      "precision": 0.7875354107648725,
+      "recall": 0.8701095461658842,
+      "auc_roc": 0.9164627182248327,
+      "log_loss": NaN,
+      "specificity": 0.7797356828193832
+    },
+    "config": {
+      "best_params": "{'alpha': np.float64(0.004073745196058387), 'l1_ratio': np.float64(0.9385527090157502), 'learning_rate': 'optimal', 'loss': 'hinge', 'penalty': 'l1'}",
+      "cv_score": 0.8206017876406226
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_LogisticRegression_2026-03-09T02-16-43.170011",
+    "timestamp": "2026-03-09T02:16:43.170011",
+    "experiment_name": "ml_experiments",
+    "model_name": "LogisticRegression",
+    "metrics": {
+      "accuracy": 0.825,
+      "f1": 0.8261851015801355,
+      "precision": 0.7956521739130434,
+      "recall": 0.8591549295774648,
+      "auc_roc": 0.9154699776403568,
+      "log_loss": 0.3775193126941008,
+      "specificity": 0.7929515418502202
+    },
+    "config": {
+      "best_params": "{'C': np.float64(0.1767016940294795), 'l1_ratio': np.float64(0.9507143064099162), 'penalty': 'elasticnet'}",
+      "cv_score": 0.8239366620434583
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_LinearSVC_2026-03-09T02-27-35.191808",
+    "timestamp": "2026-03-09T02:27:35.191808",
+    "experiment_name": "ml_experiments",
+    "model_name": "LinearSVC",
+    "metrics": {
+      "accuracy": 0.796969696969697,
+      "f1": 0.8,
+      "precision": 0.7646219686162625,
+      "recall": 0.838810641627543,
+      "auc_roc": 0.8945626770904428,
+      "log_loss": 0.41001315975458086,
+      "specificity": 0.7577092511013216
+    },
+    "config": {
+      "best_params": "{'estimator__C': np.float64(0.7459343285726545), 'estimator__loss': 'hinge'}",
+      "cv_score": 0.8033845738942826
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_SGDClassifier_2026-03-09T02-27-42.074033",
+    "timestamp": "2026-03-09T02:27:42.074033",
+    "experiment_name": "ml_experiments",
+    "model_name": "SGDClassifier",
+    "metrics": {
+      "accuracy": 0.8257575757575758,
+      "f1": 0.8211508553654744,
+      "precision": 0.8160741885625966,
+      "recall": 0.8262910798122066,
+      "auc_roc": 0.9121263721995868,
+      "log_loss": NaN,
+      "specificity": 0.8252569750367107
+    },
+    "config": {
+      "best_params": "{'alpha': np.float64(0.004073745196058387), 'l1_ratio': np.float64(0.9385527090157502), 'learning_rate': 'optimal', 'loss': 'hinge', 'penalty': 'l1'}",
+      "cv_score": 0.8170006934812759
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_LogisticRegression_2026-03-09T02-30-18.289542",
+    "timestamp": "2026-03-09T02:30:18.289542",
+    "experiment_name": "ml_experiments",
+    "model_name": "LogisticRegression",
+    "metrics": {
+      "accuracy": 0.8098484848484848,
+      "f1": 0.8119850187265918,
+      "precision": 0.7787356321839081,
+      "recall": 0.8482003129890454,
+      "auc_roc": 0.9077164898347501,
+      "log_loss": 0.3853465910830028,
+      "specificity": 0.7738619676945668
+    },
+    "config": {
+      "best_params": "{'C': np.float64(0.50465608220732), 'l1_ratio': np.float64(0.013264961159866528), 'penalty': 'l1'}",
+      "cv_score": 0.8156025581753736
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_RandomForest_2026-03-09T02-31-09.193331",
+    "timestamp": "2026-03-09T02:31:09.193331",
+    "experiment_name": "ml_experiments",
+    "model_name": "RandomForest",
+    "metrics": {
+      "accuracy": 0.85,
+      "f1": 0.8436018957345972,
+      "precision": 0.8516746411483254,
+      "recall": 0.8356807511737089,
+      "auc_roc": 0.9349858327645758,
+      "log_loss": 0.32309036134249314,
+      "specificity": 0.8634361233480177
+    },
+    "config": {
+      "best_params": "{'max_depth': 20, 'max_features': 0.5, 'min_samples_leaf': 3, 'min_samples_split': 3, 'n_estimators': 64}",
+      "cv_score": 0.8544818153798734
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_XGBoost_2026-03-09T02-41-47.472856",
+    "timestamp": "2026-03-09T02:41:47.472856",
+    "experiment_name": "ml_experiments",
+    "model_name": "XGBoost",
+    "metrics": {
+      "accuracy": 0.8704545454545455,
+      "f1": 0.8679536679536679,
+      "precision": 0.8567073170731707,
+      "recall": 0.8794992175273866,
+      "auc_roc": 0.955335865741028,
+      "log_loss": 0.2875817190024193,
+      "specificity": 0.8619676945668135
+    },
+    "config": {
+      "best_params": "{'colsample_bytree': np.float64(0.8083337040103294), 'learning_rate': np.float64(0.24040287158375262), 'max_depth': 7, 'min_child_weight': 2, 'n_estimators': 160, 'reg_alpha': np.float64(1.3921548533046495), 'reg_lambda': np.float64(0.0060780830996819525), 'subsample': np.float64(0.7123738038749523)}",
+      "cv_score": 0.8844764216366159
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_LightGBM_2026-03-09T02-43-10.328358",
+    "timestamp": "2026-03-09T02:43:10.328358",
+    "experiment_name": "ml_experiments",
+    "model_name": "LightGBM",
+    "metrics": {
+      "accuracy": 0.8696969696969697,
+      "f1": 0.8668730650154799,
+      "precision": 0.8575803981623277,
+      "recall": 0.8763693270735524,
+      "auc_roc": 0.9482993572464318,
+      "log_loss": 0.28982878711951326,
+      "specificity": 0.8634361233480177
+    },
+    "config": {
+      "best_params": "{'colsample_bytree': np.float64(0.8779139732158818), 'learning_rate': np.float64(0.15171397878553214), 'max_depth': 4, 'min_child_samples': 17, 'n_estimators': 111, 'num_leaves': 44, 'reg_alpha': np.float64(0.0003368769521063147), 'reg_lambda': np.float64(0.019172239802201452), 'subsample': np.float64(0.6873761748867334)}",
+      "cv_score": 0.8769760363692403
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_CatBoost_2026-03-09T02-45-09.348841",
+    "timestamp": "2026-03-09T02:45:09.348841",
+    "experiment_name": "ml_experiments",
+    "model_name": "CatBoost",
+    "metrics": {
+      "accuracy": 0.8863636363636364,
+      "f1": 0.8829953198127926,
+      "precision": 0.880248833592535,
+      "recall": 0.8857589984350548,
+      "auc_roc": 0.9614324878952291,
+      "log_loss": 0.2595457167705726,
+      "specificity": 0.8869309838472834
+    },
+    "config": {
+      "best_params": "{'bagging_temperature': np.float64(1.0284688768272232), 'depth': 7, 'iterations': 230, 'l2_leaf_reg': np.float64(3.800329214045199), 'learning_rate': np.float64(0.048440014400661126), 'random_strength': np.float64(1.400998503939086)}",
+      "cv_score": 0.8864189397441825
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "ml_experiments_Stacking_2026-03-09T02-46-18.847277",
+    "timestamp": "2026-03-09T02:46:18.847277",
+    "experiment_name": "ml_experiments",
+    "model_name": "Stacking",
+    "metrics": {
+      "accuracy": 0.8856060606060606,
+      "f1": 0.882307092751364,
+      "precision": 0.8788819875776398,
+      "recall": 0.8857589984350548,
+      "auc_roc": 0.9612877132266597,
+      "log_loss": 0.26758134895778884,
+      "specificity": 0.8854625550660793
+    },
+    "config": {
+      "base_learners": [
+        "rf",
+        "xgb",
+        "lgbm",
+        "catboost"
+      ]
+    },
+    "additional_info": {}
+  }
+]

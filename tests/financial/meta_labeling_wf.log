@@ -1,0 +1,683 @@
+12:42:42 [INFO] Run dir: /home/felipeteodoro/projetos/LearnableWaveletLayer/tests/financial/results/2026-05-03
+12:42:42 [INFO] Found 550 completed experiments
+12:42:42 [INFO] [1/550] features / ABEV3.SA / CNN_LSTM_raw
+12:42:43 [INFO] [2/550] features / ABEV3.SA / CNN_raw
+12:42:43 [INFO] [3/550] features / ABEV3.SA / LSTM_raw
+12:42:43 [INFO] [4/550] features / ABEV3.SA / MLP_raw
+12:42:43 [INFO] [5/550] features / ABEV3.SA / Transformer_raw
+12:42:43 [INFO] [6/550] features / B3SA3.SA / CNN_LSTM_raw
+12:42:43 [INFO] [7/550] features / B3SA3.SA / CNN_raw
+12:42:43 [INFO] [8/550] features / B3SA3.SA / LSTM_raw
+12:42:44 [INFO] [9/550] features / B3SA3.SA / MLP_raw
+12:42:44 [INFO] [10/550] features / B3SA3.SA / Transformer_raw
+12:42:44 [INFO] [11/550] features / BBAS3.SA / CNN_LSTM_raw
+12:42:44 [INFO] [12/550] features / BBAS3.SA / CNN_raw
+12:42:44 [INFO] [13/550] features / BBAS3.SA / LSTM_raw
+12:42:44 [INFO] [14/550] features / BBAS3.SA / MLP_raw
+12:42:44 [INFO] [15/550] features / BBAS3.SA / Transformer_raw
+12:42:44 [INFO] [16/550] features / BBDC4.SA / CNN_LSTM_raw
+12:42:44 [INFO] [17/550] features / BBDC4.SA / CNN_raw
+12:42:44 [INFO] [18/550] features / BBDC4.SA / LSTM_raw
+12:42:44 [INFO] [19/550] features / BBDC4.SA / MLP_raw
+12:42:45 [INFO] [20/550] features / BBDC4.SA / Transformer_raw
+12:42:45 [INFO] [21/550] features / BRKM5.SA / CNN_LSTM_raw
+12:42:45 [INFO] [22/550] features / BRKM5.SA / CNN_raw
+12:42:45 [INFO] [23/550] features / BRKM5.SA / LSTM_raw
+12:42:45 [INFO] [24/550] features / BRKM5.SA / MLP_raw
+12:42:45 [INFO] [25/550] features / BRKM5.SA / Transformer_raw
+12:42:45 [INFO] [26/550] features / COGN3.SA / CNN_LSTM_raw
+12:42:45 [INFO] [27/550] features / COGN3.SA / CNN_raw
+12:42:45 [INFO] [28/550] features / COGN3.SA / LSTM_raw
+12:42:45 [INFO] [29/550] features / COGN3.SA / MLP_raw
+12:42:45 [INFO] [30/550] features / COGN3.SA / Transformer_raw
+12:42:45 [INFO] [31/550] features / CSNA3.SA / CNN_LSTM_raw
+12:42:46 [INFO] [32/550] features / CSNA3.SA / CNN_raw
+12:42:46 [INFO] [33/550] features / CSNA3.SA / LSTM_raw
+12:42:46 [INFO] [34/550] features / CSNA3.SA / MLP_raw
+12:42:46 [INFO] [35/550] features / CSNA3.SA / Transformer_raw
+12:42:46 [INFO] [36/550] features / CYRE3.SA / CNN_LSTM_raw
+12:42:46 [INFO] [37/550] features / CYRE3.SA / CNN_raw
+12:42:46 [INFO] [38/550] features / CYRE3.SA / LSTM_raw
+12:42:46 [INFO] [39/550] features / CYRE3.SA / MLP_raw
+12:42:46 [INFO] [40/550] features / CYRE3.SA / Transformer_raw
+12:42:46 [INFO] [41/550] features / EZTC3.SA / CNN_LSTM_raw
+12:42:47 [INFO] [42/550] features / EZTC3.SA / CNN_raw
+12:42:47 [INFO] [43/550] features / EZTC3.SA / LSTM_raw
+12:42:47 [INFO] [44/550] features / EZTC3.SA / MLP_raw
+12:42:47 [INFO] [45/550] features / EZTC3.SA / Transformer_raw
+12:42:47 [INFO] [46/550] features / GGBR4.SA / CNN_LSTM_raw
+12:42:47 [INFO] [47/550] features / GGBR4.SA / CNN_raw
+12:42:47 [INFO] [48/550] features / GGBR4.SA / LSTM_raw
+12:42:47 [INFO] [49/550] features / GGBR4.SA / MLP_raw
+12:42:47 [INFO] [50/550] features / GGBR4.SA / Transformer_raw
+12:42:47 [INFO] [51/550] features / HYPE3.SA / CNN_LSTM_raw
+12:42:47 [INFO] [52/550] features / HYPE3.SA / CNN_raw
+12:42:48 [INFO] [53/550] features / HYPE3.SA / LSTM_raw
+12:42:48 [INFO] [54/550] features / HYPE3.SA / MLP_raw
+12:42:48 [INFO] [55/550] features / HYPE3.SA / Transformer_raw
+12:42:48 [INFO] [56/550] features / ITUB4.SA / CNN_LSTM_raw
+12:42:48 [INFO] [57/550] features / ITUB4.SA / CNN_raw
+12:42:48 [INFO] [58/550] features / ITUB4.SA / LSTM_raw
+12:42:48 [INFO] [59/550] features / ITUB4.SA / MLP_raw
+12:42:48 [INFO] [60/550] features / ITUB4.SA / Transformer_raw
+12:42:48 [INFO] [61/550] features / LREN3.SA / CNN_LSTM_raw
+12:42:48 [INFO] [62/550] features / LREN3.SA / CNN_raw
+12:42:48 [INFO] [63/550] features / LREN3.SA / LSTM_raw
+12:42:49 [INFO] [64/550] features / LREN3.SA / MLP_raw
+12:42:49 [INFO] [65/550] features / LREN3.SA / Transformer_raw
+12:42:49 [INFO] [66/550] features / MGLU3.SA / CNN_LSTM_raw
+12:42:49 [INFO] [67/550] features / MGLU3.SA / CNN_raw
+12:42:49 [INFO] [68/550] features / MGLU3.SA / LSTM_raw
+12:42:49 [INFO] [69/550] features / MGLU3.SA / MLP_raw
+12:42:49 [INFO] [70/550] features / MGLU3.SA / Transformer_raw
+12:42:49 [INFO] [71/550] features / MRVE3.SA / CNN_LSTM_raw
+12:42:49 [INFO] [72/550] features / MRVE3.SA / CNN_raw
+12:42:49 [INFO] [73/550] features / MRVE3.SA / LSTM_raw
+12:42:49 [INFO] [74/550] features / MRVE3.SA / MLP_raw
+12:42:49 [INFO] [75/550] features / MRVE3.SA / Transformer_raw
+12:42:50 [INFO] [76/550] features / MULT3.SA / CNN_LSTM_raw
+12:42:50 [INFO] [77/550] features / MULT3.SA / CNN_raw
+12:42:50 [INFO] [78/550] features / MULT3.SA / LSTM_raw
+12:42:50 [INFO] [79/550] features / MULT3.SA / MLP_raw
+12:42:50 [INFO] [80/550] features / MULT3.SA / Transformer_raw
+12:42:50 [INFO] [81/550] features / PETR4.SA / CNN_LSTM_raw
+12:42:50 [INFO] [82/550] features / PETR4.SA / CNN_raw
+12:42:50 [INFO] [83/550] features / PETR4.SA / LSTM_raw
+12:42:50 [INFO] [84/550] features / PETR4.SA / MLP_raw
+12:42:50 [INFO] [85/550] features / PETR4.SA / Transformer_raw
+12:42:50 [INFO] [86/550] features / RADL3.SA / CNN_LSTM_raw
+12:42:51 [INFO] [87/550] features / RADL3.SA / CNN_raw
+12:42:51 [INFO] [88/550] features / RADL3.SA / LSTM_raw
+12:42:51 [INFO] [89/550] features / RADL3.SA / MLP_raw
+12:42:51 [INFO] [90/550] features / RADL3.SA / Transformer_raw
+12:42:51 [INFO] [91/550] features / RENT3.SA / CNN_LSTM_raw
+12:42:51 [INFO] [92/550] features / RENT3.SA / CNN_raw
+12:42:51 [INFO] [93/550] features / RENT3.SA / LSTM_raw
+12:42:51 [INFO] [94/550] features / RENT3.SA / MLP_raw
+12:42:51 [INFO] [95/550] features / RENT3.SA / Transformer_raw
+12:42:51 [INFO] [96/550] features / SUZB3.SA / CNN_LSTM_raw
+12:42:51 [INFO] [97/550] features / SUZB3.SA / CNN_raw
+12:42:51 [INFO] [98/550] features / SUZB3.SA / LSTM_raw
+12:42:51 [INFO] [99/550] features / SUZB3.SA / MLP_raw
+12:42:51 [INFO] [100/550] features / SUZB3.SA / Transformer_raw
+12:42:52 [INFO] [101/550] features / UGPA3.SA / CNN_LSTM_raw
+12:42:52 [INFO] [102/550] features / UGPA3.SA / CNN_raw
+12:42:52 [INFO] [103/550] features / UGPA3.SA / LSTM_raw
+12:42:52 [INFO] [104/550] features / UGPA3.SA / MLP_raw
+12:42:52 [INFO] [105/550] features / UGPA3.SA / Transformer_raw
+12:42:52 [INFO] [106/550] features / USIM5.SA / CNN_LSTM_raw
+12:42:52 [INFO] [107/550] features / USIM5.SA / CNN_raw
+12:42:52 [INFO] [108/550] features / USIM5.SA / LSTM_raw
+12:42:52 [INFO] [109/550] features / USIM5.SA / MLP_raw
+12:42:52 [INFO] [110/550] features / USIM5.SA / Transformer_raw
+12:42:52 [INFO] [111/550] features / VALE3.SA / CNN_LSTM_raw
+12:42:52 [INFO] [112/550] features / VALE3.SA / CNN_raw
+12:42:53 [INFO] [113/550] features / VALE3.SA / LSTM_raw
+12:42:53 [INFO] [114/550] features / VALE3.SA / MLP_raw
+12:42:53 [INFO] [115/550] features / VALE3.SA / Transformer_raw
+12:42:53 [INFO] [116/550] features / VIVT3.SA / CNN_LSTM_raw
+12:42:53 [INFO] [117/550] features / VIVT3.SA / CNN_raw
+12:42:53 [INFO] [118/550] features / VIVT3.SA / LSTM_raw
+12:42:53 [INFO] [119/550] features / VIVT3.SA / MLP_raw
+12:42:53 [INFO] [120/550] features / VIVT3.SA / Transformer_raw
+12:42:53 [INFO] [121/550] features / WEGE3.SA / CNN_LSTM_raw
+12:42:53 [INFO] [122/550] features / WEGE3.SA / CNN_raw
+12:42:53 [INFO] [123/550] features / WEGE3.SA / LSTM_raw
+12:42:54 [INFO] [124/550] features / WEGE3.SA / MLP_raw
+12:42:54 [INFO] [125/550] features / WEGE3.SA / Transformer_raw
+12:42:54 [INFO] [126/550] ohlcv / ABEV3.SA / CNN_LSTM_db4
+12:42:54 [INFO] [127/550] ohlcv / ABEV3.SA / CNN_LSTM_learned_wavelet
+12:42:54 [INFO] [128/550] ohlcv / ABEV3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:42:54 [INFO] [129/550] ohlcv / ABEV3.SA / CNN_LSTM_raw
+12:42:54 [INFO] [130/550] ohlcv / ABEV3.SA / CNN_db4
+12:42:54 [INFO] [131/550] ohlcv / ABEV3.SA / CNN_learned_wavelet
+12:42:54 [INFO] [132/550] ohlcv / ABEV3.SA / CNN_learned_wavelet_no_warmup
+12:42:54 [INFO] [133/550] ohlcv / ABEV3.SA / CNN_raw
+12:42:54 [INFO] [134/550] ohlcv / ABEV3.SA / LSTM_db4
+12:42:55 [INFO] [135/550] ohlcv / ABEV3.SA / LSTM_learned_wavelet
+12:42:55 [INFO] [136/550] ohlcv / ABEV3.SA / LSTM_learned_wavelet_no_warmup
+12:42:55 [INFO] [137/550] ohlcv / ABEV3.SA / LSTM_raw
+12:42:55 [INFO] [138/550] ohlcv / ABEV3.SA / MLP_raw
+12:42:55 [INFO] [139/550] ohlcv / ABEV3.SA / Transformer_db4
+12:42:55 [INFO] [140/550] ohlcv / ABEV3.SA / Transformer_learned_wavelet
+12:42:55 [INFO] [141/550] ohlcv / ABEV3.SA / Transformer_learned_wavelet_no_warmup
+12:42:55 [INFO] [142/550] ohlcv / ABEV3.SA / Transformer_raw
+12:42:55 [INFO] [143/550] ohlcv / B3SA3.SA / CNN_LSTM_db4
+12:42:55 [INFO] [144/550] ohlcv / B3SA3.SA / CNN_LSTM_learned_wavelet
+12:42:55 [INFO] [145/550] ohlcv / B3SA3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:42:55 [INFO] [146/550] ohlcv / B3SA3.SA / CNN_LSTM_raw
+12:42:56 [INFO] [147/550] ohlcv / B3SA3.SA / CNN_db4
+12:42:56 [INFO] [148/550] ohlcv / B3SA3.SA / CNN_learned_wavelet
+12:42:56 [INFO] [149/550] ohlcv / B3SA3.SA / CNN_learned_wavelet_no_warmup
+12:42:56 [INFO] [150/550] ohlcv / B3SA3.SA / CNN_raw
+12:42:56 [INFO] [151/550] ohlcv / B3SA3.SA / LSTM_db4
+12:42:56 [INFO] [152/550] ohlcv / B3SA3.SA / LSTM_learned_wavelet
+12:42:56 [INFO] [153/550] ohlcv / B3SA3.SA / LSTM_learned_wavelet_no_warmup
+12:42:56 [INFO] [154/550] ohlcv / B3SA3.SA / LSTM_raw
+12:42:56 [INFO] [155/550] ohlcv / B3SA3.SA / MLP_raw
+12:42:56 [INFO] [156/550] ohlcv / B3SA3.SA / Transformer_db4
+12:42:56 [INFO] [157/550] ohlcv / B3SA3.SA / Transformer_learned_wavelet
+12:42:56 [INFO] [158/550] ohlcv / B3SA3.SA / Transformer_learned_wavelet_no_warmup
+12:42:57 [INFO] [159/550] ohlcv / B3SA3.SA / Transformer_raw
+12:42:57 [INFO] [160/550] ohlcv / BBAS3.SA / CNN_LSTM_db4
+12:42:57 [INFO] [161/550] ohlcv / BBAS3.SA / CNN_LSTM_learned_wavelet
+12:42:57 [INFO] [162/550] ohlcv / BBAS3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:42:57 [INFO] [163/550] ohlcv / BBAS3.SA / CNN_LSTM_raw
+12:42:57 [INFO] [164/550] ohlcv / BBAS3.SA / CNN_db4
+12:42:57 [INFO] [165/550] ohlcv / BBAS3.SA / CNN_learned_wavelet
+12:42:57 [INFO] [166/550] ohlcv / BBAS3.SA / CNN_learned_wavelet_no_warmup
+12:42:57 [INFO] [167/550] ohlcv / BBAS3.SA / CNN_raw
+12:42:57 [INFO] [168/550] ohlcv / BBAS3.SA / LSTM_db4
+12:42:57 [INFO] [169/550] ohlcv / BBAS3.SA / LSTM_learned_wavelet
+12:42:57 [INFO] [170/550] ohlcv / BBAS3.SA / LSTM_learned_wavelet_no_warmup
+12:42:58 [INFO] [171/550] ohlcv / BBAS3.SA / LSTM_raw
+12:42:58 [INFO] [172/550] ohlcv / BBAS3.SA / MLP_raw
+12:42:58 [INFO] [173/550] ohlcv / BBAS3.SA / Transformer_db4
+12:42:58 [INFO] [174/550] ohlcv / BBAS3.SA / Transformer_learned_wavelet
+12:42:58 [INFO] [175/550] ohlcv / BBAS3.SA / Transformer_learned_wavelet_no_warmup
+12:42:58 [INFO] [176/550] ohlcv / BBAS3.SA / Transformer_raw
+12:42:58 [INFO] [177/550] ohlcv / BBDC4.SA / CNN_LSTM_db4
+12:42:58 [INFO] [178/550] ohlcv / BBDC4.SA / CNN_LSTM_learned_wavelet
+12:42:58 [INFO] [179/550] ohlcv / BBDC4.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:42:58 [INFO] [180/550] ohlcv / BBDC4.SA / CNN_LSTM_raw
+12:42:58 [INFO] [181/550] ohlcv / BBDC4.SA / CNN_db4
+12:42:58 [INFO] [182/550] ohlcv / BBDC4.SA / CNN_learned_wavelet
+12:42:59 [INFO] [183/550] ohlcv / BBDC4.SA / CNN_learned_wavelet_no_warmup
+12:42:59 [INFO] [184/550] ohlcv / BBDC4.SA / CNN_raw
+12:42:59 [INFO] [185/550] ohlcv / BBDC4.SA / LSTM_db4
+12:42:59 [INFO] [186/550] ohlcv / BBDC4.SA / LSTM_learned_wavelet
+12:42:59 [INFO] [187/550] ohlcv / BBDC4.SA / LSTM_learned_wavelet_no_warmup
+12:42:59 [INFO] [188/550] ohlcv / BBDC4.SA / LSTM_raw
+12:42:59 [INFO] [189/550] ohlcv / BBDC4.SA / MLP_raw
+12:42:59 [INFO] [190/550] ohlcv / BBDC4.SA / Transformer_db4
+12:42:59 [INFO] [191/550] ohlcv / BBDC4.SA / Transformer_learned_wavelet
+12:42:59 [INFO] [192/550] ohlcv / BBDC4.SA / Transformer_learned_wavelet_no_warmup
+12:42:59 [INFO] [193/550] ohlcv / BBDC4.SA / Transformer_raw
+12:42:59 [INFO] [194/550] ohlcv / BRKM5.SA / CNN_LSTM_db4
+12:42:59 [INFO] [195/550] ohlcv / BRKM5.SA / CNN_LSTM_learned_wavelet
+12:43:00 [INFO] [196/550] ohlcv / BRKM5.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:00 [INFO] [197/550] ohlcv / BRKM5.SA / CNN_LSTM_raw
+12:43:00 [INFO] [198/550] ohlcv / BRKM5.SA / CNN_db4
+12:43:00 [INFO] [199/550] ohlcv / BRKM5.SA / CNN_learned_wavelet
+12:43:00 [INFO] [200/550] ohlcv / BRKM5.SA / CNN_learned_wavelet_no_warmup
+12:43:00 [INFO] [201/550] ohlcv / BRKM5.SA / CNN_raw
+12:43:00 [INFO] [202/550] ohlcv / BRKM5.SA / LSTM_db4
+12:43:00 [INFO] [203/550] ohlcv / BRKM5.SA / LSTM_learned_wavelet
+12:43:00 [INFO] [204/550] ohlcv / BRKM5.SA / LSTM_learned_wavelet_no_warmup
+12:43:00 [INFO] [205/550] ohlcv / BRKM5.SA / LSTM_raw
+12:43:00 [INFO] [206/550] ohlcv / BRKM5.SA / MLP_raw
+12:43:00 [INFO] [207/550] ohlcv / BRKM5.SA / Transformer_db4
+12:43:01 [INFO] [208/550] ohlcv / BRKM5.SA / Transformer_learned_wavelet
+12:43:01 [INFO] [209/550] ohlcv / BRKM5.SA / Transformer_learned_wavelet_no_warmup
+12:43:01 [INFO] [210/550] ohlcv / BRKM5.SA / Transformer_raw
+12:43:01 [INFO] [211/550] ohlcv / COGN3.SA / CNN_LSTM_db4
+12:43:01 [INFO] [212/550] ohlcv / COGN3.SA / CNN_LSTM_learned_wavelet
+12:43:01 [INFO] [213/550] ohlcv / COGN3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:01 [INFO] [214/550] ohlcv / COGN3.SA / CNN_LSTM_raw
+12:43:01 [INFO] [215/550] ohlcv / COGN3.SA / CNN_db4
+12:43:01 [INFO] [216/550] ohlcv / COGN3.SA / CNN_learned_wavelet
+12:43:01 [INFO] [217/550] ohlcv / COGN3.SA / CNN_learned_wavelet_no_warmup
+12:43:01 [INFO] [218/550] ohlcv / COGN3.SA / CNN_raw
+12:43:01 [INFO] [219/550] ohlcv / COGN3.SA / LSTM_db4
+12:43:01 [INFO] [220/550] ohlcv / COGN3.SA / LSTM_learned_wavelet
+12:43:01 [INFO] [221/550] ohlcv / COGN3.SA / LSTM_learned_wavelet_no_warmup
+12:43:02 [INFO] [222/550] ohlcv / COGN3.SA / LSTM_raw
+12:43:02 [INFO] [223/550] ohlcv / COGN3.SA / MLP_raw
+12:43:02 [INFO] [224/550] ohlcv / COGN3.SA / Transformer_db4
+12:43:02 [INFO] [225/550] ohlcv / COGN3.SA / Transformer_learned_wavelet
+12:43:02 [INFO] [226/550] ohlcv / COGN3.SA / Transformer_learned_wavelet_no_warmup
+12:43:02 [INFO] [227/550] ohlcv / COGN3.SA / Transformer_raw
+12:43:02 [INFO] [228/550] ohlcv / CSNA3.SA / CNN_LSTM_db4
+12:43:02 [INFO] [229/550] ohlcv / CSNA3.SA / CNN_LSTM_learned_wavelet
+12:43:02 [INFO] [230/550] ohlcv / CSNA3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:02 [INFO] [231/550] ohlcv / CSNA3.SA / CNN_LSTM_raw
+12:43:02 [INFO] [232/550] ohlcv / CSNA3.SA / CNN_db4
+12:43:02 [INFO] [233/550] ohlcv / CSNA3.SA / CNN_learned_wavelet
+12:43:02 [INFO] [234/550] ohlcv / CSNA3.SA / CNN_learned_wavelet_no_warmup
+12:43:03 [INFO] [235/550] ohlcv / CSNA3.SA / CNN_raw
+12:43:03 [INFO] [236/550] ohlcv / CSNA3.SA / LSTM_db4
+12:43:03 [INFO] [237/550] ohlcv / CSNA3.SA / LSTM_learned_wavelet
+12:43:03 [INFO] [238/550] ohlcv / CSNA3.SA / LSTM_learned_wavelet_no_warmup
+12:43:03 [INFO] [239/550] ohlcv / CSNA3.SA / LSTM_raw
+12:43:03 [INFO] [240/550] ohlcv / CSNA3.SA / MLP_raw
+12:43:03 [INFO] [241/550] ohlcv / CSNA3.SA / Transformer_db4
+12:43:03 [INFO] [242/550] ohlcv / CSNA3.SA / Transformer_learned_wavelet
+12:43:03 [INFO] [243/550] ohlcv / CSNA3.SA / Transformer_learned_wavelet_no_warmup
+12:43:03 [INFO] [244/550] ohlcv / CSNA3.SA / Transformer_raw
+12:43:03 [INFO] [245/550] ohlcv / CYRE3.SA / CNN_LSTM_db4
+12:43:04 [INFO] [246/550] ohlcv / CYRE3.SA / CNN_LSTM_learned_wavelet
+12:43:04 [INFO] [247/550] ohlcv / CYRE3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:04 [INFO] [248/550] ohlcv / CYRE3.SA / CNN_LSTM_raw
+12:43:04 [INFO] [249/550] ohlcv / CYRE3.SA / CNN_db4
+12:43:04 [INFO] [250/550] ohlcv / CYRE3.SA / CNN_learned_wavelet
+12:43:04 [INFO] [251/550] ohlcv / CYRE3.SA / CNN_learned_wavelet_no_warmup
+12:43:04 [INFO] [252/550] ohlcv / CYRE3.SA / CNN_raw
+12:43:04 [INFO] [253/550] ohlcv / CYRE3.SA / LSTM_db4
+12:43:04 [INFO] [254/550] ohlcv / CYRE3.SA / LSTM_learned_wavelet
+12:43:04 [INFO] [255/550] ohlcv / CYRE3.SA / LSTM_learned_wavelet_no_warmup
+12:43:04 [INFO] [256/550] ohlcv / CYRE3.SA / LSTM_raw
+12:43:04 [INFO] [257/550] ohlcv / CYRE3.SA / MLP_raw
+12:43:05 [INFO] [258/550] ohlcv / CYRE3.SA / Transformer_db4
+12:43:05 [INFO] [259/550] ohlcv / CYRE3.SA / Transformer_learned_wavelet
+12:43:05 [INFO] [260/550] ohlcv / CYRE3.SA / Transformer_learned_wavelet_no_warmup
+12:43:05 [INFO] [261/550] ohlcv / CYRE3.SA / Transformer_raw
+12:43:05 [INFO] [262/550] ohlcv / EZTC3.SA / CNN_LSTM_db4
+12:43:05 [INFO] [263/550] ohlcv / EZTC3.SA / CNN_LSTM_learned_wavelet
+12:43:05 [INFO] [264/550] ohlcv / EZTC3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:05 [INFO] [265/550] ohlcv / EZTC3.SA / CNN_LSTM_raw
+12:43:05 [INFO] [266/550] ohlcv / EZTC3.SA / CNN_db4
+12:43:05 [INFO] [267/550] ohlcv / EZTC3.SA / CNN_learned_wavelet
+12:43:05 [INFO] [268/550] ohlcv / EZTC3.SA / CNN_learned_wavelet_no_warmup
+12:43:06 [INFO] [269/550] ohlcv / EZTC3.SA / CNN_raw
+12:43:06 [INFO] [270/550] ohlcv / EZTC3.SA / LSTM_db4
+12:43:06 [INFO] [271/550] ohlcv / EZTC3.SA / LSTM_learned_wavelet
+12:43:06 [INFO] [272/550] ohlcv / EZTC3.SA / LSTM_learned_wavelet_no_warmup
+12:43:06 [INFO] [273/550] ohlcv / EZTC3.SA / LSTM_raw
+12:43:06 [INFO] [274/550] ohlcv / EZTC3.SA / MLP_raw
+12:43:06 [INFO] [275/550] ohlcv / EZTC3.SA / Transformer_db4
+12:43:06 [INFO] [276/550] ohlcv / EZTC3.SA / Transformer_learned_wavelet
+12:43:06 [INFO] [277/550] ohlcv / EZTC3.SA / Transformer_learned_wavelet_no_warmup
+12:43:06 [INFO] [278/550] ohlcv / EZTC3.SA / Transformer_raw
+12:43:06 [INFO] [279/550] ohlcv / GGBR4.SA / CNN_LSTM_db4
+12:43:06 [INFO] [280/550] ohlcv / GGBR4.SA / CNN_LSTM_learned_wavelet
+12:43:07 [INFO] [281/550] ohlcv / GGBR4.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:07 [INFO] [282/550] ohlcv / GGBR4.SA / CNN_LSTM_raw
+12:43:07 [INFO] [283/550] ohlcv / GGBR4.SA / CNN_db4
+12:43:07 [INFO] [284/550] ohlcv / GGBR4.SA / CNN_learned_wavelet
+12:43:07 [INFO] [285/550] ohlcv / GGBR4.SA / CNN_learned_wavelet_no_warmup
+12:43:07 [INFO] [286/550] ohlcv / GGBR4.SA / CNN_raw
+12:43:07 [INFO] [287/550] ohlcv / GGBR4.SA / LSTM_db4
+12:43:07 [INFO] [288/550] ohlcv / GGBR4.SA / LSTM_learned_wavelet
+12:43:07 [INFO] [289/550] ohlcv / GGBR4.SA / LSTM_learned_wavelet_no_warmup
+12:43:07 [INFO] [290/550] ohlcv / GGBR4.SA / LSTM_raw
+12:43:07 [INFO] [291/550] ohlcv / GGBR4.SA / MLP_raw
+12:43:07 [INFO] [292/550] ohlcv / GGBR4.SA / Transformer_db4
+12:43:08 [INFO] [293/550] ohlcv / GGBR4.SA / Transformer_learned_wavelet
+12:43:08 [INFO] [294/550] ohlcv / GGBR4.SA / Transformer_learned_wavelet_no_warmup
+12:43:08 [INFO] [295/550] ohlcv / GGBR4.SA / Transformer_raw
+12:43:08 [INFO] [296/550] ohlcv / HYPE3.SA / CNN_LSTM_db4
+12:43:08 [INFO] [297/550] ohlcv / HYPE3.SA / CNN_LSTM_learned_wavelet
+12:43:08 [INFO] [298/550] ohlcv / HYPE3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:08 [INFO] [299/550] ohlcv / HYPE3.SA / CNN_LSTM_raw
+12:43:08 [INFO] [300/550] ohlcv / HYPE3.SA / CNN_db4
+12:43:08 [INFO] [301/550] ohlcv / HYPE3.SA / CNN_learned_wavelet
+12:43:08 [INFO] [302/550] ohlcv / HYPE3.SA / CNN_learned_wavelet_no_warmup
+12:43:08 [INFO] [303/550] ohlcv / HYPE3.SA / CNN_raw
+12:43:08 [INFO] [304/550] ohlcv / HYPE3.SA / LSTM_db4
+12:43:09 [INFO] [305/550] ohlcv / HYPE3.SA / LSTM_learned_wavelet
+12:43:09 [INFO] [306/550] ohlcv / HYPE3.SA / LSTM_learned_wavelet_no_warmup
+12:43:09 [INFO] [307/550] ohlcv / HYPE3.SA / LSTM_raw
+12:43:09 [INFO] [308/550] ohlcv / HYPE3.SA / MLP_raw
+12:43:09 [INFO] [309/550] ohlcv / HYPE3.SA / Transformer_db4
+12:43:09 [INFO] [310/550] ohlcv / HYPE3.SA / Transformer_learned_wavelet
+12:43:09 [INFO] [311/550] ohlcv / HYPE3.SA / Transformer_learned_wavelet_no_warmup
+12:43:09 [INFO] [312/550] ohlcv / HYPE3.SA / Transformer_raw
+12:43:09 [INFO] [313/550] ohlcv / ITUB4.SA / CNN_LSTM_db4
+12:43:09 [INFO] [314/550] ohlcv / ITUB4.SA / CNN_LSTM_learned_wavelet
+12:43:09 [INFO] [315/550] ohlcv / ITUB4.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:09 [INFO] [316/550] ohlcv / ITUB4.SA / CNN_LSTM_raw
+12:43:10 [INFO] [317/550] ohlcv / ITUB4.SA / CNN_db4
+12:43:10 [INFO] [318/550] ohlcv / ITUB4.SA / CNN_learned_wavelet
+12:43:10 [INFO] [319/550] ohlcv / ITUB4.SA / CNN_learned_wavelet_no_warmup
+12:43:10 [INFO] [320/550] ohlcv / ITUB4.SA / CNN_raw
+12:43:10 [INFO] [321/550] ohlcv / ITUB4.SA / LSTM_db4
+12:43:10 [INFO] [322/550] ohlcv / ITUB4.SA / LSTM_learned_wavelet
+12:43:10 [INFO] [323/550] ohlcv / ITUB4.SA / LSTM_learned_wavelet_no_warmup
+12:43:10 [INFO] [324/550] ohlcv / ITUB4.SA / LSTM_raw
+12:43:10 [INFO] [325/550] ohlcv / ITUB4.SA / MLP_raw
+12:43:10 [INFO] [326/550] ohlcv / ITUB4.SA / Transformer_db4
+12:43:10 [INFO] [327/550] ohlcv / ITUB4.SA / Transformer_learned_wavelet
+12:43:11 [INFO] [328/550] ohlcv / ITUB4.SA / Transformer_learned_wavelet_no_warmup
+12:43:11 [INFO] [329/550] ohlcv / ITUB4.SA / Transformer_raw
+12:43:11 [INFO] [330/550] ohlcv / LREN3.SA / CNN_LSTM_db4
+12:43:11 [INFO] [331/550] ohlcv / LREN3.SA / CNN_LSTM_learned_wavelet
+12:43:11 [INFO] [332/550] ohlcv / LREN3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:11 [INFO] [333/550] ohlcv / LREN3.SA / CNN_LSTM_raw
+12:43:11 [INFO] [334/550] ohlcv / LREN3.SA / CNN_db4
+12:43:11 [INFO] [335/550] ohlcv / LREN3.SA / CNN_learned_wavelet
+12:43:11 [INFO] [336/550] ohlcv / LREN3.SA / CNN_learned_wavelet_no_warmup
+12:43:11 [INFO] [337/550] ohlcv / LREN3.SA / CNN_raw
+12:43:11 [INFO] [338/550] ohlcv / LREN3.SA / LSTM_db4
+12:43:11 [INFO] [339/550] ohlcv / LREN3.SA / LSTM_learned_wavelet
+12:43:12 [INFO] [340/550] ohlcv / LREN3.SA / LSTM_learned_wavelet_no_warmup
+12:43:12 [INFO] [341/550] ohlcv / LREN3.SA / LSTM_raw
+12:43:12 [INFO] [342/550] ohlcv / LREN3.SA / MLP_raw
+12:43:12 [INFO] [343/550] ohlcv / LREN3.SA / Transformer_db4
+12:43:12 [INFO] [344/550] ohlcv / LREN3.SA / Transformer_learned_wavelet
+12:43:12 [INFO] [345/550] ohlcv / LREN3.SA / Transformer_learned_wavelet_no_warmup
+12:43:12 [INFO] [346/550] ohlcv / LREN3.SA / Transformer_raw
+12:43:12 [INFO] [347/550] ohlcv / MGLU3.SA / CNN_LSTM_db4
+12:43:12 [INFO] [348/550] ohlcv / MGLU3.SA / CNN_LSTM_learned_wavelet
+12:43:12 [INFO] [349/550] ohlcv / MGLU3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:12 [INFO] [350/550] ohlcv / MGLU3.SA / CNN_LSTM_raw
+12:43:12 [INFO] [351/550] ohlcv / MGLU3.SA / CNN_db4
+12:43:13 [INFO] [352/550] ohlcv / MGLU3.SA / CNN_learned_wavelet
+12:43:13 [INFO] [353/550] ohlcv / MGLU3.SA / CNN_learned_wavelet_no_warmup
+12:43:13 [INFO] [354/550] ohlcv / MGLU3.SA / CNN_raw
+12:43:13 [INFO] [355/550] ohlcv / MGLU3.SA / LSTM_db4
+12:43:13 [INFO] [356/550] ohlcv / MGLU3.SA / LSTM_learned_wavelet
+12:43:13 [INFO] [357/550] ohlcv / MGLU3.SA / LSTM_learned_wavelet_no_warmup
+12:43:13 [INFO] [358/550] ohlcv / MGLU3.SA / LSTM_raw
+12:43:13 [INFO] [359/550] ohlcv / MGLU3.SA / MLP_raw
+12:43:13 [INFO] [360/550] ohlcv / MGLU3.SA / Transformer_db4
+12:43:13 [INFO] [361/550] ohlcv / MGLU3.SA / Transformer_learned_wavelet
+12:43:13 [INFO] [362/550] ohlcv / MGLU3.SA / Transformer_learned_wavelet_no_warmup
+12:43:13 [INFO] [363/550] ohlcv / MGLU3.SA / Transformer_raw
+12:43:13 [INFO] [364/550] ohlcv / MRVE3.SA / CNN_LSTM_db4
+12:43:13 [INFO] [365/550] ohlcv / MRVE3.SA / CNN_LSTM_learned_wavelet
+12:43:14 [INFO] [366/550] ohlcv / MRVE3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:14 [INFO] [367/550] ohlcv / MRVE3.SA / CNN_LSTM_raw
+12:43:14 [INFO] [368/550] ohlcv / MRVE3.SA / CNN_db4
+12:43:14 [INFO] [369/550] ohlcv / MRVE3.SA / CNN_learned_wavelet
+12:43:14 [INFO] [370/550] ohlcv / MRVE3.SA / CNN_learned_wavelet_no_warmup
+12:43:14 [INFO] [371/550] ohlcv / MRVE3.SA / CNN_raw
+12:43:14 [INFO] [372/550] ohlcv / MRVE3.SA / LSTM_db4
+12:43:14 [INFO] [373/550] ohlcv / MRVE3.SA / LSTM_learned_wavelet
+12:43:14 [INFO] [374/550] ohlcv / MRVE3.SA / LSTM_learned_wavelet_no_warmup
+12:43:14 [INFO] [375/550] ohlcv / MRVE3.SA / LSTM_raw
+12:43:14 [INFO] [376/550] ohlcv / MRVE3.SA / MLP_raw
+12:43:14 [INFO] [377/550] ohlcv / MRVE3.SA / Transformer_db4
+12:43:15 [INFO] [378/550] ohlcv / MRVE3.SA / Transformer_learned_wavelet
+12:43:15 [INFO] [379/550] ohlcv / MRVE3.SA / Transformer_learned_wavelet_no_warmup
+12:43:15 [INFO] [380/550] ohlcv / MRVE3.SA / Transformer_raw
+12:43:15 [INFO] [381/550] ohlcv / MULT3.SA / CNN_LSTM_db4
+12:43:15 [INFO] [382/550] ohlcv / MULT3.SA / CNN_LSTM_learned_wavelet
+12:43:15 [INFO] [383/550] ohlcv / MULT3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:15 [INFO] [384/550] ohlcv / MULT3.SA / CNN_LSTM_raw
+12:43:15 [INFO] [385/550] ohlcv / MULT3.SA / CNN_db4
+12:43:15 [INFO] [386/550] ohlcv / MULT3.SA / CNN_learned_wavelet
+12:43:15 [INFO] [387/550] ohlcv / MULT3.SA / CNN_learned_wavelet_no_warmup
+12:43:15 [INFO] [388/550] ohlcv / MULT3.SA / CNN_raw
+12:43:15 [INFO] [389/550] ohlcv / MULT3.SA / LSTM_db4
+12:43:16 [INFO] [390/550] ohlcv / MULT3.SA / LSTM_learned_wavelet
+12:43:16 [INFO] [391/550] ohlcv / MULT3.SA / LSTM_learned_wavelet_no_warmup
+12:43:16 [INFO] [392/550] ohlcv / MULT3.SA / LSTM_raw
+12:43:16 [INFO] [393/550] ohlcv / MULT3.SA / MLP_raw
+12:43:16 [INFO] [394/550] ohlcv / MULT3.SA / Transformer_db4
+12:43:16 [INFO] [395/550] ohlcv / MULT3.SA / Transformer_learned_wavelet
+12:43:16 [INFO] [396/550] ohlcv / MULT3.SA / Transformer_learned_wavelet_no_warmup
+12:43:16 [INFO] [397/550] ohlcv / MULT3.SA / Transformer_raw
+12:43:16 [INFO] [398/550] ohlcv / PETR4.SA / CNN_LSTM_db4
+12:43:16 [INFO] [399/550] ohlcv / PETR4.SA / CNN_LSTM_learned_wavelet
+12:43:16 [INFO] [400/550] ohlcv / PETR4.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:16 [INFO] [401/550] ohlcv / PETR4.SA / CNN_LSTM_raw
+12:43:17 [INFO] [402/550] ohlcv / PETR4.SA / CNN_db4
+12:43:17 [INFO] [403/550] ohlcv / PETR4.SA / CNN_learned_wavelet
+12:43:17 [INFO] [404/550] ohlcv / PETR4.SA / CNN_learned_wavelet_no_warmup
+12:43:17 [INFO] [405/550] ohlcv / PETR4.SA / CNN_raw
+12:43:17 [INFO] [406/550] ohlcv / PETR4.SA / LSTM_db4
+12:43:17 [INFO] [407/550] ohlcv / PETR4.SA / LSTM_learned_wavelet
+12:43:17 [INFO] [408/550] ohlcv / PETR4.SA / LSTM_learned_wavelet_no_warmup
+12:43:17 [INFO] [409/550] ohlcv / PETR4.SA / LSTM_raw
+12:43:17 [INFO] [410/550] ohlcv / PETR4.SA / MLP_raw
+12:43:17 [INFO] [411/550] ohlcv / PETR4.SA / Transformer_db4
+12:43:17 [INFO] [412/550] ohlcv / PETR4.SA / Transformer_learned_wavelet
+12:43:17 [INFO] [413/550] ohlcv / PETR4.SA / Transformer_learned_wavelet_no_warmup
+12:43:18 [INFO] [414/550] ohlcv / PETR4.SA / Transformer_raw
+12:43:18 [INFO] [415/550] ohlcv / RADL3.SA / CNN_LSTM_db4
+12:43:18 [INFO] [416/550] ohlcv / RADL3.SA / CNN_LSTM_learned_wavelet
+12:43:18 [INFO] [417/550] ohlcv / RADL3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:18 [INFO] [418/550] ohlcv / RADL3.SA / CNN_LSTM_raw
+12:43:18 [INFO] [419/550] ohlcv / RADL3.SA / CNN_db4
+12:43:18 [INFO] [420/550] ohlcv / RADL3.SA / CNN_learned_wavelet
+12:43:18 [INFO] [421/550] ohlcv / RADL3.SA / CNN_learned_wavelet_no_warmup
+12:43:18 [INFO] [422/550] ohlcv / RADL3.SA / CNN_raw
+12:43:18 [INFO] [423/550] ohlcv / RADL3.SA / LSTM_db4
+12:43:18 [INFO] [424/550] ohlcv / RADL3.SA / LSTM_learned_wavelet
+12:43:18 [INFO] [425/550] ohlcv / RADL3.SA / LSTM_learned_wavelet_no_warmup
+12:43:19 [INFO] [426/550] ohlcv / RADL3.SA / LSTM_raw
+12:43:19 [INFO] [427/550] ohlcv / RADL3.SA / MLP_raw
+12:43:19 [INFO] [428/550] ohlcv / RADL3.SA / Transformer_db4
+12:43:19 [INFO] [429/550] ohlcv / RADL3.SA / Transformer_learned_wavelet
+12:43:19 [INFO] [430/550] ohlcv / RADL3.SA / Transformer_learned_wavelet_no_warmup
+12:43:19 [INFO] [431/550] ohlcv / RADL3.SA / Transformer_raw
+12:43:19 [INFO] [432/550] ohlcv / RENT3.SA / CNN_LSTM_db4
+12:43:19 [INFO] [433/550] ohlcv / RENT3.SA / CNN_LSTM_learned_wavelet
+12:43:19 [INFO] [434/550] ohlcv / RENT3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:19 [INFO] [435/550] ohlcv / RENT3.SA / CNN_LSTM_raw
+12:43:19 [INFO] [436/550] ohlcv / RENT3.SA / CNN_db4
+12:43:19 [INFO] [437/550] ohlcv / RENT3.SA / CNN_learned_wavelet
+12:43:20 [INFO] [438/550] ohlcv / RENT3.SA / CNN_learned_wavelet_no_warmup
+12:43:20 [INFO] [439/550] ohlcv / RENT3.SA / CNN_raw
+12:43:20 [INFO] [440/550] ohlcv / RENT3.SA / LSTM_db4
+12:43:20 [INFO] [441/550] ohlcv / RENT3.SA / LSTM_learned_wavelet
+12:43:20 [INFO] [442/550] ohlcv / RENT3.SA / LSTM_learned_wavelet_no_warmup
+12:43:20 [INFO] [443/550] ohlcv / RENT3.SA / LSTM_raw
+12:43:20 [INFO] [444/550] ohlcv / RENT3.SA / MLP_raw
+12:43:20 [INFO] [445/550] ohlcv / RENT3.SA / Transformer_db4
+12:43:20 [INFO] [446/550] ohlcv / RENT3.SA / Transformer_learned_wavelet
+12:43:20 [INFO] [447/550] ohlcv / RENT3.SA / Transformer_learned_wavelet_no_warmup
+12:43:20 [INFO] [448/550] ohlcv / RENT3.SA / Transformer_raw
+12:43:21 [INFO] [449/550] ohlcv / SUZB3.SA / CNN_LSTM_db4
+12:43:21 [INFO] [450/550] ohlcv / SUZB3.SA / CNN_LSTM_learned_wavelet
+12:43:21 [INFO] [451/550] ohlcv / SUZB3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:21 [INFO] [452/550] ohlcv / SUZB3.SA / CNN_LSTM_raw
+12:43:21 [INFO] [453/550] ohlcv / SUZB3.SA / CNN_db4
+12:43:21 [INFO] [454/550] ohlcv / SUZB3.SA / CNN_learned_wavelet
+12:43:21 [INFO] [455/550] ohlcv / SUZB3.SA / CNN_learned_wavelet_no_warmup
+12:43:21 [INFO] [456/550] ohlcv / SUZB3.SA / CNN_raw
+12:43:21 [INFO] [457/550] ohlcv / SUZB3.SA / LSTM_db4
+12:43:21 [INFO] [458/550] ohlcv / SUZB3.SA / LSTM_learned_wavelet
+12:43:21 [INFO] [459/550] ohlcv / SUZB3.SA / LSTM_learned_wavelet_no_warmup
+12:43:21 [INFO] [460/550] ohlcv / SUZB3.SA / LSTM_raw
+12:43:21 [INFO] [461/550] ohlcv / SUZB3.SA / MLP_raw
+12:43:21 [INFO] [462/550] ohlcv / SUZB3.SA / Transformer_db4
+12:43:21 [INFO] [463/550] ohlcv / SUZB3.SA / Transformer_learned_wavelet
+12:43:21 [INFO] [464/550] ohlcv / SUZB3.SA / Transformer_learned_wavelet_no_warmup
+12:43:21 [INFO] [465/550] ohlcv / SUZB3.SA / Transformer_raw
+12:43:21 [INFO] [466/550] ohlcv / UGPA3.SA / CNN_LSTM_db4
+12:43:21 [INFO] [467/550] ohlcv / UGPA3.SA / CNN_LSTM_learned_wavelet
+12:43:21 [INFO] [468/550] ohlcv / UGPA3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:21 [INFO] [469/550] ohlcv / UGPA3.SA / CNN_LSTM_raw
+12:43:21 [INFO] [470/550] ohlcv / UGPA3.SA / CNN_db4
+12:43:21 [INFO] [471/550] ohlcv / UGPA3.SA / CNN_learned_wavelet
+12:43:21 [INFO] [472/550] ohlcv / UGPA3.SA / CNN_learned_wavelet_no_warmup
+12:43:21 [INFO] [473/550] ohlcv / UGPA3.SA / CNN_raw
+12:43:22 [INFO] [474/550] ohlcv / UGPA3.SA / LSTM_db4
+12:43:22 [INFO] [475/550] ohlcv / UGPA3.SA / LSTM_learned_wavelet
+12:43:22 [INFO] [476/550] ohlcv / UGPA3.SA / LSTM_learned_wavelet_no_warmup
+12:43:22 [INFO] [477/550] ohlcv / UGPA3.SA / LSTM_raw
+12:43:22 [INFO] [478/550] ohlcv / UGPA3.SA / MLP_raw
+12:43:22 [INFO] [479/550] ohlcv / UGPA3.SA / Transformer_db4
+12:43:22 [INFO] [480/550] ohlcv / UGPA3.SA / Transformer_learned_wavelet
+12:43:22 [INFO] [481/550] ohlcv / UGPA3.SA / Transformer_learned_wavelet_no_warmup
+12:43:22 [INFO] [482/550] ohlcv / UGPA3.SA / Transformer_raw
+12:43:22 [INFO] [483/550] ohlcv / USIM5.SA / CNN_LSTM_db4
+12:43:22 [INFO] [484/550] ohlcv / USIM5.SA / CNN_LSTM_learned_wavelet
+12:43:22 [INFO] [485/550] ohlcv / USIM5.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:22 [INFO] [486/550] ohlcv / USIM5.SA / CNN_LSTM_raw
+12:43:23 [INFO] [487/550] ohlcv / USIM5.SA / CNN_db4
+12:43:23 [INFO] [488/550] ohlcv / USIM5.SA / CNN_learned_wavelet
+12:43:23 [INFO] [489/550] ohlcv / USIM5.SA / CNN_learned_wavelet_no_warmup
+12:43:23 [INFO] [490/550] ohlcv / USIM5.SA / CNN_raw
+12:43:23 [INFO] [491/550] ohlcv / USIM5.SA / LSTM_db4
+12:43:23 [INFO] [492/550] ohlcv / USIM5.SA / LSTM_learned_wavelet
+12:43:23 [INFO] [493/550] ohlcv / USIM5.SA / LSTM_learned_wavelet_no_warmup
+12:43:23 [INFO] [494/550] ohlcv / USIM5.SA / LSTM_raw
+12:43:23 [INFO] [495/550] ohlcv / USIM5.SA / MLP_raw
+12:43:23 [INFO] [496/550] ohlcv / USIM5.SA / Transformer_db4
+12:43:23 [INFO] [497/550] ohlcv / USIM5.SA / Transformer_learned_wavelet
+12:43:23 [INFO] [498/550] ohlcv / USIM5.SA / Transformer_learned_wavelet_no_warmup
+12:43:24 [INFO] [499/550] ohlcv / USIM5.SA / Transformer_raw
+12:43:24 [INFO] [500/550] ohlcv / VALE3.SA / CNN_LSTM_db4
+12:43:24 [INFO] [501/550] ohlcv / VALE3.SA / CNN_LSTM_learned_wavelet
+12:43:24 [INFO] [502/550] ohlcv / VALE3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:24 [INFO] [503/550] ohlcv / VALE3.SA / CNN_LSTM_raw
+12:43:24 [INFO] [504/550] ohlcv / VALE3.SA / CNN_db4
+12:43:24 [INFO] [505/550] ohlcv / VALE3.SA / CNN_learned_wavelet
+12:43:24 [INFO] [506/550] ohlcv / VALE3.SA / CNN_learned_wavelet_no_warmup
+12:43:24 [INFO] [507/550] ohlcv / VALE3.SA / CNN_raw
+12:43:24 [INFO] [508/550] ohlcv / VALE3.SA / LSTM_db4
+12:43:24 [INFO] [509/550] ohlcv / VALE3.SA / LSTM_learned_wavelet
+12:43:25 [INFO] [510/550] ohlcv / VALE3.SA / LSTM_learned_wavelet_no_warmup
+12:43:25 [INFO] [511/550] ohlcv / VALE3.SA / LSTM_raw
+12:43:25 [INFO] [512/550] ohlcv / VALE3.SA / MLP_raw
+12:43:25 [INFO] [513/550] ohlcv / VALE3.SA / Transformer_db4
+12:43:25 [INFO] [514/550] ohlcv / VALE3.SA / Transformer_learned_wavelet
+12:43:25 [INFO] [515/550] ohlcv / VALE3.SA / Transformer_learned_wavelet_no_warmup
+12:43:25 [INFO] [516/550] ohlcv / VALE3.SA / Transformer_raw
+12:43:25 [INFO] [517/550] ohlcv / VIVT3.SA / CNN_LSTM_db4
+12:43:25 [INFO] [518/550] ohlcv / VIVT3.SA / CNN_LSTM_learned_wavelet
+12:43:25 [INFO] [519/550] ohlcv / VIVT3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:25 [INFO] [520/550] ohlcv / VIVT3.SA / CNN_LSTM_raw
+12:43:25 [INFO] [521/550] ohlcv / VIVT3.SA / CNN_db4
+12:43:26 [INFO] [522/550] ohlcv / VIVT3.SA / CNN_learned_wavelet
+12:43:26 [INFO] [523/550] ohlcv / VIVT3.SA / CNN_learned_wavelet_no_warmup
+12:43:26 [INFO] [524/550] ohlcv / VIVT3.SA / CNN_raw
+12:43:26 [INFO] [525/550] ohlcv / VIVT3.SA / LSTM_db4
+12:43:26 [INFO] [526/550] ohlcv / VIVT3.SA / LSTM_learned_wavelet
+12:43:26 [INFO] [527/550] ohlcv / VIVT3.SA / LSTM_learned_wavelet_no_warmup
+12:43:26 [INFO] [528/550] ohlcv / VIVT3.SA / LSTM_raw
+12:43:26 [INFO] [529/550] ohlcv / VIVT3.SA / MLP_raw
+12:43:26 [INFO] [530/550] ohlcv / VIVT3.SA / Transformer_db4
+12:43:26 [INFO] [531/550] ohlcv / VIVT3.SA / Transformer_learned_wavelet
+12:43:26 [INFO] [532/550] ohlcv / VIVT3.SA / Transformer_learned_wavelet_no_warmup
+12:43:27 [INFO] [533/550] ohlcv / VIVT3.SA / Transformer_raw
+12:43:27 [INFO] [534/550] ohlcv / WEGE3.SA / CNN_LSTM_db4
+12:43:27 [INFO] [535/550] ohlcv / WEGE3.SA / CNN_LSTM_learned_wavelet
+12:43:27 [INFO] [536/550] ohlcv / WEGE3.SA / CNN_LSTM_learned_wavelet_no_warmup
+12:43:27 [INFO] [537/550] ohlcv / WEGE3.SA / CNN_LSTM_raw
+12:43:27 [INFO] [538/550] ohlcv / WEGE3.SA / CNN_db4
+12:43:27 [INFO] [539/550] ohlcv / WEGE3.SA / CNN_learned_wavelet
+12:43:27 [INFO] [540/550] ohlcv / WEGE3.SA / CNN_learned_wavelet_no_warmup
+12:43:27 [INFO] [541/550] ohlcv / WEGE3.SA / CNN_raw
+12:43:27 [INFO] [542/550] ohlcv / WEGE3.SA / LSTM_db4
+12:43:27 [INFO] [543/550] ohlcv / WEGE3.SA / LSTM_learned_wavelet
+12:43:27 [INFO] [544/550] ohlcv / WEGE3.SA / LSTM_learned_wavelet_no_warmup
+12:43:28 [INFO] [545/550] ohlcv / WEGE3.SA / LSTM_raw
+12:43:28 [INFO] [546/550] ohlcv / WEGE3.SA / MLP_raw
+12:43:28 [INFO] [547/550] ohlcv / WEGE3.SA / Transformer_db4
+12:43:28 [INFO] [548/550] ohlcv / WEGE3.SA / Transformer_learned_wavelet
+12:43:28 [INFO] [549/550] ohlcv / WEGE3.SA / Transformer_learned_wavelet_no_warmup
+12:43:28 [INFO] [550/550] ohlcv / WEGE3.SA / Transformer_raw
+12:43:28 [INFO] Saved summary: /home/felipeteodoro/projetos/LearnableWaveletLayer/tests/financial/results/2026-05-03/meta_summary.csv
+
+[feature_mode=features]
+
+==============================================================
+  Model: CNN  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -1.3507     -1.3254  +   0.0253
+  db4                            —           —           —
+  learned_wavelet                —           —           —
+  learned_wavelet_no_warmup           —           —           —
+
+
+[feature_mode=features]
+
+==============================================================
+  Model: LSTM  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -0.9469     -0.9841    -0.0371
+  db4                            —           —           —
+  learned_wavelet                —           —           —
+  learned_wavelet_no_warmup           —           —           —
+
+
+[feature_mode=features]
+
+==============================================================
+  Model: CNN_LSTM  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -0.8397     -0.8749    -0.0353
+  db4                            —           —           —
+  learned_wavelet                —           —           —
+  learned_wavelet_no_warmup           —           —           —
+
+
+[feature_mode=features]
+
+==============================================================
+  Model: Transformer  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -0.7694     -0.7734    -0.0040
+  db4                            —           —           —
+  learned_wavelet                —           —           —
+  learned_wavelet_no_warmup           —           —           —
+
+
+[feature_mode=features]
+
+==============================================================
+  Model: MLP  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -1.1653     -1.1934    -0.0281
+  db4                            —           —           —
+  learned_wavelet                —           —           —
+  learned_wavelet_no_warmup           —           —           —
+
+
+[feature_mode=ohlcv]
+
+==============================================================
+  Model: CNN  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -1.0773     -0.9676  +   0.1098
+  db4                      -0.7639     -0.7823    -0.0184
+  learned_wavelet          -0.7689     -0.7934    -0.0245
+  learned_wavelet_no_warmup     -1.0399     -1.0107  +   0.0292
+
+
+[feature_mode=ohlcv]
+
+==============================================================
+  Model: LSTM  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -0.9248     -0.9646    -0.0399
+  db4                      -1.2125     -1.2036  +   0.0089
+  learned_wavelet          -1.3428     -1.3252  +   0.0176
+  learned_wavelet_no_warmup     -1.1762     -1.1147  +   0.0615
+
+
+[feature_mode=ohlcv]
+
+==============================================================
+  Model: CNN_LSTM  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -0.6750     -0.7118    -0.0368
+  db4                      -1.1142     -1.0910  +   0.0232
+  learned_wavelet          -0.7179     -0.7432    -0.0252
+  learned_wavelet_no_warmup     -0.9581     -0.9900    -0.0319
+
+
+[feature_mode=ohlcv]
+
+==============================================================
+  Model: Transformer  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -0.9758     -0.9522  +   0.0236
+  db4                      -1.0548     -1.0365  +   0.0183
+  learned_wavelet          -1.3889     -1.3747  +   0.0143
+  learned_wavelet_no_warmup     -1.2006     -1.1903  +   0.0103
+
+
+[feature_mode=ohlcv]
+
+==============================================================
+  Model: MLP  |  Metric: sharpe
+==============================================================
+  mode                    sem_meta    com_meta       delta
+  --------------------  ----------  ----------  ----------
+  raw                      -1.1027     -1.0757  +   0.0270
+  db4                            —           —           —
+  learned_wavelet                —           —           —
+  learned_wavelet_no_warmup           —           —           —
+

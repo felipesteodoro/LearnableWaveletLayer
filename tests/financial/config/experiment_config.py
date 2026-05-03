@@ -28,10 +28,10 @@ FEATURE_MODES = ["features", "ohlcv"]
 # ---------------------------------------------------------------------------
 
 FEATURE_CONFIG = {
-    # sequence_length=20 garante que kernel_size=4 seja válido até o nível 2:
-    # nível 1 → L/2 = 10 amostras (>= kernel_size=4 OK)
-    # nível 2 → L/4 =  5 amostras (>= kernel_size=4 OK)
-    "sequence_length": 20,           # sliding window (trading days)
+    # sequence_length=40 garante que kernel_size=8 seja válido até o nível 2:
+    # nível 1 → L/2 = 20 amostras (>= kernel_size=8 OK, razão 2.5×)
+    # nível 2 → L/4 = 10 amostras (>= kernel_size=8 OK, razão 1.25× → 2.5× vs seq_len=20)
+    "sequence_length": 40,           # sliding window (trading days)
     # Distribution-quality thresholds — features failing these are dropped
     "adf_max_failing_pct": 0.30,     # drop if non-stationary in >30% of assets
     "max_kurtosis": 20.0,            # after 1%-99% winsorisation
@@ -105,12 +105,12 @@ WAVELET_CONFIG = {
 
 LEARNED_WAVELET_CONFIG = {
     "levels": 2,
-    # kernel_size=4 é compatível com seq_len=20:
-    #   nível 1: 20//2=10 amostras > 4 coeficientes → overlap bem definido
-    #   nível 2: 10//2= 5 amostras > 4 coeficientes → mesma garantia
-    # kernel_size=8 seria inválido com seq_len=20: nível 2 teria apenas 5 amostras
-    # para um filtro de 8 coeficientes — quase tudo padding, sem informação real.
-    "kernel_size": 4,
+    # kernel_size=8 é compatível com seq_len=40:
+    #   nível 1: 40//2=20 amostras > 8 coeficientes → razão 2.5×, overlap bem definido
+    #   nível 2: 20//2=10 amostras > 8 coeficientes → razão 1.25× (mínimo aceitável)
+    # Benefício vs kernel_size=4: ~4 parâmetros livres no passa-baixa (vs ~2),
+    # espaço real para o filtro aprendido divergir do warm-start db4.
+    "kernel_size": 8,
     "wavelet_net_units": 32,
     "reg_energy": 1e-2,
     "reg_high_dc": 1e-2,
@@ -432,7 +432,7 @@ ML_MODELS_CONFIG = {
 # ---------------------------------------------------------------------------
 
 BACKTEST_CONFIG = {
-    "transaction_cost": 0.001,   # 0.1% per trade (round-trip = 0.2%)
+    "transaction_cost": 0.0005,  # 0.05% per trade (round-trip = 0.1%)
     "allow_short": True,         # True: sell=short; False: sell=flat
     # Taxa Selic anualizada usada como risk-free rate no Sharpe, Sortino e Alpha.
     # Valor constante representando média histórica brasileira; ajustar conforme

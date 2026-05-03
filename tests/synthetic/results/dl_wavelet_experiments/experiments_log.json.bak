@@ -1,0 +1,4519 @@
+[
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g0_2026-04-27T00-06-13.426735",
+    "timestamp": "2026-04-27T00:06:13.426735",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g0",
+    "metrics": {
+      "mse": 0.06507907810803538,
+      "rmse": 0.25510601346898,
+      "mae": 0.1992899403593076,
+      "r2": 0.9356023206884239,
+      "explained_var": 0.9481739014201724,
+      "max_error": 1.2795900660726542,
+      "mape": 2.0186022618055057,
+      "residual_std": 0.22885470526837523,
+      "residual_mean": 0.11271469285128936
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g1_2026-04-27T00-10-33.038231",
+    "timestamp": "2026-04-27T00:10:33.038231",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g1",
+    "metrics": {
+      "mse": 0.061725980219409546,
+      "rmse": 0.24844713767602464,
+      "mae": 0.19346077940974765,
+      "r2": 0.9389203105679607,
+      "explained_var": 0.9483577459986041,
+      "max_error": 1.1899125534269328,
+      "mape": 1.9912616891658346,
+      "residual_std": 0.22844843239933377,
+      "residual_mean": 0.09765907000221012
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g2_2026-04-27T00-18-04.623160",
+    "timestamp": "2026-04-27T00:18:04.623160",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g2",
+    "metrics": {
+      "mse": 0.06954538255212073,
+      "rmse": 0.2637145853989133,
+      "mae": 0.20549370099834643,
+      "r2": 0.9311827798826888,
+      "explained_var": 0.9446896965641289,
+      "max_error": 1.2368919807645793,
+      "mape": 2.07220727866254,
+      "residual_std": 0.23642239260953388,
+      "residual_mean": 0.11683250756918706
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g3_2026-04-27T00-25-38.827088",
+    "timestamp": "2026-04-27T00:25:38.827088",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g3",
+    "metrics": {
+      "mse": 0.05840298346447304,
+      "rmse": 0.24166709222497185,
+      "mae": 0.1872788672374952,
+      "r2": 0.9422085144823211,
+      "explained_var": 0.9486977048420873,
+      "max_error": 1.398795006967597,
+      "mape": 1.7788771137927792,
+      "residual_std": 0.22769525748466687,
+      "residual_mean": 0.08098057287685917
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g4_2026-04-27T00-34-11.776489",
+    "timestamp": "2026-04-27T00:34:11.776489",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g4",
+    "metrics": {
+      "mse": 0.060562598602170434,
+      "rmse": 0.24609469438037554,
+      "mae": 0.1919012558452776,
+      "r2": 0.9400715112069675,
+      "explained_var": 0.9503800485080768,
+      "max_error": 1.1980673629018779,
+      "mape": 1.8710764653563052,
+      "residual_std": 0.22393076062721282,
+      "residual_mean": 0.10206670880893703
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g5_2026-04-27T00-42-30.463660",
+    "timestamp": "2026-04-27T00:42:30.463660",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g5",
+    "metrics": {
+      "mse": 0.05727793588092322,
+      "rmse": 0.23932809254436307,
+      "mae": 0.18647633920933757,
+      "r2": 0.9433217824572521,
+      "explained_var": 0.9515010564539005,
+      "max_error": 1.3047063333759832,
+      "mape": 1.7188490104537388,
+      "residual_std": 0.2213868020076446,
+      "residual_mean": 0.09091655392584562
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g6_2026-04-27T00-48-46.927498",
+    "timestamp": "2026-04-27T00:48:46.927498",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g6",
+    "metrics": {
+      "mse": 0.052549147393263954,
+      "rmse": 0.22923600806431776,
+      "mae": 0.17923215165278114,
+      "r2": 0.9480010590145356,
+      "explained_var": 0.9503566065887764,
+      "max_error": 1.2776852829227971,
+      "mape": 1.9495744287873629,
+      "residual_std": 0.2239836501083532,
+      "residual_mean": 0.048790079702771195
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g0_2026-04-27T01-03-49.298743",
+    "timestamp": "2026-04-27T01:03:49.298743",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g0",
+    "metrics": {
+      "mse": 0.06454256403710588,
+      "rmse": 0.25405228603007274,
+      "mae": 0.1984977083268971,
+      "r2": 0.9361332172851536,
+      "explained_var": 0.9474062736082925,
+      "max_error": 1.3770694715748357,
+      "mape": 1.7228773999597597,
+      "residual_std": 0.23054332843979006,
+      "residual_mean": 0.10673489471119074
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g1_2026-04-27T01-10-08.351480",
+    "timestamp": "2026-04-27T01:10:08.351480",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g1",
+    "metrics": {
+      "mse": 0.05907025598173317,
+      "rmse": 0.24304373265265075,
+      "mae": 0.1885268177594189,
+      "r2": 0.9415482285220834,
+      "explained_var": 0.9485407127698987,
+      "max_error": 1.2092735725614543,
+      "mape": 1.930226150647598,
+      "residual_std": 0.22804338074862046,
+      "residual_mean": 0.08406231306877592
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g2_2026-04-27T01-16-22.602770",
+    "timestamp": "2026-04-27T01:16:22.602770",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g2",
+    "metrics": {
+      "mse": 0.06729769095475178,
+      "rmse": 0.259417985025618,
+      "mae": 0.20315963534449738,
+      "r2": 0.9334069374289652,
+      "explained_var": 0.9461138092673205,
+      "max_error": 1.251569147703361,
+      "mape": 2.003465470535707,
+      "residual_std": 0.23335887884068396,
+      "residual_mean": 0.11331956857035229
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g3_2026-04-27T01-23-51.624640",
+    "timestamp": "2026-04-27T01:23:51.624640",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g3",
+    "metrics": {
+      "mse": 0.06521804304173667,
+      "rmse": 0.25537823525456643,
+      "mae": 0.19765320750838866,
+      "r2": 0.9354648107620971,
+      "explained_var": 0.9471255072654484,
+      "max_error": 1.2477097494373846,
+      "mape": 1.864978339857475,
+      "residual_std": 0.23115787559571296,
+      "residual_mean": 0.10855450055991948
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g4_2026-04-27T01-31-53.412056",
+    "timestamp": "2026-04-27T01:31:53.412056",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g4",
+    "metrics": {
+      "mse": 0.05743568837201791,
+      "rmse": 0.2396574396341952,
+      "mae": 0.18696590618911738,
+      "r2": 0.9431656816852766,
+      "explained_var": 0.9518710718023745,
+      "max_error": 1.1556024509641643,
+      "mape": 1.8209938418544616,
+      "residual_std": 0.22054066650473558,
+      "residual_mean": 0.09379500407625624
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g5_2026-04-27T01-39-45.780173",
+    "timestamp": "2026-04-27T01:39:45.780173",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g5",
+    "metrics": {
+      "mse": 0.053826042101120804,
+      "rmse": 0.2320044010382579,
+      "mae": 0.1803770993298041,
+      "r2": 0.9467375338033347,
+      "explained_var": 0.9517992462580221,
+      "max_error": 1.1294337469312663,
+      "mape": 1.7129994135326037,
+      "residual_std": 0.22070516786098074,
+      "residual_mean": 0.07152112261826658
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g6_2026-04-27T01-47-48.116829",
+    "timestamp": "2026-04-27T01:47:48.116829",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g6",
+    "metrics": {
+      "mse": 0.05526099439056017,
+      "rmse": 0.23507657133487414,
+      "mae": 0.1828757578076405,
+      "r2": 0.9453176059240657,
+      "explained_var": 0.9501767653709111,
+      "max_error": 1.3547011596928167,
+      "mape": 1.7935042880153362,
+      "residual_std": 0.2243889918268414,
+      "residual_mean": 0.07007549313057927
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g7_2026-04-27T01-55-36.771113",
+    "timestamp": "2026-04-27T01:55:36.771113",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g7",
+    "metrics": {
+      "mse": 0.061848604460887725,
+      "rmse": 0.2486937965870635,
+      "mae": 0.1925046760897762,
+      "r2": 0.9387989702415745,
+      "explained_var": 0.9481812380570895,
+      "max_error": 1.1932600719700384,
+      "mape": 1.6957018673944368,
+      "residual_std": 0.2288385060622678,
+      "residual_mean": 0.09737321296987762
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g8_2026-04-27T02-02-34.780581",
+    "timestamp": "2026-04-27T02:02:34.780581",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g8",
+    "metrics": {
+      "mse": 0.05693357130661192,
+      "rmse": 0.23860756758035132,
+      "mae": 0.1853575499560792,
+      "r2": 0.9436625414241501,
+      "explained_var": 0.949703426316015,
+      "max_error": 1.4057016355763006,
+      "mape": 1.9405236130780494,
+      "residual_std": 0.22545236117547923,
+      "residual_mean": 0.07813324610569546
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g9_2026-04-27T02-11-33.030147",
+    "timestamp": "2026-04-27T02:11:33.030147",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g9",
+    "metrics": {
+      "mse": 0.05038689976235516,
+      "rmse": 0.22447026476207302,
+      "mae": 0.17444955969880166,
+      "r2": 0.9501406672200533,
+      "explained_var": 0.9514124011982691,
+      "max_error": 1.1530936939487981,
+      "mape": 1.717222689881498,
+      "residual_std": 0.22158905530200143,
+      "residual_mean": 0.0358495513601176
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g10_2026-04-27T02-17-05.585046",
+    "timestamp": "2026-04-27T02:17:05.585046",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g10",
+    "metrics": {
+      "mse": 0.058557799167087726,
+      "rmse": 0.2419871880226053,
+      "mae": 0.18804900934044314,
+      "r2": 0.9420553197497095,
+      "explained_var": 0.9433828062340908,
+      "max_error": 1.310208371690272,
+      "mape": 2.0804212370950896,
+      "residual_std": 0.2391992190725427,
+      "residual_mean": 0.03662694038782707
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g11_2026-04-27T02-23-55.510503",
+    "timestamp": "2026-04-27T02:23:55.510503",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g11",
+    "metrics": {
+      "mse": 0.05441702443948262,
+      "rmse": 0.23327456877997357,
+      "mae": 0.18176422075918355,
+      "r2": 0.946152739239382,
+      "explained_var": 0.9467264343056646,
+      "max_error": 1.1730245862517343,
+      "mape": 2.026587194675592,
+      "residual_std": 0.23202857376576252,
+      "residual_mean": 0.024078317958460185
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g12_2026-04-27T02-32-59.474609",
+    "timestamp": "2026-04-27T02:32:59.474609",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g12",
+    "metrics": {
+      "mse": 0.055673155866909664,
+      "rmse": 0.2359515964491651,
+      "mae": 0.18307045351220813,
+      "r2": 0.9449097599104131,
+      "explained_var": 0.9505058864174677,
+      "max_error": 1.0958052235815043,
+      "mape": 1.6122021281275982,
+      "residual_std": 0.2236466323045976,
+      "residual_mean": 0.07520199283078725
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g13_2026-04-27T02-40-16.567952",
+    "timestamp": "2026-04-27T02:40:16.567952",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g13",
+    "metrics": {
+      "mse": 0.062057562743750065,
+      "rmse": 0.24911355391417397,
+      "mae": 0.19312551250859294,
+      "r2": 0.9385921998188754,
+      "explained_var": 0.9470228225606241,
+      "max_error": 1.1287708836767192,
+      "mape": 1.7666746945874157,
+      "residual_std": 0.23138222635434624,
+      "residual_mean": 0.09230291474843108
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g14_2026-04-27T02-49-08.257008",
+    "timestamp": "2026-04-27T02:49:08.257008",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g14",
+    "metrics": {
+      "mse": 0.061454211780767876,
+      "rmse": 0.24789960020292062,
+      "mae": 0.1923240240664745,
+      "r2": 0.9391892335039863,
+      "explained_var": 0.9485344450549975,
+      "max_error": 1.4341245872746038,
+      "mape": 1.5835183465966478,
+      "residual_std": 0.22805726810941473,
+      "residual_mean": 0.09718072979371165
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g15_2026-04-27T02-58-11.574646",
+    "timestamp": "2026-04-27T02:58:11.574646",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g15",
+    "metrics": {
+      "mse": 0.06055305592565336,
+      "rmse": 0.2460753053958348,
+      "mae": 0.19094191643344138,
+      "r2": 0.9400809539686044,
+      "explained_var": 0.9495328651706674,
+      "max_error": 1.1909803110334392,
+      "mape": 1.9503688548389029,
+      "residual_std": 0.22583430437122987,
+      "residual_mean": 0.09773393931903125
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g16_2026-04-27T03-07-17.525327",
+    "timestamp": "2026-04-27T03:07:17.525327",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g16",
+    "metrics": {
+      "mse": 0.06039191036312618,
+      "rmse": 0.24574765586496686,
+      "mae": 0.19138696217290685,
+      "r2": 0.9402404122854675,
+      "explained_var": 0.9495185213815023,
+      "max_error": 1.4658337814579534,
+      "mape": 1.8239915176579184,
+      "residual_std": 0.22586639544913237,
+      "residual_mean": 0.09683120246047935
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g17_2026-04-27T03-13-57.333047",
+    "timestamp": "2026-04-27T03:13:57.333047",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g17",
+    "metrics": {
+      "mse": 0.05491626804173653,
+      "rmse": 0.23434220286097962,
+      "mae": 0.1817509326075795,
+      "r2": 0.9456587228775809,
+      "explained_var": 0.9486199481810632,
+      "max_error": 1.2546402199039983,
+      "mape": 1.9156579742768816,
+      "residual_std": 0.2278677460582276,
+      "residual_mean": 0.05470428089354275
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g18_2026-04-27T03-22-58.995754",
+    "timestamp": "2026-04-27T03:22:58.995754",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g18",
+    "metrics": {
+      "mse": 0.06123270928867681,
+      "rmse": 0.2474524384375244,
+      "mae": 0.19331805988737552,
+      "r2": 0.9394084167940249,
+      "explained_var": 0.9494909799963458,
+      "max_error": 1.1558303791257853,
+      "mape": 1.8049744403451584,
+      "residual_std": 0.22592800047074674,
+      "residual_mean": 0.1009418044814291
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g19_2026-04-27T03-32-00.185696",
+    "timestamp": "2026-04-27T03:32:00.185696",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g19",
+    "metrics": {
+      "mse": 0.057761603743692165,
+      "rmse": 0.24033643865151236,
+      "mae": 0.18694638313562528,
+      "r2": 0.9428431787519537,
+      "explained_var": 0.9507723699180071,
+      "max_error": 1.3203238231907415,
+      "mape": 1.690380738936347,
+      "residual_std": 0.22304374671790878,
+      "residual_mean": 0.08951586894919537
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g20_2026-04-27T03-41-02.292133",
+    "timestamp": "2026-04-27T03:41:02.292133",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g20",
+    "metrics": {
+      "mse": 0.05180168232940264,
+      "rmse": 0.2275998293703285,
+      "mae": 0.17655890056218834,
+      "r2": 0.9487406978797212,
+      "explained_var": 0.949577743479113,
+      "max_error": 1.4957956058750677,
+      "mape": 1.8461200881676731,
+      "residual_std": 0.2257338695459002,
+      "residual_mean": 0.029084402507824514
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g21_2026-04-27T03-50-02.777771",
+    "timestamp": "2026-04-27T03:50:02.777771",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g21",
+    "metrics": {
+      "mse": 0.052568951102229644,
+      "rmse": 0.22927919901776883,
+      "mae": 0.17794674388843432,
+      "r2": 0.9479814626567471,
+      "explained_var": 0.949892480093818,
+      "max_error": 1.2845457775364446,
+      "mape": 1.7186009206266524,
+      "residual_std": 0.22502824930075938,
+      "residual_mean": 0.043945854399077666
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g22_2026-04-27T03-55-57.432403",
+    "timestamp": "2026-04-27T03:55:57.432403",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g22",
+    "metrics": {
+      "mse": 0.05793419964410283,
+      "rmse": 0.2406952422548124,
+      "mae": 0.18712162077506977,
+      "r2": 0.942672389985913,
+      "explained_var": 0.9430910654478603,
+      "max_error": 1.1183859620604502,
+      "mape": 1.8646961916886737,
+      "residual_std": 0.23981470791404152,
+      "residual_mean": 0.02056952873076538
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g23_2026-04-27T04-04-59.345768",
+    "timestamp": "2026-04-27T04:04:59.345768",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g23",
+    "metrics": {
+      "mse": 0.05352260697646954,
+      "rmse": 0.2313495342041335,
+      "mae": 0.17975250822327307,
+      "r2": 0.9470377918650227,
+      "explained_var": 0.9504838017549376,
+      "max_error": 1.227372167802863,
+      "mape": 1.7694693996828619,
+      "residual_std": 0.22369652318244956,
+      "residual_mean": 0.05901247743107686
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g24_2026-04-27T04-10-09.906193",
+    "timestamp": "2026-04-27T04:10:09.906193",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g24",
+    "metrics": {
+      "mse": 0.06259884136230211,
+      "rmse": 0.2501976046294251,
+      "mae": 0.19411509396343565,
+      "r2": 0.9380565885608632,
+      "explained_var": 0.9459671822137303,
+      "max_error": 1.315446338466166,
+      "mape": 1.918993627932039,
+      "residual_std": 0.2336761538198827,
+      "residual_mean": 0.08941082987115503
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g25_2026-04-27T04-16-07.102492",
+    "timestamp": "2026-04-27T04:16:07.102492",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g25",
+    "metrics": {
+      "mse": 0.0705768440272098,
+      "rmse": 0.2656630272115595,
+      "mae": 0.20361606811432878,
+      "r2": 0.930162118139682,
+      "explained_var": 0.9393228481819127,
+      "max_error": 1.158490387144798,
+      "mape": 1.7948952065683963,
+      "residual_std": 0.24762710536512517,
+      "residual_mean": 0.09621673823040874
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g26_2026-04-27T04-25-11.212071",
+    "timestamp": "2026-04-27T04:25:11.212071",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g26",
+    "metrics": {
+      "mse": 0.060670700662981816,
+      "rmse": 0.24631423154779714,
+      "mae": 0.19209017755297744,
+      "r2": 0.9399645410093643,
+      "explained_var": 0.9489159103944308,
+      "max_error": 1.243710516191535,
+      "mape": 1.8071739900781736,
+      "residual_std": 0.22721051003895232,
+      "residual_mean": 0.09511090784353264
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g27_2026-04-27T04-34-13.159166",
+    "timestamp": "2026-04-27T04:34:13.159166",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g27",
+    "metrics": {
+      "mse": 0.0607836022669518,
+      "rmse": 0.24654330708204553,
+      "mae": 0.19177077190103758,
+      "r2": 0.939852821521357,
+      "explained_var": 0.9499579553451687,
+      "max_error": 1.2318602783451604,
+      "mape": 1.5404435780066277,
+      "residual_std": 0.2248811795844897,
+      "residual_mean": 0.10105472445977125
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g28_2026-04-27T04-43-16.654285",
+    "timestamp": "2026-04-27T04:43:16.654285",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g28",
+    "metrics": {
+      "mse": 0.05912082297475922,
+      "rmse": 0.24314773898755304,
+      "mae": 0.18946452191869034,
+      "r2": 0.941498190981674,
+      "explained_var": 0.9490961444056364,
+      "max_error": 1.0962883192274089,
+      "mape": 1.7811245122692916,
+      "residual_std": 0.22680933575456402,
+      "residual_mean": 0.087626184381911
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g29_2026-04-27T04-51-28.151235",
+    "timestamp": "2026-04-27T04:51:28.151235",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g29",
+    "metrics": {
+      "mse": 0.056624994758110454,
+      "rmse": 0.23796006967159522,
+      "mae": 0.1848313270257415,
+      "r2": 0.9439678870773334,
+      "explained_var": 0.947181123790841,
+      "max_error": 1.2696481926212835,
+      "mape": 1.8374413108924093,
+      "residual_std": 0.23103627083224768,
+      "residual_mean": 0.05698452700548426
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g30_2026-04-27T05-00-29.915415",
+    "timestamp": "2026-04-27T05:00:29.915415",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g30",
+    "metrics": {
+      "mse": 0.053974982322648,
+      "rmse": 0.23232516506536266,
+      "mae": 0.1811878411756922,
+      "r2": 0.9465901530336412,
+      "explained_var": 0.9513854244939766,
+      "max_error": 1.3614091856251287,
+      "mape": 1.739315097540974,
+      "residual_std": 0.22165056187013424,
+      "residual_mean": 0.06961329431438937
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g31_2026-04-27T05-09-27.637723",
+    "timestamp": "2026-04-27T05:09:27.637723",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g31",
+    "metrics": {
+      "mse": 0.062292917628702156,
+      "rmse": 0.24958549162301513,
+      "mae": 0.19486739876014578,
+      "r2": 0.9383593091749669,
+      "explained_var": 0.9495454563869173,
+      "max_error": 1.139562485910468,
+      "mape": 1.8177356017227249,
+      "residual_std": 0.22580613053141163,
+      "residual_mean": 0.10632266476689366
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g32_2026-04-27T05-18-07.508126",
+    "timestamp": "2026-04-27T05:18:07.508126",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g32",
+    "metrics": {
+      "mse": 0.05832542616430317,
+      "rmse": 0.24150657582000365,
+      "mae": 0.1869486237484184,
+      "r2": 0.942285259732712,
+      "explained_var": 0.9472219050374981,
+      "max_error": 1.4734941704044866,
+      "mape": 1.8783471678641996,
+      "residual_std": 0.23094706251139308,
+      "residual_mean": 0.07063200748712921
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g33_2026-04-27T05-27-00.201101",
+    "timestamp": "2026-04-27T05:27:00.201101",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g33",
+    "metrics": {
+      "mse": 0.055069509399238624,
+      "rmse": 0.23466893573551362,
+      "mae": 0.1827750574239903,
+      "r2": 0.9455070860061842,
+      "explained_var": 0.9472699301259093,
+      "max_error": 1.387345073915534,
+      "mape": 1.8242023983846005,
+      "residual_std": 0.23084196419972122,
+      "residual_mean": 0.04220778321178742
+    },
+    "config": {
+      "params": {
+        "filters": [
+          32,
+          64,
+          128
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g34_2026-04-27T05-34-42.359783",
+    "timestamp": "2026-04-27T05:34:42.359783",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g34",
+    "metrics": {
+      "mse": 0.05299057588094462,
+      "rmse": 0.2301968198758285,
+      "mae": 0.17901819458519386,
+      "r2": 0.9475642524245366,
+      "explained_var": 0.9500556848621924,
+      "max_error": 1.3700202686558294,
+      "mape": 1.9437655383083279,
+      "residual_std": 0.22466148162895735,
+      "residual_mean": 0.05017763000806525
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          7,
+          5,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_g35_2026-04-27T05-43-45.767538",
+    "timestamp": "2026-04-27T05:43:45.767538",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_g35",
+    "metrics": {
+      "mse": 0.053113938005351136,
+      "rmse": 0.23046461334736648,
+      "mae": 0.1793280914691269,
+      "r2": 0.9474421819410928,
+      "explained_var": 0.9493286730551381,
+      "max_error": 1.1308480484257268,
+      "mape": 1.8831667283611184,
+      "residual_std": 0.22629071064713027,
+      "residual_mean": 0.043662939435726245
+    },
+    "config": {
+      "params": {
+        "filters": [
+          64,
+          128,
+          256
+        ],
+        "kernel_sizes": [
+          5,
+          3,
+          3
+        ],
+        "pool_sizes": [
+          2,
+          2,
+          2
+        ],
+        "dense_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g0_2026-04-27T05-51-38.486313",
+    "timestamp": "2026-04-27T05:51:38.486313",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g0",
+    "metrics": {
+      "mse": 0.08937210261031546,
+      "rmse": 0.29895167270031364,
+      "mae": 0.22856972238564702,
+      "r2": 0.9115636519351715,
+      "explained_var": 0.9324613926907644,
+      "max_error": 1.4185793322643576,
+      "mape": 2.6960254760772386,
+      "residual_std": 0.2612532116623602,
+      "residual_mean": 0.14532330166362672
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g1_2026-04-27T05-58-37.040662",
+    "timestamp": "2026-04-27T05:58:37.040662",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g1",
+    "metrics": {
+      "mse": 0.08494974337142726,
+      "rmse": 0.2914613925915871,
+      "mae": 0.22541789804902407,
+      "r2": 0.915939707656086,
+      "explained_var": 0.9378087598923784,
+      "max_error": 1.3624245295910784,
+      "mape": 2.215271609806776,
+      "residual_std": 0.2506976113421922,
+      "residual_mean": 0.1486622044729137
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g2_2026-04-27T06-05-50.075271",
+    "timestamp": "2026-04-27T06:05:50.075271",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g2",
+    "metrics": {
+      "mse": 0.07727205264283372,
+      "rmse": 0.2779785111170173,
+      "mae": 0.213604749158936,
+      "r2": 0.923537010503134,
+      "explained_var": 0.9364831217154437,
+      "max_error": 1.3798061299660396,
+      "mape": 2.120368050720964,
+      "residual_std": 0.2533553970813867,
+      "residual_mean": 0.11438135955026318
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g3_2026-04-27T06-15-23.948770",
+    "timestamp": "2026-04-27T06:15:23.948770",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g3",
+    "metrics": {
+      "mse": 0.08650483667119552,
+      "rmse": 0.29411704586982973,
+      "mae": 0.22566355362185858,
+      "r2": 0.9144008966813545,
+      "explained_var": 0.9358698141560824,
+      "max_error": 1.2416848959039326,
+      "mape": 2.2735103973145168,
+      "residual_std": 0.25457563564316193,
+      "residual_mean": 0.14729590085292787
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g4_2026-04-27T06-24-14.318816",
+    "timestamp": "2026-04-27T06:24:14.318816",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g4",
+    "metrics": {
+      "mse": 0.10157066995889177,
+      "rmse": 0.3187015374278759,
+      "mae": 0.2428019930931644,
+      "r2": 0.8994928074946557,
+      "explained_var": 0.9276529275347948,
+      "max_error": 1.3077986794683452,
+      "mape": 2.298071187578016,
+      "residual_std": 0.270393388692756,
+      "residual_mean": 0.16869524388713497
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g5_2026-04-27T06-30-44.376839",
+    "timestamp": "2026-04-27T06:30:44.376839",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g5",
+    "metrics": {
+      "mse": 0.10305602734698649,
+      "rmse": 0.32102340622918213,
+      "mae": 0.241835938877349,
+      "r2": 0.8980230022742619,
+      "explained_var": 0.9232685047335085,
+      "max_error": 1.3207339415936419,
+      "mape": 2.2979587284037906,
+      "residual_std": 0.27846615503682387,
+      "residual_mean": 0.1597267286523895
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.2,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g6_2026-04-27T06-37-24.558111",
+    "timestamp": "2026-04-27T06:37:24.558111",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g6",
+    "metrics": {
+      "mse": 0.107217098553366,
+      "rmse": 0.3274402213433255,
+      "mae": 0.25169277207818397,
+      "r2": 0.8939054988164498,
+      "explained_var": 0.9164214790617555,
+      "max_error": 1.5617531905560442,
+      "mape": 2.221497611159419,
+      "residual_std": 0.2906249718976462,
+      "residual_mean": 0.1508450339350233
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g7_2026-04-27T06-45-08.629259",
+    "timestamp": "2026-04-27T06:45:08.629259",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g7",
+    "metrics": {
+      "mse": 0.11866119915983943,
+      "rmse": 0.34447234890458106,
+      "mae": 0.25897472235761937,
+      "r2": 0.8825812216095467,
+      "explained_var": 0.9102658726724147,
+      "max_error": 1.717607228789587,
+      "mape": 2.506557078512869,
+      "residual_std": 0.3011372009824518,
+      "residual_mean": 0.16726501530294333
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g8_2026-04-27T06-51-53.162727",
+    "timestamp": "2026-04-27T06:51:53.162727",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g8",
+    "metrics": {
+      "mse": 0.10911104222518095,
+      "rmse": 0.3303196061773823,
+      "mae": 0.247471229760977,
+      "r2": 0.8920313853416206,
+      "explained_var": 0.9199689380726327,
+      "max_error": 1.556828774013991,
+      "mape": 2.3970755692049472,
+      "residual_std": 0.2843903641702577,
+      "residual_mean": 0.1680272685973594
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g9_2026-04-27T06-57-35.849187",
+    "timestamp": "2026-04-27T06:57:35.849187",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g9",
+    "metrics": {
+      "mse": 0.1122826550891952,
+      "rmse": 0.33508604132251646,
+      "mae": 0.24830754924958262,
+      "r2": 0.8888929802803472,
+      "explained_var": 0.9130863185510635,
+      "max_error": 1.5963472495465227,
+      "mape": 2.2926594620751395,
+      "residual_std": 0.296366874826777,
+      "residual_mean": 0.15636281717404785
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g10_2026-04-27T07-05-21.772601",
+    "timestamp": "2026-04-27T07:05:21.772601",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g10",
+    "metrics": {
+      "mse": 0.10330014318328568,
+      "rmse": 0.32140339634684273,
+      "mae": 0.24105457098492514,
+      "r2": 0.8977814424089734,
+      "explained_var": 0.917501458705295,
+      "max_error": 1.4221201442731557,
+      "mape": 2.664341398861404,
+      "residual_std": 0.28874117694879825,
+      "residual_mean": 0.14116896230230094
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g11_2026-04-27T07-12-59.935850",
+    "timestamp": "2026-04-27T07:12:59.935850",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g11",
+    "metrics": {
+      "mse": 0.11751944195936959,
+      "rmse": 0.3428110878594355,
+      "mae": 0.25700986978599777,
+      "r2": 0.8837110242463554,
+      "explained_var": 0.9055964948655701,
+      "max_error": 1.6843118195304472,
+      "mape": 2.845135788723996,
+      "residual_std": 0.30887278742715224,
+      "residual_mean": 0.14871799873031774
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.3,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g12_2026-04-27T07-17-47.409096",
+    "timestamp": "2026-04-27T07:17:47.409096",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g12",
+    "metrics": {
+      "mse": 0.18106259579245004,
+      "rmse": 0.4255145071468775,
+      "mae": 0.3188738878491345,
+      "r2": 0.8208331875905283,
+      "explained_var": 0.8653131818307152,
+      "max_error": 1.7806848084304354,
+      "mape": 2.213499808237577,
+      "residual_std": 0.3689335359270528,
+      "residual_mean": 0.21201566418737103
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g13_2026-04-27T07-23-43.211622",
+    "timestamp": "2026-04-27T07:23:43.211622",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g13",
+    "metrics": {
+      "mse": 0.16904433681185535,
+      "rmse": 0.4111500174046638,
+      "mae": 0.3053883208857082,
+      "r2": 0.8327256115494387,
+      "explained_var": 0.8765791162411746,
+      "max_error": 1.837919271984572,
+      "mape": 2.227234262421222,
+      "residual_std": 0.3531668351544853,
+      "residual_mean": 0.2105172756778406
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g14_2026-04-27T07-29-48.926207",
+    "timestamp": "2026-04-27T07:29:48.926207",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g14",
+    "metrics": {
+      "mse": 0.1535752870972457,
+      "rmse": 0.391886829451113,
+      "mae": 0.28842491042161356,
+      "r2": 0.8480326953578872,
+      "explained_var": 0.88123434497341,
+      "max_error": 1.7721027503399798,
+      "mape": 2.1279660791330337,
+      "residual_std": 0.34644238661436466,
+      "residual_mean": 0.18317467034005747
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g15_2026-04-27T07-33-49.773036",
+    "timestamp": "2026-04-27T07:33:49.773036",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g15",
+    "metrics": {
+      "mse": 0.16029709003278395,
+      "rmse": 0.4003711903131692,
+      "mae": 0.29621202875544195,
+      "r2": 0.841381271852474,
+      "explained_var": 0.8729048517375213,
+      "max_error": 1.7678085933117815,
+      "mape": 2.093119443592929,
+      "residual_std": 0.35838520581356986,
+      "residual_mean": 0.17848566969577445
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g16_2026-04-27T07-38-46.819339",
+    "timestamp": "2026-04-27T07:38:46.819339",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g16",
+    "metrics": {
+      "mse": 0.12033274503734163,
+      "rmse": 0.34689010513034474,
+      "mae": 0.25819321814959,
+      "r2": 0.8809271773528766,
+      "explained_var": 0.8968404953521004,
+      "max_error": 1.646067748007538,
+      "mape": 2.283688859034827,
+      "residual_std": 0.32287930640185303,
+      "residual_mean": 0.12681363702220658
+    },
+    "config": {
+      "params": {
+        "units": [
+          64,
+          32
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_LSTM_g17_2026-04-27T07-43-34.587165",
+    "timestamp": "2026-04-27T07:43:34.587165",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_LSTM_g17",
+    "metrics": {
+      "mse": 0.13145694901606447,
+      "rmse": 0.3625699229335832,
+      "mae": 0.2753385320500492,
+      "r2": 0.8699194473535499,
+      "explained_var": 0.8826221358520472,
+      "max_error": 1.571100274262192,
+      "mape": 2.1510037850398724,
+      "residual_std": 0.3444123284659281,
+      "residual_mean": 0.11330091357417253
+    },
+    "config": {
+      "params": {
+        "units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.4,
+        "recurrent_dropout": 0.0,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g0_2026-04-27T07-47-32.576378",
+    "timestamp": "2026-04-27T07:47:32.576378",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g0",
+    "metrics": {
+      "mse": 0.06609249073153765,
+      "rmse": 0.2570845983942594,
+      "mae": 0.20115630782458266,
+      "r2": 0.9345995188197455,
+      "explained_var": 0.9491662261543705,
+      "max_error": 1.158865539339717,
+      "mape": 2.3304905076302402,
+      "residual_std": 0.22665315240283732,
+      "residual_mean": 0.12132946566021738
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g1_2026-04-27T07-50-22.414482",
+    "timestamp": "2026-04-27T07:50:22.414482",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g1",
+    "metrics": {
+      "mse": 0.0612046353022592,
+      "rmse": 0.24739570590909454,
+      "mae": 0.19403481351990118,
+      "r2": 0.9394361968368109,
+      "explained_var": 0.9510479335518508,
+      "max_error": 1.1929409462186809,
+      "mape": 2.2186767164994343,
+      "residual_std": 0.2224185998237612,
+      "residual_mean": 0.10832636684896604
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g2_2026-04-27T07-55-03.504739",
+    "timestamp": "2026-04-27T07:55:03.504739",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g2",
+    "metrics": {
+      "mse": 0.062478857683998974,
+      "rmse": 0.24995771179141277,
+      "mae": 0.19577048305957997,
+      "r2": 0.9381753159716166,
+      "explained_var": 0.9508043107866115,
+      "max_error": 1.155789073106956,
+      "mape": 2.1452653054910007,
+      "residual_std": 0.22297137509460607,
+      "residual_mean": 0.11297178219546442
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g3_2026-04-27T07-58-35.618061",
+    "timestamp": "2026-04-27T07:58:35.618061",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g3",
+    "metrics": {
+      "mse": 0.062017765832284445,
+      "rmse": 0.2490336640542488,
+      "mae": 0.19359962709883746,
+      "r2": 0.9386315800439288,
+      "explained_var": 0.9476055881321273,
+      "max_error": 1.1632946687910075,
+      "mape": 2.170719369370765,
+      "residual_std": 0.2301060685765799,
+      "residual_mean": 0.0952311033040926
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g4_2026-04-27T08-03-44.314583",
+    "timestamp": "2026-04-27T08:03:44.314583",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g4",
+    "metrics": {
+      "mse": 0.0731276040400611,
+      "rmse": 0.27042116048871084,
+      "mae": 0.21071897636739959,
+      "r2": 0.9276380654013241,
+      "explained_var": 0.9423308196140088,
+      "max_error": 1.185999057181409,
+      "mape": 2.4862838163337484,
+      "residual_std": 0.24141123463704886,
+      "residual_mean": 0.12185327172906295
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g5_2026-04-27T08-08-23.551052",
+    "timestamp": "2026-04-27T08:08:23.551052",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g5",
+    "metrics": {
+      "mse": 0.08205818878016555,
+      "rmse": 0.2864580052645859,
+      "mae": 0.22439445757817675,
+      "r2": 0.9188009867444418,
+      "explained_var": 0.9349848423487266,
+      "max_error": 1.2578343366461306,
+      "mape": 2.0843101978994274,
+      "residual_std": 0.2563261400105365,
+      "residual_mean": 0.127887054573418
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g6_2026-04-27T08-14-03.465302",
+    "timestamp": "2026-04-27T08:14:03.465302",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g6",
+    "metrics": {
+      "mse": 0.06356115519963174,
+      "rmse": 0.2521133776689205,
+      "mae": 0.19985739800808375,
+      "r2": 0.9371043504576962,
+      "explained_var": 0.9469392073827363,
+      "max_error": 1.1718109529291945,
+      "mape": 2.194124399768313,
+      "residual_std": 0.23156475248147146,
+      "residual_mean": 0.09969413527297676
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g7_2026-04-27T08-17-57.388062",
+    "timestamp": "2026-04-27T08:17:57.388062",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g7",
+    "metrics": {
+      "mse": 0.0694789486830077,
+      "rmse": 0.2635885974070345,
+      "mae": 0.20734678960968878,
+      "r2": 0.9312485181679095,
+      "explained_var": 0.9471686879845902,
+      "max_error": 1.2012060563837843,
+      "mape": 2.2733258783255477,
+      "residual_std": 0.23106346710575165,
+      "residual_mean": 0.12684093523810408
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g8_2026-04-27T08-29-52.734795",
+    "timestamp": "2026-04-27T08:29:52.734795",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g8",
+    "metrics": {
+      "mse": 0.07677445467523474,
+      "rmse": 0.277082036002399,
+      "mae": 0.21691906879756656,
+      "r2": 0.9240293984606022,
+      "explained_var": 0.9450360252407659,
+      "max_error": 1.2787274676534648,
+      "mape": 2.120575573955337,
+      "residual_std": 0.23568104401810988,
+      "residual_mean": 0.14570140756275657
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g9_2026-04-27T08-40-05.728135",
+    "timestamp": "2026-04-27T08:40:05.728135",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g9",
+    "metrics": {
+      "mse": 0.07701526210325248,
+      "rmse": 0.2775162375488189,
+      "mae": 0.2183887561709915,
+      "r2": 0.9237911123635005,
+      "explained_var": 0.9406839179100527,
+      "max_error": 1.0992651860987501,
+      "mape": 2.3408798133709485,
+      "residual_std": 0.24483404983304757,
+      "residual_mean": 0.13065814228589523
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g10_2026-04-27T08-52-08.080015",
+    "timestamp": "2026-04-27T08:52:08.080015",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g10",
+    "metrics": {
+      "mse": 0.06683624668396845,
+      "rmse": 0.2585270714721544,
+      "mae": 0.20289070048767885,
+      "r2": 0.9338635502304056,
+      "explained_var": 0.949897338612225,
+      "max_error": 1.3102194625112529,
+      "mape": 2.0988160124439066,
+      "residual_std": 0.22501733945731808,
+      "residual_mean": 0.12729274774125407
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g11_2026-04-27T09-03-46.365375",
+    "timestamp": "2026-04-27T09:03:46.365375",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g11",
+    "metrics": {
+      "mse": 0.07767592159879319,
+      "rmse": 0.2787040035571667,
+      "mae": 0.21656357558279932,
+      "r2": 0.9231373701845265,
+      "explained_var": 0.9413250224568593,
+      "max_error": 1.3830822068426127,
+      "mape": 2.0388435026018,
+      "residual_std": 0.24350733831740742,
+      "residual_mean": 0.1355732192741799
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.2,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g12_2026-04-27T09-10-15.486929",
+    "timestamp": "2026-04-27T09:10:15.486929",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g12",
+    "metrics": {
+      "mse": 0.07334370284166403,
+      "rmse": 0.27082042545137547,
+      "mae": 0.212529360036543,
+      "r2": 0.9274242292234032,
+      "explained_var": 0.9443288192004176,
+      "max_error": 1.1540417884665042,
+      "mape": 2.306303339888267,
+      "residual_std": 0.23719241887815412,
+      "residual_mean": 0.1307037079366699
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g13_2026-04-27T09-14-50.862641",
+    "timestamp": "2026-04-27T09:14:50.862641",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g13",
+    "metrics": {
+      "mse": 0.07625339958220195,
+      "rmse": 0.2761401810352886,
+      "mae": 0.21680017445030497,
+      "r2": 0.9245449979398862,
+      "explained_var": 0.9424686305605264,
+      "max_error": 1.1447789840572367,
+      "mape": 2.5812346266567032,
+      "residual_std": 0.24112261418200692,
+      "residual_mean": 0.13458560291590246
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g14_2026-04-27T09-21-57.823940",
+    "timestamp": "2026-04-27T09:21:57.823940",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g14",
+    "metrics": {
+      "mse": 0.06740004694291485,
+      "rmse": 0.2596151901236036,
+      "mae": 0.20381122664173293,
+      "r2": 0.9333056531407888,
+      "explained_var": 0.9499783971794035,
+      "max_error": 1.1915507870885844,
+      "mape": 2.0943031833095946,
+      "residual_std": 0.22483524367816968,
+      "residual_mean": 0.12980431480922702
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g15_2026-04-27T09-27-21.236998",
+    "timestamp": "2026-04-27T09:27:21.236998",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g15",
+    "metrics": {
+      "mse": 0.07165521969978353,
+      "rmse": 0.267684926172139,
+      "mae": 0.20985573211482605,
+      "r2": 0.9290950334058674,
+      "explained_var": 0.9405538550788123,
+      "max_error": 1.1990629117762404,
+      "mape": 2.358995514181694,
+      "residual_std": 0.2451023276057352,
+      "residual_mean": 0.10761072763453651
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g16_2026-04-27T09-37-46.297141",
+    "timestamp": "2026-04-27T09:37:46.297141",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g16",
+    "metrics": {
+      "mse": 0.06914903915577214,
+      "rmse": 0.2629620488887553,
+      "mae": 0.20627518424953614,
+      "r2": 0.9315749734367056,
+      "explained_var": 0.9465950022214968,
+      "max_error": 1.178486998674583,
+      "mape": 1.7783198586000415,
+      "residual_std": 0.23231461819053115,
+      "residual_mean": 0.12320291121057111
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g17_2026-04-27T09-43-10.617838",
+    "timestamp": "2026-04-27T09:43:10.617838",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g17",
+    "metrics": {
+      "mse": 0.07804090868113878,
+      "rmse": 0.2793580295626721,
+      "mae": 0.22052666262523862,
+      "r2": 0.9227762046338599,
+      "explained_var": 0.9386640485277915,
+      "max_error": 1.1100019770833964,
+      "mape": 2.4636946240933972,
+      "residual_std": 0.24896777662157213,
+      "residual_mean": 0.1267120944710872
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g18_2026-04-27T09-53-04.615409",
+    "timestamp": "2026-04-27T09:53:04.615409",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g18",
+    "metrics": {
+      "mse": 0.07455515110556077,
+      "rmse": 0.27304789159698845,
+      "mae": 0.21286471643057361,
+      "r2": 0.9262254652109277,
+      "explained_var": 0.9451041186968665,
+      "max_error": 1.22228208879518,
+      "mape": 1.917272930508899,
+      "residual_std": 0.23553500917943399,
+      "residual_mean": 0.13812461966066988
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g19_2026-04-27T09-57-41.532507",
+    "timestamp": "2026-04-27T09:57:41.532507",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g19",
+    "metrics": {
+      "mse": 0.06902950236925687,
+      "rmse": 0.262734661529949,
+      "mae": 0.20791200631249526,
+      "r2": 0.9316932586347713,
+      "explained_var": 0.947643238543581,
+      "max_error": 1.2553845006200786,
+      "mape": 2.3063025405897695,
+      "residual_std": 0.23002337707556608,
+      "residual_mean": 0.1269596328287413
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g20_2026-04-27T10-09-44.930490",
+    "timestamp": "2026-04-27T10:09:44.930490",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g20",
+    "metrics": {
+      "mse": 0.07725034736147865,
+      "rmse": 0.27793946708137485,
+      "mae": 0.21888309645721216,
+      "r2": 0.9235584885232397,
+      "explained_var": 0.9442044555361709,
+      "max_error": 1.2444065171453471,
+      "mape": 2.23359488784074,
+      "residual_std": 0.23745720276056623,
+      "residual_mean": 0.14444522913065003
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g21_2026-04-27T10-20-32.293775",
+    "timestamp": "2026-04-27T10:20:32.293775",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g21",
+    "metrics": {
+      "mse": 0.09350856842758183,
+      "rmse": 0.3057917075847248,
+      "mae": 0.23982500747231117,
+      "r2": 0.9074704962401661,
+      "explained_var": 0.929880886211379,
+      "max_error": 1.3299185161361295,
+      "mape": 2.400806886427217,
+      "residual_std": 0.26619739236308243,
+      "residual_mean": 0.15049091908376722
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g22_2026-04-27T10-32-34.553834",
+    "timestamp": "2026-04-27T10:32:34.553834",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g22",
+    "metrics": {
+      "mse": 0.0704554092185412,
+      "rmse": 0.2654343783659931,
+      "mae": 0.20909671656894388,
+      "r2": 0.9302822814870011,
+      "explained_var": 0.9497069988977008,
+      "max_error": 1.1754079419347758,
+      "mape": 2.0312653734312254,
+      "residual_std": 0.225444354056695,
+      "residual_mean": 0.14010800277821656
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g23_2026-04-27T10-44-23.117622",
+    "timestamp": "2026-04-27T10:44:23.117622",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g23",
+    "metrics": {
+      "mse": 0.07685646810481178,
+      "rmse": 0.2772299913516064,
+      "mae": 0.2122808096233136,
+      "r2": 0.9239482437379065,
+      "explained_var": 0.9444144916765448,
+      "max_error": 1.4031147915098185,
+      "mape": 2.14618953613113,
+      "residual_std": 0.23700984069743677,
+      "residual_mean": 0.14381517137418925
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g24_2026-04-27T10-54-13.002056",
+    "timestamp": "2026-04-27T10:54:13.002056",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g24",
+    "metrics": {
+      "mse": 0.08146236417570091,
+      "rmse": 0.28541612458952087,
+      "mae": 0.2216380539099355,
+      "r2": 0.9193905728744198,
+      "explained_var": 0.9416193798532586,
+      "max_error": 1.273774961170914,
+      "mape": 2.256885445364282,
+      "residual_std": 0.24289576322085588,
+      "residual_mean": 0.14987999327815177
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g25_2026-04-27T10-58-29.425587",
+    "timestamp": "2026-04-27T10:58:29.425587",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g25",
+    "metrics": {
+      "mse": 0.07105848594690754,
+      "rmse": 0.26656797622165257,
+      "mae": 0.2079089890677366,
+      "r2": 0.9296855191651818,
+      "explained_var": 0.9426168336235836,
+      "max_error": 1.2582167941305156,
+      "mape": 2.4855222324516375,
+      "residual_std": 0.2408118432600423,
+      "residual_mean": 0.11431597479183901
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g26_2026-04-27T11-08-59.784891",
+    "timestamp": "2026-04-27T11:08:59.784891",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g26",
+    "metrics": {
+      "mse": 0.0682592481019423,
+      "rmse": 0.26126470887194525,
+      "mae": 0.20565792211518297,
+      "r2": 0.9324554480931492,
+      "explained_var": 0.9500706594198358,
+      "max_error": 1.168305810091209,
+      "mape": 2.008814862577744,
+      "residual_std": 0.2246277995321684,
+      "residual_mean": 0.13342263593288153
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g27_2026-04-27T11-13-58.625443",
+    "timestamp": "2026-04-27T11:13:58.625443",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g27",
+    "metrics": {
+      "mse": 0.06618504159508458,
+      "rmse": 0.25726453621726525,
+      "mae": 0.20071517663871294,
+      "r2": 0.9345079369933894,
+      "explained_var": 0.9480333849016205,
+      "max_error": 1.1995874606136003,
+      "mape": 2.391351532144166,
+      "residual_std": 0.22916474306157625,
+      "residual_mean": 0.11691262606154357
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g28_2026-04-27T11-25-58.203080",
+    "timestamp": "2026-04-27T11:25:58.203080",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g28",
+    "metrics": {
+      "mse": 0.07801144334137644,
+      "rmse": 0.27930528699145035,
+      "mae": 0.21822977641757024,
+      "r2": 0.9228053614620754,
+      "explained_var": 0.9407404266734526,
+      "max_error": 1.2448007235913225,
+      "mape": 2.2565074123528808,
+      "residual_std": 0.2447173987866939,
+      "residual_mean": 0.13462851879319873
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g29_2026-04-27T11-33-49.842263",
+    "timestamp": "2026-04-27T11:33:49.842263",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g29",
+    "metrics": {
+      "mse": 0.0872485489873488,
+      "rmse": 0.29537865357427034,
+      "mae": 0.2292346330781229,
+      "r2": 0.9136649712714062,
+      "explained_var": 0.9359029700820529,
+      "max_error": 1.1875501398810941,
+      "mape": 2.2868728674899184,
+      "residual_std": 0.2545098181027944,
+      "residual_mean": 0.14991097850601642
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g30_2026-04-27T11-45-53.786541",
+    "timestamp": "2026-04-27T11:45:53.786541",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g30",
+    "metrics": {
+      "mse": 0.08030017403908969,
+      "rmse": 0.2833728533912338,
+      "mae": 0.2196170365266727,
+      "r2": 0.9205405945079826,
+      "explained_var": 0.9432226352045564,
+      "max_error": 1.2143656382946917,
+      "mape": 2.3962825498637748,
+      "residual_std": 0.23953732949459572,
+      "residual_mean": 0.1514002702034814
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g31_2026-04-27T11-53-43.053224",
+    "timestamp": "2026-04-27T11:53:43.053224",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g31",
+    "metrics": {
+      "mse": 0.08230655321996515,
+      "rmse": 0.286891187072669,
+      "mae": 0.2234234219828182,
+      "r2": 0.9185552227598927,
+      "explained_var": 0.937410754501359,
+      "max_error": 1.1199129656311966,
+      "mape": 2.311513603344269,
+      "residual_std": 0.2514985269573302,
+      "residual_mean": 0.13804000926636512
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g32_2026-04-27T12-05-54.695544",
+    "timestamp": "2026-04-27T12:05:54.695544",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g32",
+    "metrics": {
+      "mse": 0.0754988369621752,
+      "rmse": 0.2747705169085199,
+      "mae": 0.21424227940075638,
+      "r2": 0.9252916600475504,
+      "explained_var": 0.9435459427189232,
+      "max_error": 1.2100349026891704,
+      "mape": 2.160138085046179,
+      "residual_std": 0.23885435678531255,
+      "residual_mean": 0.13582132824725954
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g33_2026-04-27T12-18-10.849527",
+    "timestamp": "2026-04-27T12:18:10.849527",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g33",
+    "metrics": {
+      "mse": 0.08306652818288912,
+      "rmse": 0.28821264403715724,
+      "mae": 0.22377056441318435,
+      "r2": 0.9178032049782953,
+      "explained_var": 0.938424083813151,
+      "max_error": 1.2472284394475932,
+      "mape": 2.304637567841637,
+      "residual_std": 0.24945431967211765,
+      "residual_mean": 0.14435744033408898
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          32,
+          64
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g34_2026-04-27T12-30-35.488869",
+    "timestamp": "2026-04-27T12:30:35.488869",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g34",
+    "metrics": {
+      "mse": 0.08260295834402138,
+      "rmse": 0.28740730391557795,
+      "mae": 0.22098126948046465,
+      "r2": 0.9182619210924413,
+      "explained_var": 0.9425621153745205,
+      "max_error": 1.2207634407255168,
+      "mape": 2.059087308700867,
+      "residual_std": 0.2409266300828168,
+      "residual_mean": 0.15670774473828322
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          64,
+          32
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_CNN_LSTM_g35_2026-04-27T12-42-35.312809",
+    "timestamp": "2026-04-27T12:42:35.312809",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_CNN_LSTM_g35",
+    "metrics": {
+      "mse": 0.08154774017746448,
+      "rmse": 0.28556564950544117,
+      "mae": 0.2224738544678872,
+      "r2": 0.9193060907867457,
+      "explained_var": 0.9410431612420733,
+      "max_error": 1.3592044482617327,
+      "mape": 2.2392182665714544,
+      "residual_std": 0.24409151446364236,
+      "residual_mean": 0.14821293042211248
+    },
+    "config": {
+      "params": {
+        "cnn_filters": [
+          64,
+          128
+        ],
+        "cnn_kernel_sizes": [
+          5,
+          3
+        ],
+        "lstm_units": [
+          100,
+          50
+        ],
+        "dense_units": [
+          64
+        ],
+        "dropout_rate": 0.4,
+        "learning_rate": 0.001,
+        "l2_reg": 0.01
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_Transformer_g0_2026-04-27T12-46-52.695255",
+    "timestamp": "2026-04-27T12:46:52.695255",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_Transformer_g0",
+    "metrics": {
+      "mse": 0.04086260892525436,
+      "rmse": 0.2021450195410571,
+      "mae": 0.15591273653163815,
+      "r2": 0.9595652356808975,
+      "explained_var": 0.9617499449107161,
+      "max_error": 1.2064478355619426,
+      "mape": 1.5251399926645384,
+      "residual_std": 0.1966081968058245,
+      "residual_mean": 0.046987507637844754
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_Transformer_g1_2026-04-27T12-51-11.551758",
+    "timestamp": "2026-04-27T12:51:11.551758",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_Transformer_g1",
+    "metrics": {
+      "mse": 0.04402774555822844,
+      "rmse": 0.20982789509078253,
+      "mae": 0.1620381762742901,
+      "r2": 0.9564332390424506,
+      "explained_var": 0.9620186244990772,
+      "max_error": 1.1466249781820292,
+      "mape": 1.3458153933912385,
+      "residual_std": 0.1959164631549595,
+      "residual_mean": 0.07512978785461763
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 2,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_Transformer_g2_2026-04-27T12-59-51.410801",
+    "timestamp": "2026-04-27T12:59:51.410801",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_Transformer_g2",
+    "metrics": {
+      "mse": 0.039632794304387986,
+      "rmse": 0.19907986915905884,
+      "mae": 0.1530545363982664,
+      "r2": 0.9607821737487011,
+      "explained_var": 0.9630505613444944,
+      "max_error": 1.142781968710136,
+      "mape": 1.4391222052607238,
+      "residual_std": 0.19323665453162234,
+      "residual_mean": 0.04787890610503167
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.0001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  },
+  {
+    "id": "DL_Wavelet_Wavelet_Transformer_g3_2026-04-27T13-15-54.766377",
+    "timestamp": "2026-04-27T13:15:54.766377",
+    "experiment_name": "DL_Wavelet",
+    "model_name": "Wavelet_Transformer_g3",
+    "metrics": {
+      "mse": 0.04416022390710083,
+      "rmse": 0.21014334133419701,
+      "mae": 0.16180773435742565,
+      "r2": 0.9563021477843315,
+      "explained_var": 0.9603735159045991,
+      "max_error": 1.2556223231527324,
+      "mape": 1.735311384276701,
+      "residual_std": 0.20011440778028117,
+      "residual_mean": 0.064143960790149
+    },
+    "config": {
+      "params": {
+        "head_size": 64,
+        "num_heads": 2,
+        "ff_dim": 64,
+        "num_transformer_blocks": 3,
+        "mlp_units": [
+          128,
+          64
+        ],
+        "dropout_rate": 0.15,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+        "use_warmup": true,
+        "warmup_steps": 500
+      },
+      "wavelet": {
+        "wavelet_type": "db2",
+        "decomposition_level": 2,
+        "mode": "symmetric"
+      }
+    },
+    "additional_info": {}
+  }
+]

@@ -40,7 +40,7 @@ LearnableWaveletLayer/
 │   ├── synthetic/                         # Track 1 — regression on synthetic signals
 │   ├── ford-a/                            # Track 2 — binary classification (FordA)
 │   └── financial/                         # Track 3 — financial trend classification (B3)
-├── data/                                  # Raw OHLCV CSVs for 25 B3 tickers
+├── data/                                  # Raw OHLCV CSVs for 20 B3 tickers
 ├── requirements.txt
 └── 0-download-tickers-br.ipynb            # Download script for B3 data
 ```
@@ -92,7 +92,7 @@ UCR FordA dataset: univariate 500-sample signals from automotive sensors, classi
 
 ### Track 3 — B3 Financial Classification (buy/sell/hold)
 
-25 highly liquid Ibovespa equities, daily OHLCV, 2005–2025. Labels assigned via the Triple Barrier Method calibrated per asset. Cross-validation via PurgedKFold with 10-day embargo to prevent temporal leakage. GPU queue enables parallel training across 7 GPUs.
+20 highly liquid Ibovespa equities, daily OHLCV, 2005–2026. Labels assigned via the Triple Barrier Method calibrated per asset. Cross-validation via PurgedKFold with 10-day embargo to prevent temporal leakage. GPU queue enables parallel training across 7 GPUs.
 
 → See [tests/financial/README.md](tests/financial/README.md)
 

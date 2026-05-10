@@ -56,7 +56,7 @@ N_JOBS_QUARTER = max(1, os.cpu_count() // 4)  # 1/4 dos cores — para modelos q
 # ============================================================================
 SYNTHETIC_SIGNAL_CONFIG = {
     # Tamanho e estrutura
-    "n_samples": 50000,           # Número de amostras (grande para DL)
+    "n_samples": 25000,           # Número de amostras
     "sequence_length": 256,        # Comprimento de cada sequência para modelos
     "n_features": 1,               # Univariado
     
@@ -88,12 +88,13 @@ WAVELET_CONFIG = {
 
 LEARNED_WAVELET_CONFIG = {
     "levels": 2,
-    "kernel_size": 32,
+    "kernel_size": 8,
     "wavelet_net_units": 32,
     "reg_energy": 1e-2,
     "reg_high_dc": 1e-2,
     "reg_smooth": 1e-3,
-    "normalize_low": "sum1",
+    "align": "pad_to_first",
+    "warm_start_db4": False,
 }
 
 # ============================================================================
@@ -261,7 +262,7 @@ def build_param_dist(param_spec: dict) -> dict:
 # ============================================================================
 DL_TRAINING_CONFIG = {
     "epochs": EPOCHS_OVERRIDE if EPOCHS_OVERRIDE > 0 else 100,
-    "batch_size": 64,
+    "batch_size": 256,
     "early_stopping_patience": 15,
     "reduce_lr_patience": 7,
     "reduce_lr_factor": 0.5,
@@ -414,27 +415,27 @@ LEARNED_WAVELET_MODELS_CONFIG = {
 # Grid axes específicos para learned wavelets (podem diferir dos DL padrão)
 LEARNED_WAVELET_GRID_AXES = {
     "CNN": {
-        "wavelet_kernel_size": [4, 8, 16],
+        "kernel_size": [4, 8, 16],
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "filters": [[32, 64, 128], [64, 128, 256]],
         "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
     },
     "LSTM": {
-        "wavelet_kernel_size": [4, 8, 16],
+        "kernel_size": [4, 8, 16],
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "units": [[64, 32], [128, 64]],
     },
     "CNN_LSTM": {
-        "wavelet_kernel_size": [4, 8, 16],
+        "kernel_size": [4, 8, 16],
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "cnn_filters": [[32, 64], [64, 128]],
         "lstm_units": [[64, 32], [100, 50]],
     },
     "Transformer": {
-        "wavelet_kernel_size": [4, 8, 16],
+        "kernel_size": [4, 8, 16],
         "dropout_rate": [0.15, 0.2, 0.3],
         "num_heads": [2, 4],
         "ff_dim": [64, 128],

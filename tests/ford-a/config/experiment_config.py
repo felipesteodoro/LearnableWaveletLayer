@@ -241,7 +241,7 @@ def build_param_dist(param_spec: dict) -> dict:
 # ============================================================================
 DL_TRAINING_CONFIG = {
     "epochs": EPOCHS_OVERRIDE if EPOCHS_OVERRIDE > 0 else 100,
-    "batch_size": 64,
+    "batch_size": 256,
     "early_stopping_patience": 15,
     "reduce_lr_patience": 7,
     "reduce_lr_factor": 0.5,

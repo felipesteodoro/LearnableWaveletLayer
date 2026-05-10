@@ -1,0 +1,43 @@
+{
+  "model_name": "LSTM",
+  "mode": "learned_wavelet",
+  "config_idx": 47,
+  "config": {
+    "units": [
+      128,
+      64
+    ],
+    "dropout_rate": 0.3,
+    "recurrent_dropout": 0.0,
+    "learning_rate": 0.001,
+    "l2_reg": 0.01,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1,
+    "levels": 2,
+    "kernel_size": 16,
+    "wavelet_net_units": 32,
+    "reg_energy": 0.01,
+    "reg_high_dc": 0.01,
+    "reg_smooth": 0.001,
+    "align": "pad_to_first",
+    "warm_start_db4": true
+  },
+  "epochs_trained": 50,
+  "train_mse": 0.06129336953120061,
+  "train_rmse": 0.2475749775950724,
+  "train_mae": 0.1903555752322411,
+  "train_r2": 0.9378690252693718,
+  "val_mse": 0.07007772865317609,
+  "val_rmse": 0.2647219836983247,
+  "val_mae": 0.20550083800978458,
+  "val_r2": 0.9293475164920602,
+  "test_mse": 0.09783934454025547,
+  "test_rmse": 0.31279281408027176,
+  "test_mae": 0.24772968065124232,
+  "test_r2": 0.9031850647407952
+}

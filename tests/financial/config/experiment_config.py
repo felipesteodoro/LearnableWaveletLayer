@@ -154,11 +154,14 @@ DL_MODELS_CONFIG = {
     "CNN": {
         "filters": [32, 64, 128],
         "cnn_kernel_size": 3,   # lido por _cnn_backbone via cfg.get("cnn_kernel_size", 3)
+        "pool_sizes": None,     # sem MaxPooling (GlobalAveragePooling1D ao final)
+        "dense_units": [64],    # cabeça densa antes da saída
         "dropout_rate": 0.1,   # era 0.3; reduzido para combater underfitting (val_loss > log(3))
         "l2_reg": 1e-4,        # era 1e-3
     },
     "LSTM": {
         "units": [64, 32],
+        "dense_units": [32],    # cabeça densa antes da saída
         "dropout_rate": 0.1,   # era 0.3
         "recurrent_dropout": 0.0,  # era 0.1
         "l2_reg": 1e-4,        # era 1e-3
@@ -166,6 +169,7 @@ DL_MODELS_CONFIG = {
     "CNN_LSTM": {
         "filters": [32, 64],
         "lstm_units": [32, 16],
+        "dense_units": [32],    # cabeça densa antes da saída
         "dropout_rate": 0.1,   # era 0.3
         "l2_reg": 1e-4,        # era 1e-3
     },
@@ -174,6 +178,7 @@ DL_MODELS_CONFIG = {
         "head_size": 16,
         "ff_dim": 64,
         "num_blocks": 1,
+        "mlp_units": [32],      # cabeça MLP antes da saída
         "dropout_rate": 0.1,   # era 0.2
         "l2_reg": 1e-4,
     },

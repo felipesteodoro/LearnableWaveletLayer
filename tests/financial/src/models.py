@@ -1,6 +1,8 @@
 """
-DL model factory for 3-class financial classification.
-Mirrors tests/synthetic/src/models.py — same backbones, softmax output.
+Model factories for the financial experiment (multiclass classification).
+
+DL models delegate to models/base_models.py — all backbone implementations
+live there so that synthetic, financial, and ford-a share the same code.
 """
 from __future__ import annotations
 
@@ -8,174 +10,29 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-import numpy as np
+from tensorflow import keras
+from tensorflow.keras import layers
 
-# Project root on path so models/ is importable
+# ---------------------------------------------------------------------------
+# Path bootstrap — add root and models/ so base_models / dl_utils / LWT work
+# ---------------------------------------------------------------------------
 _ROOT = Path(__file__).parent.parent.parent.parent
-sys.path.insert(0, str(_ROOT))
+for _p in (str(_ROOT / "models"), str(_ROOT)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
-try:
-    import tensorflow as tf
-    from tensorflow import keras
-    from tensorflow.keras import layers, regularizers
-except ImportError:
-    raise ImportError("TensorFlow not found. Install tensorflow[and-cuda].")
-
-# Shared DL utilities (centralised in models/dl_utils.py)
-from models.dl_utils import SinusoidalPositionalEncoding, TransformerBlock  # noqa: E402
-
-
-# ---------------------------------------------------------------------------
-# Backbone builders
-# ---------------------------------------------------------------------------
-
-def _cnn_backbone(x, cfg: dict):
-    l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
-    dr = cfg.get("dropout_rate", 0.3)
-    for f in cfg.get("filters", [64, 128, 256]):
-        x = layers.Conv1D(f, kernel_size=cfg.get("cnn_kernel_size", 3),
-                          padding="same", activation="relu",
-                          kernel_regularizer=l2)(x)
-        x = layers.BatchNormalization()(x)
-        x = layers.Dropout(dr)(x)
-    x = layers.GlobalAveragePooling1D()(x)
-    x = layers.Dense(64, activation="relu", kernel_regularizer=l2)(x)
-    x = layers.Dropout(dr)(x)
-    return x
-
-
-def _lstm_backbone(x, cfg: dict):
-    l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
-    dr = cfg.get("dropout_rate", 0.3)
-    rdr = cfg.get("recurrent_dropout", 0.1)
-    units = cfg.get("units", [64, 32])
-    for i, u in enumerate(units):
-        return_seq = i < len(units) - 1
-        x = layers.LSTM(u, return_sequences=return_seq,
-                        dropout=dr, recurrent_dropout=rdr,
-                        kernel_regularizer=l2)(x)
-    x = layers.Dense(32, activation="relu", kernel_regularizer=l2)(x)
-    x = layers.Dropout(dr)(x)
-    return x
-
-
-def _cnn_lstm_backbone(x, cfg: dict):
-    l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
-    dr = cfg.get("dropout_rate", 0.3)
-    for f in cfg.get("filters", [32, 64]):
-        x = layers.Conv1D(f, 3, padding="same", activation="relu",
-                          kernel_regularizer=l2)(x)
-        x = layers.BatchNormalization()(x)
-    for i, u in enumerate(cfg.get("lstm_units", [32, 16])):
-        return_seq = i < len(cfg.get("lstm_units", [32, 16])) - 1
-        x = layers.LSTM(u, return_sequences=return_seq,
-                        dropout=dr, kernel_regularizer=l2)(x)
-    x = layers.Dense(32, activation="relu", kernel_regularizer=l2)(x)
-    x = layers.Dropout(dr)(x)
-    return x
-
-
-def _transformer_backbone(x, cfg: dict):
-    d_model = cfg.get("head_size", 16) * cfg.get("num_heads", 4)
-    l2 = cfg.get("l2_reg", 1e-4)
-    dr = cfg.get("dropout_rate", 0.2)
-    x = layers.Dense(d_model)(x)
-    x = SinusoidalPositionalEncoding()(x)
-    for _ in range(cfg.get("num_blocks", 1)):
-        x = TransformerBlock(
-            head_size=cfg.get("head_size", 16),
-            num_heads=cfg.get("num_heads", 4),
-            ff_dim=cfg.get("ff_dim", 64),
-            dropout=dr, l2_reg=l2,
-        )(x)
-    x = layers.GlobalAveragePooling1D()(x)
-    x = layers.Dense(32, activation="relu")(x)
-    x = layers.Dropout(dr)(x)
-    return x
-
-
-def _mlp_backbone(x, cfg: dict):
-    """Flatten temporal input then apply stacked dense layers (MLP baseline)."""
-    l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
-    dr = cfg.get("dropout_rate", 0.3)
-    x = layers.Flatten()(x)
-    for units in cfg.get("mlp_units", [128, 64, 32]):
-        x = layers.Dense(units, activation="relu", kernel_regularizer=l2)(x)
-        x = layers.BatchNormalization()(x)
-        x = layers.Dropout(dr)(x)
-    return x
-
-
-_BACKBONES = {
-    "CNN":         _cnn_backbone,
-    "LSTM":        _lstm_backbone,
-    "CNN_LSTM":    _cnn_lstm_backbone,
-    "MLP":         _mlp_backbone,
-    "Transformer": _transformer_backbone,
-}
-
-# ---------------------------------------------------------------------------
-# Wavelet front-ends
-# ---------------------------------------------------------------------------
-
-def _apply_wavelet_frontend(x, mode: str, cfg: dict):
-    """
-    Prepend wavelet transform layer(s) to the input tensor.
-
-    Após o frontend, aplica uma projeção linear (Dense) para mapear todos os modos
-    (raw, db4, learned_wavelet) para a mesma dimensionalidade (wavelet_projection_dim).
-
-    Motivação: sem essa projeção, raw=(N,L,F) e learned_wavelet=(N,L,(levels+1)*F)
-    chegam ao backbone com capacidades efetivas diferentes — o backbone wavelet tem
-    mais parâmetros na primeira camada, o que é um confundidor na comparação de modos.
-
-    Com a projeção, todos os modos entram no backbone com (N, L, proj_dim),
-    tornando a comparação mais justa.
-    """
-    if mode == "raw":
-        # Sem transformada; projeção ainda é aplicada para equalizar capacidade
-        x_out = x
-
-    elif mode == "db4":
-        from models.LWT.fixed_db4_dwt import FixedDb4DWT1D
-        x_out = FixedDb4DWT1D(
-            levels=cfg.get("wavelet_levels", 2),
-            mode="concat",
-            # pad_to_first: sem interpolação bilinear = sem aliasing espectral
-            align=cfg.get("align", "pad_to_first"),
-        )(x)
-
-    elif mode in ("learned_wavelet", "learned_wavelet_no_warmup"):
-        from models.LWT.learned_wavelet_dwt_qmf import LearnedWaveletDWT1D_QMF
-        # learned_wavelet_no_warmup: mesma arquitetura, mas sem inicialização db4
-        warm = False if mode == "learned_wavelet_no_warmup" else cfg.get("warm_start_db4", False)
-        x_out = LearnedWaveletDWT1D_QMF(
-            levels=cfg.get("wavelet_levels", 2),
-            kernel_size=cfg.get("kernel_size", 8),
-            wavelet_net_units=cfg.get("wavelet_net_units", 32),
-            reg_energy=cfg.get("reg_energy", 1e-2),
-            reg_high_dc=cfg.get("reg_high_dc", 1e-2),
-            reg_smooth=cfg.get("reg_smooth", 1e-3),
-            align=cfg.get("align", "pad_to_first"),
-            warm_start_db4=warm,
-            mode="concat",
-        )(x)
-
-    else:
-        raise ValueError(f"Unknown mode: {mode}")
-
-    # Projeção linear para dimensionalidade uniforme entre os modos.
-    # Sem isso, raw=(N,L,F) vs learned_wavelet=(N,L,3F) — a primeira camada
-    # do backbone teria número de parâmetros 3× maior para wavelet vs raw.
-    proj_dim = cfg.get("wavelet_projection_dim", 0)
-    if proj_dim and proj_dim > 0:
-        x_out = layers.Dense(proj_dim, use_bias=False, name=f"wavelet_proj_{mode}")(x_out)
-
-    return x_out
+from base_models import (  # noqa: E402
+    build_model as _build_model,
+    apply_wavelet_frontend,
+    get_callbacks,            # re-exported for notebook consumers
+    get_distribute_strategy,  # re-exported for notebook consumers
+    TransformerWarmupSchedule,
+    _BACKBONES,
+)
 
 
 # ---------------------------------------------------------------------------
-# Public factory
+# Public factory — multiclass classification wrapper
 # ---------------------------------------------------------------------------
 
 def build_model(
@@ -186,41 +43,41 @@ def build_model(
     cfg: Optional[dict] = None,
 ) -> keras.Model:
     """
-    Build and compile a classification model.
+    Build and compile a classification model for the financial experiment.
 
     Parameters
     ----------
-    model_name  : CNN | LSTM | CNN_LSTM | Transformer
-    mode        : raw | db4 | learned_wavelet
+    model_name  : CNN | LSTM | CNN_LSTM | Transformer | MLP
+    mode        : raw | db4 | learned_wavelet | learned_wavelet_no_warmup
     input_shape : (sequence_length, n_features)
-    n_classes   : 3 (sell/hold/buy)
-    cfg         : model config dict (from experiment_config.DL_MODELS_CONFIG)
+    n_classes   : number of output classes (default 3: sell/hold/buy)
+    cfg         : merged config dict (DL_MODELS_CONFIG + DL_TRAINING_CONFIG
+                  + LEARNED_WAVELET_CONFIG)
     """
     if cfg is None:
-        from config.experiment_config import DL_MODELS_CONFIG, DL_TRAINING_CONFIG, LEARNED_WAVELET_CONFIG
-        cfg = {**DL_MODELS_CONFIG.get(model_name, {}), **DL_TRAINING_CONFIG, **LEARNED_WAVELET_CONFIG}
+        from config.experiment_config import (
+            DL_MODELS_CONFIG, DL_TRAINING_CONFIG, LEARNED_WAVELET_CONFIG,
+        )
+        cfg = {
+            **DL_MODELS_CONFIG.get(model_name, {}),
+            **DL_TRAINING_CONFIG,
+            **LEARNED_WAVELET_CONFIG,
+        }
 
-    backbone_fn = _BACKBONES.get(model_name)
-    if backbone_fn is None:
-        raise ValueError(f"Unknown model: {model_name}. Choose from {list(_BACKBONES)}")
-
-    inputs = keras.Input(shape=input_shape, name="input")
-    x = _apply_wavelet_frontend(inputs, mode, cfg)
-    x = backbone_fn(x, cfg)
-    outputs = layers.Dense(n_classes, activation="softmax", name="output")(x)
-
-    model = keras.Model(inputs, outputs, name=f"{model_name}_{mode}")
-
-    # Otimizador unificado: Adam com lr inicial igual para todas as arquiteturas.
-    # ReduceLROnPlateau é definido nos callbacks (get_callbacks), não aqui,
-    # para que o scheduler seja registrado no histórico de treino.
-    model.compile(
-        optimizer=keras.optimizers.Adam(cfg.get("learning_rate", 1e-3)),
-        loss="sparse_categorical_crossentropy",
-        metrics=["accuracy"],
+    return _build_model(
+        model_name=model_name,
+        mode=mode,
+        input_shape=input_shape,
+        task="multiclass",
+        n_classes=n_classes,
+        cfg=cfg,
     )
-    return model
 
+
+# ---------------------------------------------------------------------------
+# Continuous-signal variant (financial-specific)
+# Produces p_buy - p_sell ∈ [-1, +1] alongside the softmax probabilities.
+# ---------------------------------------------------------------------------
 
 def build_model_with_continuous_signal(
     model_name: str,
@@ -229,73 +86,55 @@ def build_model_with_continuous_signal(
     cfg: Optional[dict] = None,
 ) -> keras.Model:
     """
-    Variante que produz sinal de posição contínuo em [-1, +1] em vez de softmax.
+    Variant that outputs a continuous position signal in [-1, +1] in addition
+    to the softmax probabilities.
 
-    Saída: p_buy - p_sell ∈ [-1, +1]
-    - +1: compra forte (p_buy ≈ 1, p_sell ≈ 0)
-    - -1: venda forte
-    -  0: hold (equilíbrio ou dominância de hold)
-
-    Isso permite tamanho de posição fracionário no backtest, eliminando
-    o threshold binário que descarta confiança do modelo.
+    Output: (probs [B, n_classes], signal [B, 1])
+      signal = p_buy - p_sell ∈ [-1, +1]
+      +1 → strong buy, -1 → strong sell, 0 → hold / balanced
     """
     if cfg is None:
-        from config.experiment_config import DL_MODELS_CONFIG, DL_TRAINING_CONFIG, LEARNED_WAVELET_CONFIG
-        cfg = {**DL_MODELS_CONFIG.get(model_name, {}), **DL_TRAINING_CONFIG, **LEARNED_WAVELET_CONFIG}
+        from config.experiment_config import (
+            DL_MODELS_CONFIG, DL_TRAINING_CONFIG, LEARNED_WAVELET_CONFIG,
+        )
+        cfg = {
+            **DL_MODELS_CONFIG.get(model_name, {}),
+            **DL_TRAINING_CONFIG,
+            **LEARNED_WAVELET_CONFIG,
+        }
 
     backbone_fn = _BACKBONES.get(model_name)
     if backbone_fn is None:
         raise ValueError(f"Unknown model: {model_name}. Choose from {list(_BACKBONES)}")
 
     inputs = keras.Input(shape=input_shape, name="input")
-    x = _apply_wavelet_frontend(inputs, mode, cfg)
+    x = apply_wavelet_frontend(inputs, mode, cfg)
     x = backbone_fn(x, cfg)
 
-    # Softmax de 3 classes para obter probabilidades
     probs = layers.Dense(3, activation="softmax", name="probs")(x)
-
-    # Sinal contínuo: diferença entre probabilidade de compra e venda
-    # Lambda não é serializável; em produção, substituir por uma Layer customizada
+    # Lambda is not serialisable; replace with a custom Layer in production.
     signal = layers.Lambda(
         lambda p: p[:, 2:3] - p[:, 0:1],
         name="position_signal",
     )(probs)
 
-    model = keras.Model(inputs, [probs, signal], name=f"{model_name}_{mode}_continuous")
+    model = keras.Model(inputs, [probs, signal],
+                        name=f"{model_name}_{mode}_continuous")
+
+    lr = cfg.get("learning_rate", 1e-3)
+    if model_name == "Transformer" and cfg.get("use_warmup", False):
+        embed_dim = cfg.get("head_size", 64) * cfg.get("num_heads", 4)
+        lr = TransformerWarmupSchedule(
+            d_model=embed_dim,
+            warmup_steps=cfg.get("warmup_steps", 500),
+        )
+        opt = keras.optimizers.Adam(lr, beta_1=0.9, beta_2=0.98, epsilon=1e-9)
+    else:
+        opt = keras.optimizers.Adam(lr)
+
     model.compile(
-        optimizer=keras.optimizers.Adam(cfg.get("learning_rate", 1e-3)),
+        optimizer=opt,
         loss={"probs": "sparse_categorical_crossentropy", "position_signal": None},
         metrics={"probs": "accuracy"},
     )
     return model
-
-
-def get_callbacks(
-    model_path: Path,
-    early_patience: int = 15,
-    lr_patience: int = 7,
-    lr_factor: float = 0.5,
-    min_lr: float = 1e-6,
-) -> list:
-    """
-    Callbacks padrão para todos os modelos.
-
-    ReduceLROnPlateau é aplicado uniformemente a CNN, LSTM, CNN_LSTM e Transformer,
-    garantindo que a comparação entre modos (raw/db4/learned) seja sobre o frontend
-    wavelet e não sobre diferenças no regime de learning rate.
-    """
-    model_path.parent.mkdir(parents=True, exist_ok=True)
-    return [
-        keras.callbacks.EarlyStopping(
-            monitor="val_loss", patience=early_patience,
-            restore_best_weights=True, verbose=0,
-        ),
-        keras.callbacks.ReduceLROnPlateau(
-            monitor="val_loss", factor=lr_factor,
-            patience=lr_patience, min_lr=min_lr, verbose=0,
-        ),
-        keras.callbacks.ModelCheckpoint(
-            filepath=str(model_path), monitor="val_loss",
-            save_best_only=True, verbose=0,
-        ),
-    ]

@@ -1,708 +1,220 @@
 """
-Fábricas de modelos para Machine Learning e Deep Learning.
+Model factories for the synthetic experiment (regression task).
+
+DL models delegate to models/base_models.py — all backbone implementations
+live there so that synthetic, financial, and ford-a share the same code.
+ML (scikit-learn) models are experiment-specific and remain here.
 """
+from __future__ import annotations
+
 import os as _os
 import sys as _sys
+from typing import Dict, Optional, Tuple
+
 import numpy as np
-from typing import Dict, Any, Optional, Tuple
+
+# ---------------------------------------------------------------------------
+# Path bootstrap — add models/ so base_models / dl_utils / LWT are importable
+# ---------------------------------------------------------------------------
+_MODELS_DIR = _os.path.abspath(
+    _os.path.join(_os.path.dirname(__file__), "..", "..", "..", "models")
+)
+if _MODELS_DIR not in _sys.path:
+    _sys.path.insert(0, _MODELS_DIR)
+
+from base_models import (  # noqa: E402
+    build_model as _build_model,
+    get_callbacks,
+    get_distribute_strategy,
+)
+
+# ---------------------------------------------------------------------------
+# ML regressors (scikit-learn) — experiment-specific
+# ---------------------------------------------------------------------------
+
 from sklearn.svm import SVR
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
-# Deep Learning
-import tensorflow as tf
-from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.layers import (
-    Input, Dense, Dropout, Conv1D, MaxPooling1D, LSTM, GRU,
-    Flatten, BatchNormalization, GlobalAveragePooling1D,
-    Bidirectional, Concatenate, Add, LayerNormalization,
-    MultiHeadAttention, Reshape
-)
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.regularizers import l2
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
-
-# Shared DL utilities (centralised)
-_MODELS_DIR = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), '..', '..', '..', 'models'))
-if _MODELS_DIR not in _sys.path:
-    _sys.path.insert(0, _MODELS_DIR)
-from dl_utils import SinusoidalPositionalEncoding, TransformerBlock, TransformerWarmupSchedule  # noqa: E402
-from LWT import LearnedWaveletDWT1D_QMF  # noqa: E402
-
-
-# ============================================================================
-# MODELOS DE MACHINE LEARNING CLÁSSICOS
-# ============================================================================
 
 def create_svm_pipeline(params: Optional[Dict] = None) -> Pipeline:
-    """Cria pipeline SVM com normalização."""
     params = params or {}
     return Pipeline([
-        ('scaler', StandardScaler()),
-        ('svr', SVR(
-            C=params.get('C', 1.0),
-            gamma=params.get('gamma', 'scale'),
-            kernel=params.get('kernel', 'rbf'),
-            epsilon=params.get('epsilon', 0.1),
-        ))
+        ("scaler", StandardScaler()),
+        ("svr", SVR(
+            C=params.get("C", 1.0),
+            gamma=params.get("gamma", "scale"),
+            kernel=params.get("kernel", "rbf"),
+            epsilon=params.get("epsilon", 0.1),
+        )),
     ])
 
 
 def create_random_forest(params: Optional[Dict] = None) -> RandomForestRegressor:
-    """Cria modelo Random Forest."""
     params = params or {}
     return RandomForestRegressor(
-        n_estimators=params.get('n_estimators', 100),
-        max_depth=params.get('max_depth', None),
-        min_samples_split=params.get('min_samples_split', 2),
-        min_samples_leaf=params.get('min_samples_leaf', 1),
+        n_estimators=params.get("n_estimators", 100),
+        max_depth=params.get("max_depth", None),
+        min_samples_split=params.get("min_samples_split", 2),
+        min_samples_leaf=params.get("min_samples_leaf", 1),
         random_state=42,
-        n_jobs=params.get('n_jobs', -1),
+        n_jobs=params.get("n_jobs", -1),
     )
 
 
 def create_xgboost(params: Optional[Dict] = None):
-    """Cria modelo XGBoost."""
     import xgboost as xgb
     params = params or {}
     return xgb.XGBRegressor(
-        n_estimators=params.get('n_estimators', 100),
-        max_depth=params.get('max_depth', 6),
-        learning_rate=params.get('learning_rate', 0.1),
-        subsample=params.get('subsample', 0.8),
-        colsample_bytree=params.get('colsample_bytree', 0.8),
+        n_estimators=params.get("n_estimators", 100),
+        max_depth=params.get("max_depth", 6),
+        learning_rate=params.get("learning_rate", 0.1),
+        subsample=params.get("subsample", 0.8),
+        colsample_bytree=params.get("colsample_bytree", 0.8),
         random_state=42,
-        n_jobs=params.get('n_jobs', -1),
+        n_jobs=params.get("n_jobs", -1),
         verbosity=0,
     )
 
 
 def create_lightgbm(params: Optional[Dict] = None):
-    """Cria modelo LightGBM."""
     import lightgbm as lgb
     params = params or {}
     return lgb.LGBMRegressor(
-        n_estimators=params.get('n_estimators', 100),
-        max_depth=params.get('max_depth', -1),
-        learning_rate=params.get('learning_rate', 0.1),
-        num_leaves=params.get('num_leaves', 31),
-        subsample=params.get('subsample', 0.8),
+        n_estimators=params.get("n_estimators", 100),
+        max_depth=params.get("max_depth", -1),
+        learning_rate=params.get("learning_rate", 0.1),
+        num_leaves=params.get("num_leaves", 31),
+        subsample=params.get("subsample", 0.8),
         random_state=42,
-        n_jobs=params.get('n_jobs', -1),
+        n_jobs=params.get("n_jobs", -1),
         verbose=-1,
     )
 
 
-# ============================================================================
-# MULTI-GPU
-# ============================================================================
+# ---------------------------------------------------------------------------
+# DL models — thin wrappers around base_models.build_model (task=regression)
+# ---------------------------------------------------------------------------
 
-def get_distribute_strategy() -> tf.distribute.Strategy:
-    """
-    Retorna a melhor estratégia de distribuição disponível.
-
-    - 2+ GPUs  → MirroredStrategy (treina em todas as GPUs em paralelo)
-    - 1 GPU    → OneDeviceStrategy (GPU única, sem overhead)
-    - 0 GPUs   → OneDeviceStrategy (CPU)
-
-    Uso nos notebooks::
-
-        strategy = get_distribute_strategy()
-        ...
-        with strategy.scope():
-            model = create_cnn_model(input_shape, params=params)
-        model.fit(...)          # fora do scope — funciona normalmente
-    """
-    gpus = tf.config.list_physical_devices('GPU')
-    if len(gpus) >= 2:
-        strategy = tf.distribute.MirroredStrategy()
-        print(f"⚡ MirroredStrategy: {strategy.num_replicas_in_sync} GPUs")
-    elif len(gpus) == 1:
-        strategy = tf.distribute.OneDeviceStrategy(device="/gpu:0")
-        print("⚡ OneDeviceStrategy: GPU:0")
-    else:
-        strategy = tf.distribute.OneDeviceStrategy(device="/cpu:0")
-        print("⚡ OneDeviceStrategy: CPU")
-    return strategy
+def create_cnn_model(input_shape: Tuple[int, int], params: Optional[Dict] = None):
+    return _build_model("CNN", "raw", input_shape, task="regression", cfg=params)
 
 
-# ============================================================================
-# MODELOS DEEP LEARNING
-# ============================================================================
-
-def create_cnn_model(
-    input_shape: Tuple[int, int],
-    params: Optional[Dict] = None
-) -> Model:
-    """
-    Cria modelo CNN 1D para regressão.
-    
-    Args:
-        input_shape: (sequence_length, n_features)
-        params: Parâmetros do modelo
-    """
-    params = params or {}
-    
-    filters = params.get('filters', [64, 128, 256])
-    kernel_sizes = params.get('kernel_sizes', [7, 5, 3])
-    pool_sizes = params.get('pool_sizes', [2, 2, 2])
-    dense_units = params.get('dense_units', [128, 64])
-    dropout_rate = params.get('dropout_rate', 0.3)
-    l2_reg = params.get('l2_reg', 0.001)
-    learning_rate = params.get('learning_rate', 0.001)
-    
-    inputs = Input(shape=input_shape)
-    x = inputs
-    
-    # Blocos convolucionais
-    for i, (f, k, p) in enumerate(zip(filters, kernel_sizes, pool_sizes)):
-        x = Conv1D(f, k, activation='relu', padding='same',
-                   kernel_regularizer=l2(l2_reg), name=f'conv_{i+1}')(x)
-        x = BatchNormalization()(x)
-        x = MaxPooling1D(pool_size=p)(x)
-        x = Dropout(dropout_rate)(x)
-    
-    x = GlobalAveragePooling1D()(x)
-    
-    # Camadas densas
-    for i, units in enumerate(dense_units):
-        x = Dense(units, activation='relu', kernel_regularizer=l2(l2_reg),
-                  name=f'dense_{i+1}')(x)
-        x = Dropout(dropout_rate)(x)
-    
-    outputs = Dense(1, name='output')(x)
-    
-    model = Model(inputs=inputs, outputs=outputs, name='CNN_Regressor')
-    model.compile(
-        optimizer=Adam(learning_rate=learning_rate),
-        loss='mse',
-        metrics=['mae']
-    )
-    
-    return model
+def create_lstm_model(input_shape: Tuple[int, int], params: Optional[Dict] = None):
+    return _build_model("LSTM", "raw", input_shape, task="regression", cfg=params)
 
 
-def create_lstm_model(
-    input_shape: Tuple[int, int],
-    params: Optional[Dict] = None
-) -> Model:
-    """
-    Cria modelo LSTM para regressão.
-    """
-    params = params or {}
-    
-    units = params.get('units', [128, 64])
-    dropout_rate = params.get('dropout_rate', 0.3)
-    recurrent_dropout = params.get('recurrent_dropout', 0.2)
-    l2_reg = params.get('l2_reg', 0.001)
-    learning_rate = params.get('learning_rate', 0.001)
-    bidirectional = params.get('bidirectional', False)
-    
-    inputs = Input(shape=input_shape)
-    x = inputs
-    
-    # Camadas LSTM
-    for i, u in enumerate(units[:-1]):
-        lstm = LSTM(u, return_sequences=True, dropout=dropout_rate,
-                    recurrent_dropout=recurrent_dropout,
-                    kernel_regularizer=l2(l2_reg), name=f'lstm_{i+1}')
-        if bidirectional:
-            x = Bidirectional(lstm)(x)
-        else:
-            x = lstm(x)
-    
-    # Última camada LSTM
-    lstm = LSTM(units[-1], return_sequences=False, dropout=dropout_rate,
-                recurrent_dropout=recurrent_dropout,
-                kernel_regularizer=l2(l2_reg), name=f'lstm_{len(units)}')
-    if bidirectional:
-        x = Bidirectional(lstm)(x)
-    else:
-        x = lstm(x)
-    
-    x = Dense(64, activation='relu', kernel_regularizer=l2(l2_reg))(x)
-    x = Dropout(dropout_rate)(x)
-    outputs = Dense(1, name='output')(x)
-    
-    model = Model(inputs=inputs, outputs=outputs, name='LSTM_Regressor')
-    model.compile(
-        optimizer=Adam(learning_rate=learning_rate),
-        loss='mse',
-        metrics=['mae']
-    )
-    
-    return model
+def create_cnn_lstm_model(input_shape: Tuple[int, int], params: Optional[Dict] = None):
+    return _build_model("CNN_LSTM", "raw", input_shape, task="regression", cfg=params)
 
 
-def create_cnn_lstm_model(
-    input_shape: Tuple[int, int],
-    params: Optional[Dict] = None
-) -> Model:
-    """
-    Cria modelo híbrido CNN-LSTM para regressão.
-    """
-    params = params or {}
-    
-    cnn_filters = params.get('cnn_filters', [64, 128])
-    cnn_kernel_sizes = params.get('cnn_kernel_sizes', [5, 3])
-    lstm_units = params.get('lstm_units', [100, 50])
-    dense_units = params.get('dense_units', [64])
-    dropout_rate = params.get('dropout_rate', 0.3)
-    l2_reg = params.get('l2_reg', 0.001)
-    learning_rate = params.get('learning_rate', 0.001)
-    
-    inputs = Input(shape=input_shape)
-    x = inputs
-    
-    # Blocos CNN
-    for i, (f, k) in enumerate(zip(cnn_filters, cnn_kernel_sizes)):
-        x = Conv1D(f, k, activation='relu', padding='same',
-                   kernel_regularizer=l2(l2_reg))(x)
-        x = BatchNormalization()(x)
-        x = MaxPooling1D(pool_size=2)(x)
-        x = Dropout(dropout_rate)(x)
-    
-    # Camadas LSTM
-    for i, u in enumerate(lstm_units[:-1]):
-        x = LSTM(u, return_sequences=True, dropout=dropout_rate,
-                 kernel_regularizer=l2(l2_reg))(x)
-    
-    x = LSTM(lstm_units[-1], return_sequences=False, dropout=dropout_rate,
-             kernel_regularizer=l2(l2_reg))(x)
-    
-    # Camadas densas
-    for units in dense_units:
-        x = Dense(units, activation='relu', kernel_regularizer=l2(l2_reg))(x)
-        x = Dropout(dropout_rate)(x)
-    
-    outputs = Dense(1, name='output')(x)
-    
-    model = Model(inputs=inputs, outputs=outputs, name='CNN_LSTM_Regressor')
-    model.compile(
-        optimizer=Adam(learning_rate=learning_rate),
-        loss='mse',
-        metrics=['mae']
-    )
-    
-    return model
+def create_transformer_model(input_shape: Tuple[int, int], params: Optional[Dict] = None):
+    return _build_model("Transformer", "raw", input_shape, task="regression", cfg=params)
 
 
-def create_learned_wavelet_cnn_lstm_model(
-    input_shape: Tuple[int, int],
-    wavelet_config: Optional[Dict] = None,
-    cnn_lstm_params: Optional[Dict] = None
-) -> Model:
-    """
-    Cria modelo com LearnedWaveletDWT1D_QMF seguido de CNN-LSTM.
-    """
-    wavelet_config = wavelet_config or {}
-    cnn_lstm_params = cnn_lstm_params or {}
+# ---------------------------------------------------------------------------
+# Learned-wavelet DL models
+# The wavelet_config and model_params dicts are merged; warm_start_db4 in
+# wavelet_config determines whether the wavelet is warm-started from db4.
+# ---------------------------------------------------------------------------
 
-    cnn_filters = cnn_lstm_params.get('cnn_filters', [64, 128])
-    cnn_kernel_sizes = cnn_lstm_params.get('cnn_kernel_sizes', [5, 3])
-    lstm_units = cnn_lstm_params.get('lstm_units', [100, 50])
-    dense_units = cnn_lstm_params.get('dense_units', [64])
-    dropout_rate = cnn_lstm_params.get('dropout_rate', 0.3)
-    l2_reg = cnn_lstm_params.get('l2_reg', 0.001)
-    learning_rate = cnn_lstm_params.get('learning_rate', 0.001)
+def _merge(wavelet_config, model_params):
+    return {**(wavelet_config or {}), **(model_params or {})}
 
-    inputs = Input(shape=input_shape)
-
-    # Learned Wavelet Layer
-    wavelet_layer = LearnedWaveletDWT1D_QMF(
-        levels=wavelet_config.get('levels', 3),
-        kernel_size=wavelet_config.get('kernel_size', 32),
-        wavelet_net_units=wavelet_config.get('wavelet_net_units', 32),
-        mode="concat",
-        reg_energy=wavelet_config.get('reg_energy', 1e-2),
-        reg_high_dc=wavelet_config.get('reg_high_dc', 1e-2),
-        reg_smooth=wavelet_config.get('reg_smooth', 1e-3),
-    )
-
-    x = wavelet_layer(inputs)
-
-    # CNN blocks
-    for i, (f, k) in enumerate(zip(cnn_filters, cnn_kernel_sizes)):
-        x = Conv1D(f, k, activation='relu', padding='same',
-                   kernel_regularizer=l2(l2_reg))(x)
-        x = BatchNormalization()(x)
-        x = MaxPooling1D(pool_size=2)(x)
-        x = Dropout(dropout_rate)(x)
-
-    # LSTM layers
-    for u in lstm_units[:-1]:
-        x = LSTM(u, return_sequences=True, dropout=dropout_rate,
-                 kernel_regularizer=l2(l2_reg))(x)
-
-    x = LSTM(lstm_units[-1], return_sequences=False, dropout=dropout_rate,
-             kernel_regularizer=l2(l2_reg))(x)
-
-    # Dense layers
-    for units in dense_units:
-        x = Dense(units, activation='relu', kernel_regularizer=l2(l2_reg))(x)
-        x = Dropout(dropout_rate)(x)
-
-    outputs = Dense(1, name='output')(x)
-
-    model = Model(inputs=inputs, outputs=outputs, name='LearnedWavelet_CNN_LSTM')
-    model.compile(
-        optimizer=Adam(learning_rate=learning_rate),
-        loss='mse',
-        metrics=['mae']
-    )
-
-    return model
-
-
-def create_transformer_model(
-    input_shape: Tuple[int, int],
-    params: Optional[Dict] = None
-) -> Model:
-    """
-    Cria modelo Transformer para regressão de séries temporais.
-
-    Inclui:
-    - Projeção inicial + Positional Encoding sinusoidal
-    - Blocos Transformer com pre-LayerNorm
-    - L2 regularização no MLP head
-    - Warmup learning-rate schedule
-    """
-    params = params or {}
-    
-    head_size = params.get('head_size', 64)
-    num_heads = params.get('num_heads', 4)
-    ff_dim = params.get('ff_dim', 128)
-    num_transformer_blocks = params.get('num_transformer_blocks', 2)
-    mlp_units = params.get('mlp_units', [128, 64])
-    dropout_rate = params.get('dropout_rate', 0.2)
-    learning_rate = params.get('learning_rate', 0.001)
-    l2_reg = params.get('l2_reg', 0.001)
-    use_warmup = params.get('use_warmup', True)
-    warmup_steps = params.get('warmup_steps', 500)
-    
-    embed_dim = head_size * num_heads
-    
-    inputs = Input(shape=input_shape)
-    x = inputs
-    
-    # Projeção inicial para embed_dim dimensões
-    x = Dense(embed_dim, kernel_regularizer=l2(l2_reg))(x)
-    
-    # Positional Encoding — essencial para o Transformer saber a ordem
-    x = SinusoidalPositionalEncoding(max_len=input_shape[0])(x)
-    x = Dropout(dropout_rate)(x)
-    
-    # Blocos Transformer
-    for _ in range(num_transformer_blocks):
-        x = TransformerBlock(head_size, num_heads, ff_dim, dropout_rate)(x)
-    
-    # Global Average Pooling
-    x = GlobalAveragePooling1D()(x)
-    
-    # MLP head com regularização
-    for units in mlp_units:
-        x = Dense(units, activation="relu", kernel_regularizer=l2(l2_reg))(x)
-        x = Dropout(dropout_rate)(x)
-    
-    outputs = Dense(1, name='output')(x)
-    
-    model = Model(inputs=inputs, outputs=outputs, name='Transformer_Regressor')
-    
-    # Optimizer: warmup schedule ou lr fixo
-    if use_warmup:
-        lr_schedule = TransformerWarmupSchedule(d_model=embed_dim,
-                                                warmup_steps=warmup_steps)
-        optimizer = Adam(learning_rate=lr_schedule, beta_1=0.9,
-                         beta_2=0.98, epsilon=1e-9)
-    else:
-        optimizer = Adam(learning_rate=learning_rate)
-    
-    model.compile(
-        optimizer=optimizer,
-        loss='mse',
-        metrics=['mae']
-    )
-    
-    return model
-
-
-# ============================================================================
-# MODELOS COM LEARNED WAVELETS
-# ============================================================================
 
 def create_learned_wavelet_cnn_model(
     input_shape: Tuple[int, int],
     wavelet_config: Optional[Dict] = None,
-    cnn_params: Optional[Dict] = None
-) -> Model:
-    """
-    Cria modelo com LearnedWaveletDWT1D_QMF seguido de CNN.
-    """
-    import sys
-    sys.path.append('../../../models')
-    from LWT import LearnedWaveletDWT1D_QMF
-    
-    wavelet_config = wavelet_config or {}
-    cnn_params = cnn_params or {}
-    
-    inputs = Input(shape=input_shape)
-    
-    # Learned Wavelet Layer
-    wavelet_layer = LearnedWaveletDWT1D_QMF(
-        levels=wavelet_config.get('levels', 3),
-        kernel_size=wavelet_config.get('kernel_size', 32),
-        wavelet_net_units=wavelet_config.get('wavelet_net_units', 32),
-        mode="concat",
-        reg_energy=wavelet_config.get('reg_energy', 1e-2),
-        reg_high_dc=wavelet_config.get('reg_high_dc', 1e-2),
-        reg_smooth=wavelet_config.get('reg_smooth', 1e-3),
-    )
-    
-    x = wavelet_layer(inputs)
-    
-    # CNN layers
-    filters = cnn_params.get('filters', [64, 128, 256])
-    kernel_sizes = cnn_params.get('kernel_sizes', [7, 5, 3])
-    pool_sizes = cnn_params.get('pool_sizes', [2, 2, 2])
-    dense_units = cnn_params.get('dense_units', [96, 48])
-    dropout_rate = cnn_params.get('dropout_rate', 0.3)
-    l2_reg = cnn_params.get('l2_reg', 0.001)
-    for i, (f, k, p) in enumerate(zip(filters, kernel_sizes, pool_sizes)):
-        x = Conv1D(f, k, activation='relu', padding='same',
-                   kernel_regularizer=l2(l2_reg), name=f'cnn_conv_{i+1}')(x)
-        x = BatchNormalization()(x)
-        x = MaxPooling1D(pool_size=p)(x)
-        x = Dropout(dropout_rate)(x)
-    
-    x = GlobalAveragePooling1D()(x)
-    for i, units in enumerate(dense_units):
-        x = Dense(units, activation='relu', kernel_regularizer=l2(l2_reg),
-                  name=f'dense_{i+1}')(x)
-        x = Dropout(dropout_rate)(x)
-    outputs = Dense(1, name='output')(x)
-    
-    model = Model(inputs=inputs, outputs=outputs, name='LearnedWavelet_CNN')
-    model.compile(
-        optimizer=Adam(learning_rate=cnn_params.get('learning_rate', 0.001)),
-        loss='mse',
-        metrics=['mae']
-    )
-    
-    return model
+    cnn_params: Optional[Dict] = None,
+):
+    cfg = _merge(wavelet_config, cnn_params)
+    mode = "learned_wavelet" if cfg.get("warm_start_db4", False) else "learned_wavelet_no_warmup"
+    return _build_model("CNN", mode, input_shape, task="regression", cfg=cfg)
 
 
 def create_learned_wavelet_lstm_model(
     input_shape: Tuple[int, int],
     wavelet_config: Optional[Dict] = None,
-    lstm_params: Optional[Dict] = None
-) -> Model:
-    """
-    Cria modelo com LearnedWaveletDWT1D_QMF seguido de LSTM.
-    """
-    import sys
-    sys.path.append('../../../models')
-    from LWT import LearnedWaveletDWT1D_QMF
-    
-    wavelet_config = wavelet_config or {}
-    lstm_params = lstm_params or {}
-    
-    inputs = Input(shape=input_shape)
-    
-    # Learned Wavelet Layer
-    wavelet_layer = LearnedWaveletDWT1D_QMF(
-        levels=wavelet_config.get('levels', 3),
-        kernel_size=wavelet_config.get('kernel_size', 32),
-        wavelet_net_units=wavelet_config.get('wavelet_net_units', 32),
-        mode="concat",
-        reg_energy=wavelet_config.get('reg_energy', 1e-2),
-        reg_high_dc=wavelet_config.get('reg_high_dc', 1e-2),
-        reg_smooth=wavelet_config.get('reg_smooth', 1e-3),
-    )
-    
-    x = wavelet_layer(inputs)
-    
-    # LSTM layers
-    units = lstm_params.get('units', [128, 64])
-    dropout_rate = lstm_params.get('dropout_rate', 0.3)
-    l2_reg = lstm_params.get('l2_reg', 0.001)
-    for u in units[:-1]:
-        x = LSTM(u, return_sequences=True, dropout=dropout_rate,
-                 kernel_regularizer=l2(l2_reg))(x)
-    x = LSTM(units[-1], return_sequences=False, dropout=dropout_rate,
-             kernel_regularizer=l2(l2_reg))(x)
+    lstm_params: Optional[Dict] = None,
+):
+    cfg = _merge(wavelet_config, lstm_params)
+    mode = "learned_wavelet" if cfg.get("warm_start_db4", False) else "learned_wavelet_no_warmup"
+    return _build_model("LSTM", mode, input_shape, task="regression", cfg=cfg)
 
-    x = Dense(64, activation='relu', kernel_regularizer=l2(l2_reg))(x)
-    x = Dropout(dropout_rate)(x)
-    outputs = Dense(1)(x)
 
-    model = Model(inputs=inputs, outputs=outputs, name='LearnedWavelet_LSTM')
-    model.compile(
-        optimizer=Adam(learning_rate=lstm_params.get('learning_rate', 0.001)),
-        loss='mse',
-        metrics=['mae']
-    )
-
-    return model
+def create_learned_wavelet_cnn_lstm_model(
+    input_shape: Tuple[int, int],
+    wavelet_config: Optional[Dict] = None,
+    cnn_lstm_params: Optional[Dict] = None,
+):
+    cfg = _merge(wavelet_config, cnn_lstm_params)
+    mode = "learned_wavelet" if cfg.get("warm_start_db4", False) else "learned_wavelet_no_warmup"
+    return _build_model("CNN_LSTM", mode, input_shape, task="regression", cfg=cfg)
 
 
 def create_learned_wavelet_transformer_model(
     input_shape: Tuple[int, int],
     wavelet_config: Optional[Dict] = None,
-    transformer_params: Optional[Dict] = None
-) -> Model:
-    """
-    Cria modelo com LearnedWaveletDWT1D_QMF seguido de Transformer.
-    """
-    import sys
-    sys.path.append('../../../models')
-    from LWT import LearnedWaveletDWT1D_QMF
-    
-    wavelet_config = wavelet_config or {}
-    transformer_params = transformer_params or {}
-    
-    inputs = Input(shape=input_shape)
-    
-    # Learned Wavelet Layer
-    wavelet_layer = LearnedWaveletDWT1D_QMF(
-        levels=wavelet_config.get('levels', 3),
-        kernel_size=wavelet_config.get('kernel_size', 32),
-        wavelet_net_units=wavelet_config.get('wavelet_net_units', 32),
-        mode="concat",
-        reg_energy=wavelet_config.get('reg_energy', 1e-2),
-        reg_high_dc=wavelet_config.get('reg_high_dc', 1e-2),
-        reg_smooth=wavelet_config.get('reg_smooth', 1e-3),
-    )
-    
-    x = wavelet_layer(inputs)
-    
-    # Transformer blocks
-    head_size = transformer_params.get('head_size', 64)
-    num_heads = transformer_params.get('num_heads', 4)
-    ff_dim = transformer_params.get('ff_dim', 128)
-    num_blocks = transformer_params.get('num_transformer_blocks', 2)
-    
-    embed_dim = head_size * num_heads
-    dropout_rate = transformer_params.get('dropout_rate', 0.2)
-    l2_reg = transformer_params.get('l2_reg', 0.001)
-    
-    x = Dense(embed_dim, kernel_regularizer=l2(l2_reg))(x)
-    x = SinusoidalPositionalEncoding()(x)
-    x = Dropout(dropout_rate)(x)
-    
-    for _ in range(num_blocks):
-        x = TransformerBlock(head_size, num_heads, ff_dim, dropout_rate)(x)
-    
-    x = GlobalAveragePooling1D()(x)
-    x = Dense(64, activation='relu', kernel_regularizer=l2(l2_reg))(x)
-    x = Dropout(dropout_rate)(x)
-    outputs = Dense(1)(x)
-    
-    model = Model(inputs=inputs, outputs=outputs, name='LearnedWavelet_Transformer')
-    
-    lr = transformer_params.get('learning_rate', 0.001)
-    use_warmup = transformer_params.get('use_warmup', True)
-    warmup_steps = transformer_params.get('warmup_steps', 500)
-    if use_warmup:
-        lr_schedule = TransformerWarmupSchedule(d_model=embed_dim,
-                                                warmup_steps=warmup_steps)
-        optimizer = Adam(learning_rate=lr_schedule, beta_1=0.9,
-                         beta_2=0.98, epsilon=1e-9)
-    else:
-        optimizer = Adam(learning_rate=lr)
-    
-    model.compile(
-        optimizer=optimizer,
-        loss='mse',
-        metrics=['mae']
-    )
-    
-    return model
+    transformer_params: Optional[Dict] = None,
+):
+    cfg = _merge(wavelet_config, transformer_params)
+    mode = "learned_wavelet" if cfg.get("warm_start_db4", False) else "learned_wavelet_no_warmup"
+    return _build_model("Transformer", mode, input_shape, task="regression", cfg=cfg)
 
 
-# ============================================================================
-# CALLBACKS
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Warmup/NoWarmup factory helpers (mirrors financial experiment's mode pattern)
+# ---------------------------------------------------------------------------
 
-def get_callbacks(
-    model_path: str,
-    patience_early: int = 15,
-    patience_lr: int = 7,
-    min_lr: float = 1e-6,
-    monitor: str = 'val_loss',
-    use_reduce_lr: bool = True
-) -> list:
-    """Retorna lista de callbacks padrão para treinamento.
-    
-    Args:
-        use_reduce_lr: Se False, omite ReduceLROnPlateau (necessário quando
-            o optimizer usa LearningRateSchedule, e.g. TransformerWarmupSchedule).
-    """
-    callbacks = [
-        EarlyStopping(
-            monitor=monitor,
-            patience=patience_early,
-            restore_best_weights=True,
-            verbose=1
-        ),
-        ModelCheckpoint(
-            filepath=model_path,
-            monitor=monitor,
-            save_best_only=True,
-            verbose=0
-        )
-    ]
-    if use_reduce_lr:
-        callbacks.append(
-            ReduceLROnPlateau(
-                monitor=monitor,
-                factor=0.5,
-                patience=patience_lr,
-                min_lr=min_lr,
-                verbose=1
-            )
-        )
-    return callbacks
+def _with_warmup(create_fn, warm: bool):
+    """Return a wrapper that forces warm_start_db4=warm in wavelet_config."""
+    def wrapper(input_shape, wavelet_config=None, **kwargs):
+        cfg = dict(wavelet_config or {})
+        cfg["warm_start_db4"] = warm
+        return create_fn(input_shape, wavelet_config=cfg, **kwargs)
+    wrapper.__name__ = create_fn.__name__ + ("_warmup" if warm else "_no_warmup")
+    return wrapper
 
 
-# ============================================================================
-# FACTORY FUNCTIONS
-# ============================================================================
+# ---------------------------------------------------------------------------
+# MODEL_FACTORY — for notebook-level create_model(name, ...) calls
+# ---------------------------------------------------------------------------
 
 MODEL_FACTORY = {
-    # ML Clássico
-    'SVM': create_svm_pipeline,
-    'RandomForest': create_random_forest,
-    'XGBoost': create_xgboost,
-    'LightGBM': create_lightgbm,
-    
-    # Deep Learning
-    'CNN': create_cnn_model,
-    'LSTM': create_lstm_model,
-    'CNN_LSTM': create_cnn_lstm_model,
-    'Transformer': create_transformer_model,
-    
-    # Learned Wavelets
-    'LearnedWavelet_CNN': create_learned_wavelet_cnn_model,
-    'LearnedWavelet_LSTM': create_learned_wavelet_lstm_model,
-    'LearnedWavelet_CNN_LSTM': create_learned_wavelet_cnn_lstm_model,
-    'LearnedWavelet_Transformer': create_learned_wavelet_transformer_model,
+    # ML
+    "SVM":          create_svm_pipeline,
+    "RandomForest": create_random_forest,
+    "XGBoost":      create_xgboost,
+    "LightGBM":     create_lightgbm,
+
+    # DL — raw signal
+    "CNN":         create_cnn_model,
+    "LSTM":        create_lstm_model,
+    "CNN_LSTM":    create_cnn_lstm_model,
+    "Transformer": create_transformer_model,
+
+    # DL — learned wavelet (warm_start_db4 via wavelet_config)
+    "LearnedWavelet_CNN":         create_learned_wavelet_cnn_model,
+    "LearnedWavelet_LSTM":        create_learned_wavelet_lstm_model,
+    "LearnedWavelet_CNN_LSTM":    create_learned_wavelet_cnn_lstm_model,
+    "LearnedWavelet_Transformer": create_learned_wavelet_transformer_model,
+
+    # Explicit warmup / no-warmup variants
+    "LearnedWavelet_CNN_Warmup":           _with_warmup(create_learned_wavelet_cnn_model,         warm=True),
+    "LearnedWavelet_CNN_NoWarmup":         _with_warmup(create_learned_wavelet_cnn_model,         warm=False),
+    "LearnedWavelet_LSTM_Warmup":          _with_warmup(create_learned_wavelet_lstm_model,        warm=True),
+    "LearnedWavelet_LSTM_NoWarmup":        _with_warmup(create_learned_wavelet_lstm_model,        warm=False),
+    "LearnedWavelet_CNN_LSTM_Warmup":      _with_warmup(create_learned_wavelet_cnn_lstm_model,    warm=True),
+    "LearnedWavelet_CNN_LSTM_NoWarmup":    _with_warmup(create_learned_wavelet_cnn_lstm_model,    warm=False),
+    "LearnedWavelet_Transformer_Warmup":   _with_warmup(create_learned_wavelet_transformer_model, warm=True),
+    "LearnedWavelet_Transformer_NoWarmup": _with_warmup(create_learned_wavelet_transformer_model, warm=False),
 }
 
 
 def create_model(model_name: str, **kwargs):
-    """
-    Factory function para criar modelos.
-    
-    Args:
-        model_name: Nome do modelo
-        **kwargs: Parâmetros específicos do modelo
-        
-    Returns:
-        Modelo criado
-    """
     if model_name not in MODEL_FACTORY:
-        raise ValueError(f"Modelo '{model_name}' não encontrado. "
-                        f"Disponíveis: {list(MODEL_FACTORY.keys())}")
-    
+        raise ValueError(
+            f"Model '{model_name}' not found. Available: {list(MODEL_FACTORY)}"
+        )
     return MODEL_FACTORY[model_name](**kwargs)

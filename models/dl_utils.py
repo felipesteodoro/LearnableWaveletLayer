@@ -129,8 +129,42 @@ class TransformerWarmupSchedule(tf.keras.optimizers.schedules.LearningRateSchedu
         }
 
 
+class PatchEmbedding(layers.Layer):
+    """
+    Splits a time series (batch, seq_len, features) into non-overlapping patches,
+    flattens each patch, and projects to embed_dim.
+
+    Reduces the number of tokens from seq_len → seq_len // patch_size,
+    making attention O((seq_len/P)²) instead of O(seq_len²).
+
+    Config keys
+    -----------
+    patch_size : int  — number of timesteps per patch
+    embed_dim  : int  — output embedding dimension
+    """
+
+    def __init__(self, patch_size: int, embed_dim: int, **kwargs):
+        super().__init__(**kwargs)
+        self.patch_size = patch_size
+        self.embed_dim = embed_dim
+        self.projection = layers.Dense(embed_dim)
+
+    def call(self, x):
+        batch    = tf.shape(x)[0]
+        seq_len  = tf.shape(x)[1]
+        n_feats  = tf.shape(x)[2]
+        n_patches = seq_len // self.patch_size
+        x = x[:, :n_patches * self.patch_size, :]
+        x = tf.reshape(x, (batch, n_patches, self.patch_size * n_feats))
+        return self.projection(x)
+
+    def get_config(self):
+        return {**super().get_config(), "patch_size": self.patch_size, "embed_dim": self.embed_dim}
+
+
 __all__ = [
     "SinusoidalPositionalEncoding",
     "TransformerBlock",
     "TransformerWarmupSchedule",
+    "PatchEmbedding",
 ]

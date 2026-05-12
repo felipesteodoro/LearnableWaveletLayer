@@ -4,32 +4,33 @@
   "config_idx": 8,
   "config": {
     "units": [
-      64,
-      32
+      256,
+      128
     ],
-    "dropout_rate": 0.3,
+    "dropout_rate": 0.2,
     "recurrent_dropout": 0.0,
     "learning_rate": 0.001,
-    "l2_reg": 0.001,
+    "l2_reg": 0.0001,
     "epochs": 100,
     "batch_size": 256,
     "early_stopping_patience": 15,
     "reduce_lr_patience": 7,
     "reduce_lr_factor": 0.5,
     "min_lr": 1e-06,
-    "verbose": 1
+    "verbose": 1,
+    "bidirectional": false
   },
-  "epochs_trained": 32,
-  "train_mse": 0.10453728056137904,
-  "train_rmse": 0.3233222549738558,
-  "train_mae": 0.25013990076555087,
-  "train_r2": 0.8940341641087061,
-  "val_mse": 0.11216448256772409,
-  "val_rmse": 0.33490966329403526,
-  "val_mae": 0.2582184254764283,
-  "val_r2": 0.8869155806402758,
-  "test_mse": 0.14073234062277754,
-  "test_rmse": 0.3751430935293592,
-  "test_mae": 0.2830955567527334,
-  "test_r2": 0.8607411720684143
+  "epochs_trained": 34,
+  "train_mse": 0.04852416052467536,
+  "train_rmse": 0.22028200227135072,
+  "train_mae": 0.171356750123932,
+  "train_r2": 0.950812732038677,
+  "val_mse": 0.05778306713195521,
+  "val_rmse": 0.240381087300884,
+  "val_mae": 0.18615116041083496,
+  "val_r2": 0.9417430148487894,
+  "test_mse": 0.07638673651218801,
+  "test_rmse": 0.27638150537289574,
+  "test_mae": 0.20867888239627305,
+  "test_r2": 0.9244130570902728
 }

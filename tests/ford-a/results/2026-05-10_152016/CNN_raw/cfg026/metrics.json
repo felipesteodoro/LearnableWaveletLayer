@@ -1,0 +1,55 @@
+{
+  "model_name": "CNN",
+  "mode": "raw",
+  "config_idx": 26,
+  "config": {
+    "filters": [
+      64,
+      128,
+      256
+    ],
+    "kernel_sizes": [
+      7,
+      5,
+      3
+    ],
+    "pool_sizes": [
+      2,
+      2,
+      2
+    ],
+    "dense_units": [
+      128,
+      64
+    ],
+    "dropout_rate": 0.4,
+    "learning_rate": 0.001,
+    "l2_reg": 0.0001,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1
+  },
+  "epochs_trained": 25,
+  "train_accuracy": 0.7823529411764706,
+  "train_f1_macro": 0.7805416055193469,
+  "train_f1_weighted": 0.7810498219986837,
+  "train_precision_macro": 0.7873743475178641,
+  "train_recall_macro": 0.7805443239423795,
+  "train_auc_roc": 0.8886790041288735,
+  "val_accuracy": 0.7781885397412199,
+  "val_f1_macro": 0.7749396788418338,
+  "val_f1_weighted": 0.7755894510217111,
+  "val_precision_macro": 0.7891122326088204,
+  "val_recall_macro": 0.7757493709659775,
+  "val_auc_roc": 0.8978640192539109,
+  "test_accuracy": 0.7863636363636364,
+  "test_f1_macro": 0.7840715028215028,
+  "test_f1_weighted": 0.7847793675918676,
+  "test_precision_macro": 0.7924711453092631,
+  "test_recall_macro": 0.7838789959532033,
+  "test_auc_roc": 0.8899092056007114
+}

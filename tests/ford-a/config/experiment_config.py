@@ -284,10 +284,14 @@ DL_MODELS_CONFIG = {
         "dropout_rate": 0.2,
         "learning_rate": 0.001,
         "l2_reg": 0.001,
-        # Warmup desativado: dataset Ford A é pequeno (~3600 amostras),
-        # o warmup cosine/linear não traz ganho e pode atrasar a convergência.
-        "use_warmup": False,
+        "use_warmup": True,
         "warmup_steps": 500,
+    },
+    "MLP": {
+        "mlp_units": [256, 128, 64],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
     },
 }
 
@@ -299,9 +303,12 @@ DL_GRID_AXES = {
         "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
     },
     "LSTM": {
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
-        "units": [[64, 32], [128, 64]],
+        "subsample_factor":  [4],
+        "dropout_rate":      [0.2, 0.3],
+        "l2_reg":            [1e-4, 1e-3, 1e-2],
+        "units":             [[64, 32], [128, 64], [256, 128], [256, 128, 64]],
+        "bidirectional":     [False],
+        "recurrent_dropout": [0.0, 0.15],
     },
     "CNN_LSTM": {
         "dropout_rate": [0.2, 0.3, 0.4],
@@ -310,11 +317,17 @@ DL_GRID_AXES = {
         "lstm_units": [[64, 32], [100, 50]],
     },
     "Transformer": {
+        "patch_size": [10],
         "dropout_rate": [0.15, 0.2, 0.3],
         "num_heads": [2, 4],
         "ff_dim": [64, 128],
         "num_transformer_blocks": [2, 3],
         "l2_reg": [1e-4, 1e-3],
+    },
+    "MLP": {
+        "dropout_rate": [0.2, 0.3, 0.4],
+        "l2_reg": [1e-4, 1e-3, 1e-2],
+        "mlp_units": [[256, 128, 64], [128, 64, 32]],
     },
 }
 
@@ -370,34 +383,54 @@ LEARNED_WAVELET_MODELS_CONFIG = {
         "dropout_rate": 0.2,
         "learning_rate": 0.001,
         "l2_reg": 0.001,
-        "use_warmup": False,
+        "use_warmup": True,
         "warmup_steps": 500,
+    },
+    "MLP": {
+        "mlp_units": [256, 128, 64],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
     },
 }
 
 LEARNED_WAVELET_GRID_AXES = {
     "CNN": {
+        "kernel_size": [4, 8, 16],
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "filters": [[32, 64, 128], [64, 128, 256]],
     },
     "LSTM": {
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
-        "units": [[64, 32], [128, 64]],
+        "subsample_factor":  [4],
+        "kernel_size":       [4, 8, 16],
+        "dropout_rate":      [0.2, 0.3],
+        "l2_reg":            [1e-4, 1e-3, 1e-2],
+        "units":             [[64, 32], [128, 64], [256, 128], [256, 128, 64]],
+        "bidirectional":     [False],
+        "recurrent_dropout": [0.0, 0.15],
     },
     "CNN_LSTM": {
+        "kernel_size": [4, 8, 16],
         "dropout_rate": [0.2, 0.3, 0.4],
         "l2_reg": [1e-4, 1e-3, 1e-2],
         "cnn_filters": [[32, 64], [64, 128]],
         "lstm_units": [[64, 32], [100, 50]],
     },
     "Transformer": {
+        "kernel_size": [4, 8, 16],
+        "patch_size": [10],
         "dropout_rate": [0.15, 0.2, 0.3],
         "num_heads": [2, 4],
         "ff_dim": [64, 128],
         "num_transformer_blocks": [2, 3],
         "l2_reg": [1e-4, 1e-3],
+    },
+    "MLP": {
+        "kernel_size": [4, 8, 16],
+        "dropout_rate": [0.2, 0.3, 0.4],
+        "l2_reg": [1e-4, 1e-3, 1e-2],
+        "mlp_units": [[256, 128, 64], [128, 64, 32]],
     },
 }
 

@@ -1,0 +1,41 @@
+{
+  "model_name": "MLP",
+  "mode": "raw",
+  "config_idx": 1,
+  "config": {
+    "mlp_units": [
+      128,
+      64,
+      32
+    ],
+    "dropout_rate": 0.2,
+    "learning_rate": 0.001,
+    "l2_reg": 0.0001,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1
+  },
+  "epochs_trained": 32,
+  "train_accuracy": 0.9568627450980393,
+  "train_f1_macro": 0.9568585984812072,
+  "train_f1_weighted": 0.9568693796849702,
+  "train_precision_macro": 0.9569535278037302,
+  "train_recall_macro": 0.9572348046212265,
+  "train_auc_roc": 0.9917003615061946,
+  "val_accuracy": 0.8022181146025879,
+  "val_f1_macro": 0.8021937842778794,
+  "val_f1_weighted": 0.8021410685743443,
+  "val_precision_macro": 0.8034212616758429,
+  "val_recall_macro": 0.8029482551143201,
+  "val_auc_roc": 0.876449513182365,
+  "test_accuracy": 0.8022727272727272,
+  "test_f1_macro": 0.8022126782063654,
+  "test_f1_weighted": 0.8021030233895307,
+  "test_precision_macro": 0.8046875,
+  "test_recall_macro": 0.8036407382129291,
+  "test_auc_roc": 0.8866322424676958
+}

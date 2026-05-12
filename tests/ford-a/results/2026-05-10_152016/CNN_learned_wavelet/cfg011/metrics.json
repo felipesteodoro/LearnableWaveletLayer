@@ -1,0 +1,64 @@
+{
+  "model_name": "CNN",
+  "mode": "learned_wavelet",
+  "config_idx": 11,
+  "config": {
+    "filters": [
+      64,
+      128,
+      256
+    ],
+    "kernel_sizes": [
+      7,
+      5,
+      3
+    ],
+    "pool_sizes": [
+      2,
+      2,
+      2
+    ],
+    "dense_units": [
+      96,
+      48
+    ],
+    "dropout_rate": 0.3,
+    "learning_rate": 0.001,
+    "l2_reg": 0.01,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1,
+    "levels": 2,
+    "kernel_size": 4,
+    "wavelet_net_units": 32,
+    "reg_energy": 0.01,
+    "reg_high_dc": 0.01,
+    "reg_smooth": 0.001,
+    "normalize_low": "l2",
+    "align": "pad_to_first",
+    "warm_start_db4": true
+  },
+  "epochs_trained": 82,
+  "train_accuracy": 0.9937908496732026,
+  "train_f1_macro": 0.9937876909732073,
+  "train_f1_weighted": 0.9937912616775498,
+  "train_precision_macro": 0.9937307692307693,
+  "train_recall_macro": 0.9938618325632571,
+  "train_auc_roc": 0.9999106600512359,
+  "val_accuracy": 0.9519408502772643,
+  "val_f1_macro": 0.9518933486552299,
+  "val_f1_weighted": 0.951929673425021,
+  "val_precision_macro": 0.9521557623870791,
+  "val_recall_macro": 0.9517353134230391,
+  "val_auc_roc": 0.9887047368996826,
+  "test_accuracy": 0.9522727272727273,
+  "test_f1_macro": 0.9522428790721473,
+  "test_f1_weighted": 0.9522808676910672,
+  "test_precision_macro": 0.9521329365079365,
+  "test_recall_macro": 0.9524415213749458,
+  "test_auc_roc": 0.9917432478703186
+}

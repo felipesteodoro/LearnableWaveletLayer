@@ -173,10 +173,9 @@ pivot = (
     .pivot(index="model_name", columns="mode", values=metric_col)
 )
 
-model_order = ["CNN", "LSTM", "CNN_LSTM", "Transformer"]
+model_order = ["CNN", "LSTM", "CNN_LSTM", "Transformer", "MLP"]
 mode_order  = ["raw", "db4", "learned_wavelet_no_warmup", "learned_wavelet"]
-pivot = pivot.reindex(index=[m for m in model_order if m in pivot.index],
-                      columns=[c for c in mode_order if c in pivot.columns])
+pivot = pivot.reindex(index=model_order, columns=mode_order)
 
 colorscale = "RdYlGn_r" if ascending else "RdYlGn"
 fig_heat = go.Figure(go.Heatmap(
@@ -184,7 +183,7 @@ fig_heat = go.Figure(go.Heatmap(
     x=pivot.columns.tolist(),
     y=pivot.index.tolist(),
     colorscale=colorscale,
-    text=np.round(pivot.values, 5).astype(str),
+    text=[[f"{v:.5f}" if not np.isnan(v) else "" for v in row] for row in pivot.values],
     texttemplate="%{text}",
     showscale=True,
 ))
@@ -194,7 +193,7 @@ fig_heat.update_layout(
     yaxis_title="Model",
     margin=dict(l=10, r=10, t=30, b=10),
 )
-st.plotly_chart(fig_heat, use_container_width=True)
+st.plotly_chart(fig_heat, width="stretch")
 
 # ---------------------------------------------------------------------------
 # Bar chart — best per model+mode
@@ -217,7 +216,7 @@ fig_bar = px.bar(
 )
 fig_bar.update_traces(textposition="outside")
 fig_bar.update_layout(margin=dict(l=10, r=10, t=30, b=80), xaxis_tickangle=-30)
-st.plotly_chart(fig_bar, use_container_width=True)
+st.plotly_chart(fig_bar, width="stretch")
 
 # ---------------------------------------------------------------------------
 # Scatter: train vs test RMSE (overfitting check)
@@ -234,7 +233,7 @@ if "train_rmse" in df.columns and "test_rmse" in df.columns:
     fig_sc.add_shape(type="line", x0=0, y0=0, x1=df["train_rmse"].max(), y1=df["train_rmse"].max(),
                      line=dict(dash="dash", color="gray"))
     fig_sc.update_layout(margin=dict(l=10, r=10, t=30, b=10))
-    st.plotly_chart(fig_sc, use_container_width=True)
+    st.plotly_chart(fig_sc, width="stretch")
 
 # ---------------------------------------------------------------------------
 # Top configs table
@@ -249,7 +248,7 @@ display_cols = [c for c in display_cols if c in df.columns]
 top = df[display_cols].sort_values(metric_col, ascending=ascending).head(30)
 st.dataframe(
     top.style.format({c: "{:.5f}" for c in ["test_rmse","test_mae","test_r2","val_rmse","val_r2","train_rmse"] if c in top.columns}),
-    use_container_width=True,
+    width="stretch",
     height=400,
 )
 
@@ -266,7 +265,7 @@ if status:
             "Elapsed": f"{int((j['elapsed'] or 0)//60)}m{int((j['elapsed'] or 0)%60)}s",
             "PID": j.get("pid"),
         } for j in running])
-        st.dataframe(run_df, use_container_width=True, hide_index=True)
+        st.dataframe(run_df, width="stretch", hide_index=True)
 
 # ---------------------------------------------------------------------------
 # Auto-refresh

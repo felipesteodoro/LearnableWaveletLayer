@@ -32,7 +32,7 @@ logging.basicConfig(
 
 _BASE = Path(__file__).parent
 
-ALL_MODELS = ["CNN", "LSTM", "CNN_LSTM", "Transformer"]
+ALL_MODELS = ["CNN", "LSTM", "CNN_LSTM", "Transformer", "MLP"]
 ALL_MODES  = ["raw", "db4", "learned_wavelet_no_warmup", "learned_wavelet"]
 
 

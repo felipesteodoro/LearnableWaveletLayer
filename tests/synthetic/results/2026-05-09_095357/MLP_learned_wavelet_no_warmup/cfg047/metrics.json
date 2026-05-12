@@ -1,0 +1,43 @@
+{
+  "model_name": "MLP",
+  "mode": "learned_wavelet_no_warmup",
+  "config_idx": 47,
+  "config": {
+    "mlp_units": [
+      128,
+      64,
+      32
+    ],
+    "dropout_rate": 0.3,
+    "learning_rate": 0.001,
+    "l2_reg": 0.01,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1,
+    "levels": 2,
+    "kernel_size": 16,
+    "wavelet_net_units": 32,
+    "reg_energy": 0.01,
+    "reg_high_dc": 0.01,
+    "reg_smooth": 0.001,
+    "align": "pad_to_first",
+    "warm_start_db4": false
+  },
+  "epochs_trained": 45,
+  "train_mse": 0.05062156938199155,
+  "train_rmse": 0.2249923762752675,
+  "train_mae": 0.17332931030694027,
+  "train_r2": 0.9486866610181015,
+  "val_mse": 0.053088356475765465,
+  "val_rmse": 0.23040910675527881,
+  "val_mae": 0.17818764022921232,
+  "val_r2": 0.9464762300026736,
+  "test_mse": 0.06817756412173614,
+  "test_rmse": 0.26110833790160004,
+  "test_mae": 0.19997354873766682,
+  "test_r2": 0.9325362768159144
+}

@@ -309,6 +309,12 @@ DL_MODELS_CONFIG = {
         "use_warmup": True,
         "warmup_steps": 500,
     },
+    "MLP": {
+        "mlp_units": [256, 128, 64],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+    },
 }
 
 # ---- Eixos de variação do Grid para cada arquitetura DL ----
@@ -322,9 +328,11 @@ DL_GRID_AXES = {
         "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
     },
     "LSTM": {
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
-        "units": [[64, 32], [128, 64]],
+        "dropout_rate":      [0.2, 0.3, 0.4],
+        "l2_reg":            [1e-4, 1e-3, 1e-2],
+        "units":             [[64, 32], [128, 64], [256, 128], [256, 128, 64]],
+        "bidirectional":     [False, True],
+        "recurrent_dropout": [0.0, 0.15],
     },
     "CNN_LSTM": {
         "dropout_rate": [0.2, 0.3, 0.4],
@@ -338,6 +346,14 @@ DL_GRID_AXES = {
         "ff_dim": [64, 128],
         "num_transformer_blocks": [2, 3],
         "l2_reg": [1e-4, 1e-3],
+        # patch_size=1 → SinusoidalPositionalEncoding (comportamento original)
+        # patch_size>1 → PatchEmbedding (agrupa timesteps, reduz tokens)
+        "patch_size": [1, 4, 8, 16],
+    },
+    "MLP": {
+        "dropout_rate": [0.2, 0.3, 0.4],
+        "l2_reg": [1e-4, 1e-3, 1e-2],
+        "mlp_units": [[256, 128, 64], [128, 64, 32]],
     },
 }
 
@@ -410,6 +426,12 @@ LEARNED_WAVELET_MODELS_CONFIG = {
         "use_warmup": True,
         "warmup_steps": 500,
     },
+    "MLP": {
+        "mlp_units": [256, 128, 64],
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "l2_reg": 0.001,
+    },
 }
 
 # Grid axes específicos para learned wavelets (podem diferir dos DL padrão)
@@ -422,10 +444,12 @@ LEARNED_WAVELET_GRID_AXES = {
         "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
     },
     "LSTM": {
-        "kernel_size": [4, 8, 16],
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
-        "units": [[64, 32], [128, 64]],
+        "kernel_size":       [4, 8, 16],
+        "dropout_rate":      [0.2, 0.3, 0.4],
+        "l2_reg":            [1e-4, 1e-3, 1e-2],
+        "units":             [[64, 32], [128, 64], [256, 128], [256, 128, 64]],
+        "bidirectional":     [False, True],
+        "recurrent_dropout": [0.0, 0.15],
     },
     "CNN_LSTM": {
         "kernel_size": [4, 8, 16],
@@ -441,6 +465,15 @@ LEARNED_WAVELET_GRID_AXES = {
         "ff_dim": [64, 128],
         "num_transformer_blocks": [2, 3],
         "l2_reg": [1e-4, 1e-3],
+        # LWT já entrega representação multi-escala; patch_size=1 é o padrão recomendado
+        # mas incluímos 4 para comparação
+        "patch_size": [1, 4],
+    },
+    "MLP": {
+        "kernel_size": [4, 8, 16],
+        "dropout_rate": [0.2, 0.3, 0.4],
+        "l2_reg": [1e-4, 1e-3, 1e-2],
+        "mlp_units": [[256, 128, 64], [128, 64, 32]],
     },
 }
 

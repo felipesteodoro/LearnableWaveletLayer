@@ -158,19 +158,16 @@ pivot = (
     .pivot(index="model_name", columns="mode", values=metric_col)
 )
 
-model_order = ["CNN", "LSTM", "CNN_LSTM", "Transformer"]
+model_order = ["CNN", "LSTM", "CNN_LSTM", "Transformer", "MLP"]
 mode_order  = ["raw", "db4", "learned_wavelet_no_warmup", "learned_wavelet"]
-pivot = pivot.reindex(
-    index=[m for m in model_order if m in pivot.index],
-    columns=[c for c in mode_order if c in pivot.columns],
-)
+pivot = pivot.reindex(index=model_order, columns=mode_order)
 
 fig_heat = go.Figure(go.Heatmap(
     z=pivot.values,
     x=pivot.columns.tolist(),
     y=pivot.index.tolist(),
     colorscale="RdYlGn",
-    text=np.round(pivot.values, 4).astype(str),
+    text=[[f"{v:.4f}" if not np.isnan(v) else "" for v in row] for row in pivot.values],
     texttemplate="%{text}",
     showscale=True,
     zmin=0.5, zmax=1.0,

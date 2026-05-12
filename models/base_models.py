@@ -31,7 +31,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, regularizers
 
-from dl_utils import SinusoidalPositionalEncoding, TransformerBlock, TransformerWarmupSchedule
+from dl_utils import SinusoidalPositionalEncoding, TransformerBlock, TransformerWarmupSchedule, PatchEmbedding
 
 
 # ---------------------------------------------------------------------------
@@ -88,6 +88,14 @@ def _lstm_backbone(x, cfg: dict):
     recurrent_dropout : float (default 0.0)
     bidirectional     : bool  (default False)
     dense_units       : list[int] (default [64])
+    subsample_factor  : int (default 1 — no subsampling)
+        AveragePooling1D applied before the LSTM layers.
+        For long sequences (seq_len >> 100) the BPTT gradient must travel
+        seq_len steps, causing vanishing gradients even with LSTM gates.
+        Subsampling reduces the effective sequence length:
+            subsample=4  → seq_len/4   (e.g. 500→125)
+            subsample=10 → seq_len/10  (e.g. 500→50)
+        Also allows larger l2_reg values without collapsing to majority class.
     dropout_rate, l2_reg
     """
     l2 = regularizers.l2(cfg.get("l2_reg", 1e-3))
@@ -96,6 +104,10 @@ def _lstm_backbone(x, cfg: dict):
     units = cfg.get("units", [128, 64])
     bidirectional = cfg.get("bidirectional", False)
     dense_units = cfg.get("dense_units", [64])
+
+    subsample = cfg.get("subsample_factor", 1)
+    if subsample > 1:
+        x = layers.AveragePooling1D(pool_size=subsample, strides=subsample)(x)
 
     for i, u in enumerate(units):
         return_seq = i < len(units) - 1
@@ -158,6 +170,21 @@ def _transformer_backbone(x, cfg: dict):
     ff_dim                  : int  (default 128)
     num_transformer_blocks / num_blocks : int (default 2)
     mlp_units               : list[int] (default [128, 64])
+    patch_size              : int (default 1 — no patching)
+        Groups consecutive timesteps into patches before the attention layers,
+        reducing the token count from seq_len to seq_len // patch_size.
+        Self-attention complexity is O(seq_len²) per head; for seq_len=500 with
+        small datasets (~3k samples) the model collapses to majority-class
+        because the gradient signal is too sparse to learn 500×500 attention
+        weights. Patching reduces this to O((seq_len/P)²):
+            patch_size=10 → 50 tokens  (100× fewer attention weights)
+            patch_size=25 → 20 tokens  (625× fewer attention weights)
+        use_warmup=True is strongly recommended alongside patch_size > 1.
+    use_warmup              : bool (default False)
+        Replaces Adam with fixed lr by the Vaswani warmup+inv-sqrt schedule.
+        Transformers are sensitive to the initial learning rate; without warmup
+        and with a long sequence, the model often collapses to predicting the
+        majority class within the first few epochs and never recovers.
     dropout_rate, l2_reg
     """
     head_size = cfg.get("head_size", 64)
@@ -170,7 +197,11 @@ def _transformer_backbone(x, cfg: dict):
     mlp_units = cfg.get("mlp_units", [128, 64])
 
     embed_dim = head_size * num_heads
-    x = layers.Dense(embed_dim, kernel_regularizer=regularizers.l2(l2_reg_val))(x)
+    patch_size = cfg.get("patch_size", 1)
+    if patch_size > 1:
+        x = PatchEmbedding(patch_size=patch_size, embed_dim=embed_dim)(x)
+    else:
+        x = layers.Dense(embed_dim, kernel_regularizer=regularizers.l2(l2_reg_val))(x)
     x = SinusoidalPositionalEncoding()(x)
     x = layers.Dropout(dr)(x)
     for _ in range(num_blocks):
@@ -186,6 +217,12 @@ def _transformer_backbone(x, cfg: dict):
 def _mlp_backbone(x, cfg: dict):
     """
     Flatten + stacked Dense layers (MLP baseline).
+
+    Window size note: MLP receives the full input sequence flattened to a
+    fixed-length vector (seq_len × n_features). Unlike LSTM and Transformer,
+    it has no sequential mechanism, so long windows do not cause vanishing
+    gradients or attention explosion — the cost is only a larger first-layer
+    weight matrix. No subsampling or patching is needed or applied.
 
     Config keys
     -----------

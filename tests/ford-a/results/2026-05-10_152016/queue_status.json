@@ -1,12 +1,12 @@
 {
   "queue_start_time": 1778545692.9604445,
-  "updated_at": 1778554111.3476493,
+  "updated_at": 1778554153.7727652,
   "summary": {
     "total": 1380,
-    "pending": 668,
+    "pending": 666,
     "running": 6,
     "retrying": 0,
-    "done": 706,
+    "done": 708,
     "failed": 0
   },
   "jobs": [
@@ -8157,7 +8157,7 @@
       "start_time": 1778553800.1586602,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 311.196902513504,
+      "elapsed": 353.6240701675415,
       "name": "LSTM/db4/cfg039"
     },
     {
@@ -8299,13 +8299,13 @@
       "max_retries": 2,
       "job_id": "2ac71b1a",
       "retry_count": 0,
-      "status": "running",
+      "status": "done",
       "gpu_id": 0,
-      "pid": 20944,
+      "pid": null,
       "start_time": 1778553892.8172307,
-      "end_time": null,
+      "end_time": 1778554153.5505316,
       "error_msg": null,
-      "elapsed": 218.53849363327026,
+      "elapsed": 260.73330092430115,
       "name": "LSTM/db4/cfg043"
     },
     {
@@ -8455,7 +8455,7 @@
       "start_time": 1778553966.5143373,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 144.84155654907227,
+      "elapsed": 187.2687966823578,
       "name": "LSTM/db4/cfg047"
     },
     {
@@ -8543,7 +8543,7 @@
       "start_time": 1778554037.8787448,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 73.47725200653076,
+      "elapsed": 115.90452122688293,
       "name": "LSTM/learned_wavelet_no_warmup/cfg001"
     },
     {
@@ -8581,13 +8581,13 @@
       "max_retries": 2,
       "job_id": "ac0d6f2f",
       "retry_count": 0,
-      "status": "running",
+      "status": "done",
       "gpu_id": 5,
-      "pid": 111245,
+      "pid": null,
       "start_time": 1778554107.3058064,
-      "end_time": null,
+      "end_time": 1778554151.0894425,
       "error_msg": null,
-      "elapsed": 4.050248146057129,
+      "elapsed": 43.78363609313965,
       "name": "LSTM/learned_wavelet_no_warmup/cfg002"
     },
     {
@@ -8631,7 +8631,7 @@
       "start_time": 1778554111.242278,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 0.11382794380187988,
+      "elapsed": 42.54110288619995,
       "name": "LSTM/learned_wavelet_no_warmup/cfg003"
     },
     {
@@ -8669,13 +8669,13 @@
       "max_retries": 2,
       "job_id": "67e00a81",
       "retry_count": 0,
-      "status": "pending",
-      "gpu_id": null,
-      "pid": null,
-      "start_time": null,
+      "status": "running",
+      "gpu_id": 5,
+      "pid": 135487,
+      "start_time": 1778554151.225027,
       "end_time": null,
       "error_msg": null,
-      "elapsed": null,
+      "elapsed": 2.558408260345459,
       "name": "LSTM/learned_wavelet_no_warmup/cfg004"
     },
     {
@@ -8713,13 +8713,13 @@
       "max_retries": 2,
       "job_id": "3320850d",
       "retry_count": 0,
-      "status": "pending",
-      "gpu_id": null,
-      "pid": null,
-      "start_time": null,
+      "status": "running",
+      "gpu_id": 0,
+      "pid": 135972,
+      "start_time": 1778554153.6602578,
       "end_time": null,
       "error_msg": null,
-      "elapsed": null,
+      "elapsed": 0.12323546409606934,
       "name": "LSTM/learned_wavelet_no_warmup/cfg005"
     },
     {

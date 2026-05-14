@@ -303,7 +303,7 @@ DL_GRID_AXES = {
         "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
     },
     "LSTM": {
-        "subsample_factor":  [4],
+        "subsample_factor":  [4, 1],
         "dropout_rate":      [0.2, 0.3],
         "l2_reg":            [1e-4, 1e-3, 1e-2],
         "units":             [[64, 32], [128, 64], [256, 128], [256, 128, 64]],
@@ -402,7 +402,7 @@ LEARNED_WAVELET_GRID_AXES = {
         "filters": [[32, 64, 128], [64, 128, 256]],
     },
     "LSTM": {
-        "subsample_factor":  [4],
+        "subsample_factor":  [4, 1],
         "kernel_size":       [4, 8, 16],
         "dropout_rate":      [0.2, 0.3],
         "l2_reg":            [1e-4, 1e-3, 1e-2],

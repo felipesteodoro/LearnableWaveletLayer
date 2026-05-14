@@ -1,0 +1,43 @@
+{
+  "model_name": "LSTM",
+  "mode": "raw",
+  "config_idx": 50,
+  "config": {
+    "units": [
+      128,
+      64
+    ],
+    "dropout_rate": 0.2,
+    "recurrent_dropout": 0.0,
+    "learning_rate": 0.001,
+    "l2_reg": 0.0001,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1,
+    "subsample_factor": 1,
+    "bidirectional": false
+  },
+  "epochs_trained": 40,
+  "train_accuracy": 0.6601307189542484,
+  "train_f1_macro": 0.6477356299293656,
+  "train_f1_weighted": 0.6460512798528137,
+  "train_precision_macro": 0.6968334426559857,
+  "train_recall_macro": 0.6653445209177307,
+  "train_auc_roc": 0.6860218032221371,
+  "val_accuracy": 0.6487985212569316,
+  "val_f1_macro": 0.6309421226482839,
+  "val_f1_weighted": 0.6289914236406164,
+  "val_precision_macro": 0.6967171717171717,
+  "val_recall_macro": 0.6544620391642052,
+  "val_auc_roc": 0.6756645881194617,
+  "test_accuracy": 0.6613636363636364,
+  "test_f1_macro": 0.6486600265928466,
+  "test_f1_weighted": 0.6465343229658619,
+  "test_precision_macro": 0.7022753417990355,
+  "test_recall_macro": 0.6680902842409326,
+  "test_auc_roc": 0.6640997888128247
+}

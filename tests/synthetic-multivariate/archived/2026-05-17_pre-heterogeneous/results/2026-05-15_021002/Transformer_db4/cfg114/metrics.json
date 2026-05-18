@@ -1,0 +1,43 @@
+{
+  "model_name": "Transformer",
+  "mode": "db4",
+  "config_idx": 114,
+  "config": {
+    "head_size": 64,
+    "num_heads": 4,
+    "ff_dim": 128,
+    "num_transformer_blocks": 2,
+    "mlp_units": [
+      128,
+      64
+    ],
+    "dropout_rate": 0.2,
+    "learning_rate": 0.001,
+    "l2_reg": 0.0001,
+    "use_warmup": true,
+    "warmup_steps": 500,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1,
+    "levels": 2,
+    "align": "pad_to_first",
+    "patch_size": 8
+  },
+  "epochs_trained": 81,
+  "train_mse": 0.009782535023987293,
+  "train_rmse": 0.09890669857996118,
+  "train_mae": 0.07606061547994614,
+  "train_r2": 0.9655742049217224,
+  "val_mse": 0.06021725758910179,
+  "val_rmse": 0.24539204874873552,
+  "val_mae": 0.17969609797000885,
+  "val_r2": 0.6610898375511169,
+  "test_mse": 0.09213308244943619,
+  "test_rmse": 0.30353431840475004,
+  "test_mae": 0.23927967250347137,
+  "test_r2": 0.657030463218689
+}

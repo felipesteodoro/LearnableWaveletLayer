@@ -1,0 +1,49 @@
+{
+  "model_name": "CNN",
+  "mode": "raw",
+  "config_idx": 32,
+  "config": {
+    "filters": [
+      32,
+      64,
+      128
+    ],
+    "kernel_sizes": [
+      7,
+      5,
+      3
+    ],
+    "pool_sizes": [
+      2,
+      2,
+      2
+    ],
+    "dense_units": [
+      128,
+      64
+    ],
+    "dropout_rate": 0.4,
+    "learning_rate": 0.001,
+    "l2_reg": 0.01,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1
+  },
+  "epochs_trained": 100,
+  "train_mse": 0.14239439368247986,
+  "train_rmse": 0.3773518168532912,
+  "train_mae": 0.2734581530094147,
+  "train_r2": 0.7121551632881165,
+  "val_mse": 0.2463570237159729,
+  "val_rmse": 0.49634365485616205,
+  "val_mae": 0.3426428735256195,
+  "val_r2": 0.5394960641860962,
+  "test_mse": 0.19790667295455933,
+  "test_rmse": 0.4448670283967551,
+  "test_mae": 0.32080867886543274,
+  "test_r2": 0.4656822681427002
+}

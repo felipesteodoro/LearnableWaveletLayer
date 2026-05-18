@@ -1,0 +1,35 @@
+{
+  "model_name": "MLP",
+  "mode": "raw",
+  "config_idx": 3,
+  "config": {
+    "mlp_units": [
+      128,
+      64,
+      32
+    ],
+    "dropout_rate": 0.2,
+    "learning_rate": 0.001,
+    "l2_reg": 0.001,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1
+  },
+  "epochs_trained": 100,
+  "train_mse": 0.009259100072085857,
+  "train_rmse": 0.09622421770056568,
+  "train_mae": 0.07195444405078888,
+  "train_r2": 0.9674162268638611,
+  "val_mse": 0.03393154218792915,
+  "val_rmse": 0.18420516330420586,
+  "val_mae": 0.1374945044517517,
+  "val_r2": 0.8090291023254395,
+  "test_mse": 0.06957871466875076,
+  "test_rmse": 0.26377777516074163,
+  "test_mae": 0.1996190845966339,
+  "test_r2": 0.7409901022911072
+}

@@ -1,0 +1,58 @@
+{
+  "model_name": "CNN",
+  "mode": "learned_wavelet",
+  "config_idx": 133,
+  "config": {
+    "filters": [
+      32,
+      64,
+      128
+    ],
+    "kernel_sizes": [
+      5,
+      3,
+      3
+    ],
+    "pool_sizes": [
+      2,
+      2,
+      2
+    ],
+    "dense_units": [
+      96,
+      48
+    ],
+    "dropout_rate": 0.3,
+    "learning_rate": 0.001,
+    "l2_reg": 0.001,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1,
+    "levels": 3,
+    "kernel_size": 4,
+    "wavelet_net_units": 32,
+    "reg_energy": 0.0,
+    "reg_high_dc": 0.01,
+    "reg_smooth": 0.001,
+    "align": "pad_to_first",
+    "warm_start_db4": true,
+    "wavelet_projection_dim": 0
+  },
+  "epochs_trained": 100,
+  "train_mse": 0.026599351316690445,
+  "train_rmse": 0.1630930756245968,
+  "train_mae": 0.13013291358947754,
+  "train_r2": 0.9063939452171326,
+  "val_mse": 0.09508032351732254,
+  "val_rmse": 0.3083509745684656,
+  "val_mae": 0.22763216495513916,
+  "val_r2": 0.4648762345314026,
+  "test_mse": 0.14589327573776245,
+  "test_rmse": 0.3819597828800337,
+  "test_mae": 0.299589604139328,
+  "test_r2": 0.456905722618103
+}

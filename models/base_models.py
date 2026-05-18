@@ -305,6 +305,13 @@ def apply_wavelet_frontend(x, mode: str, cfg: dict):
     if proj_dim:
         x_out = layers.Dense(proj_dim, use_bias=False,
                               name=f"wavelet_proj_{mode}")(x_out)
+
+    # Normalização por banda (LayerNorm sobre o eixo de canais) para igualar
+    # a escala das sub-bandas wavelet (D1, D2, ..., A_L) e estabilizar o conv
+    # 1D subsequente. Aplicada apenas quando há frontend wavelet ativo.
+    if mode != "raw" and cfg.get("wavelet_layernorm", True):
+        x_out = layers.LayerNormalization(axis=-1,
+                                          name=f"wavelet_ln_{mode}")(x_out)
     return x_out
 
 
@@ -347,23 +354,27 @@ def build_model(
     x = backbone_fn(x, cfg)
 
     lr = cfg.get("learning_rate", 1e-3)
+    # Clipnorm global no Adam: previne divergir quando os filtros da camada
+    # wavelet (LWT) recebem gradientes grandes nos primeiros steps. Default 1.0
+    # é conservador e não degrada raw/db4 (gradientes já abaixo desse valor).
+    clipnorm = cfg.get("clipnorm", 1.0)
 
     if task == "regression":
         outputs = layers.Dense(1, name="output")(x)
         loss, metrics = "mse", ["mae"]
-        opt = keras.optimizers.Adam(lr)
+        opt = keras.optimizers.Adam(lr, clipnorm=clipnorm)
 
     elif task == "binary":
         outputs = layers.Dense(1, activation="sigmoid", name="output")(x)
         loss, metrics = "binary_crossentropy", ["accuracy"]
-        opt = keras.optimizers.Adam(lr)
+        opt = keras.optimizers.Adam(lr, clipnorm=clipnorm)
 
     elif task == "multiclass":
         if n_classes is None:
             raise ValueError("n_classes must be provided for task='multiclass'")
         outputs = layers.Dense(n_classes, activation="softmax", name="output")(x)
         loss, metrics = "sparse_categorical_crossentropy", ["accuracy"]
-        opt = keras.optimizers.Adam(lr)
+        opt = keras.optimizers.Adam(lr, clipnorm=clipnorm)
 
     else:
         raise ValueError(f"Unknown task '{task}'. Choose: regression, binary, multiclass")
@@ -375,7 +386,8 @@ def build_model(
             d_model=embed_dim,
             warmup_steps=cfg.get("warmup_steps", 500),
         )
-        opt = keras.optimizers.Adam(lr_sched, beta_1=0.9, beta_2=0.98, epsilon=1e-9)
+        opt = keras.optimizers.Adam(lr_sched, beta_1=0.9, beta_2=0.98, epsilon=1e-9,
+                                    clipnorm=clipnorm)
 
     model = keras.Model(inputs, outputs, name=f"{model_name}_{mode}")
     model.compile(optimizer=opt, loss=loss, metrics=metrics)

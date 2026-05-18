@@ -1,5 +1,5 @@
 {
-  "n_samples": 5000,
+  "n_samples": 25000,
   "n_channels": 5,
   "channel_seeds": [
     42,
@@ -8,96 +8,185 @@
     45,
     46
   ],
-  "target_weights": [
-    0.3999999999995999,
-    0.19999999999979995,
-    0.14999999999984995,
-    0.14999999999984995,
-    0.09999999999989997
+  "channel_profiles": [
+    {
+      "trend_degree": 3,
+      "n_harmonics": 2,
+      "base_frequency": 0.002,
+      "regime_changes": 1,
+      "noise_level": 0.15,
+      "spike_probability": 0.0,
+      "spike_magnitude": 0.0
+    },
+    {
+      "trend_degree": 1,
+      "n_harmonics": 8,
+      "base_frequency": 0.01,
+      "regime_changes": 0,
+      "noise_level": 0.25,
+      "spike_probability": 0.0,
+      "spike_magnitude": 0.0
+    },
+    {
+      "trend_degree": 0,
+      "n_harmonics": 3,
+      "base_frequency": 0.08,
+      "regime_changes": 0,
+      "noise_level": 0.4,
+      "spike_probability": 0.0,
+      "spike_magnitude": 0.0
+    },
+    {
+      "trend_degree": 0,
+      "n_harmonics": 1,
+      "base_frequency": 0.005,
+      "regime_changes": 0,
+      "noise_level": 0.1,
+      "spike_probability": 0.05,
+      "spike_magnitude": 4.0
+    },
+    {
+      "trend_degree": 1,
+      "n_harmonics": 3,
+      "base_frequency": 0.02,
+      "regime_changes": 6,
+      "noise_level": 0.3,
+      "spike_probability": 0.0,
+      "spike_magnitude": 0.0
+    }
   ],
-  "generator_kwargs": {
-    "trend_degree": 2,
-    "n_harmonics": 5,
-    "base_frequency": 0.01,
-    "noise_level": 0.3,
-    "spike_probability": 0.02,
-    "spike_magnitude": 3.0,
-    "regime_changes": 3
+  "target": {
+    "kind": "nonlinear_default",
+    "linear_weights": [
+      0.1999999999998,
+      0.1999999999998,
+      0.24999999999974998,
+      0.14999999999984998,
+      0.1999999999998
+    ],
+    "alpha": 0.3,
+    "beta": 0.2,
+    "formula": "y = w\u00b7clean_last + alpha * (clean_last[1] * clean_last[3]) + beta  * (clean_last[2]**2 - clean_last[4]**2)"
   },
   "per_channel": [
     {
       "channel": 0,
       "seed": 42,
-      "snr_db": 10.450926300928705,
-      "n_spikes": 105
+      "profile": {
+        "trend_degree": 3,
+        "n_harmonics": 2,
+        "base_frequency": 0.002,
+        "regime_changes": 1,
+        "noise_level": 0.15,
+        "spike_probability": 0.0,
+        "spike_magnitude": 0.0
+      },
+      "snr_db": 16.460370764612964,
+      "n_spikes": 0
     },
     {
       "channel": 1,
       "seed": 43,
-      "snr_db": 10.520635588427968,
-      "n_spikes": 97
+      "profile": {
+        "trend_degree": 1,
+        "n_harmonics": 8,
+        "base_frequency": 0.01,
+        "regime_changes": 0,
+        "noise_level": 0.25,
+        "spike_probability": 0.0,
+        "spike_magnitude": 0.0
+      },
+      "snr_db": 12.014999807952538,
+      "n_spikes": 0
     },
     {
       "channel": 2,
       "seed": 44,
-      "snr_db": 10.40112183555461,
-      "n_spikes": 96
+      "profile": {
+        "trend_degree": 0,
+        "n_harmonics": 3,
+        "base_frequency": 0.08,
+        "regime_changes": 0,
+        "noise_level": 0.4,
+        "spike_probability": 0.0,
+        "spike_magnitude": 0.0
+      },
+      "snr_db": 7.922420494792836,
+      "n_spikes": 0
     },
     {
       "channel": 3,
       "seed": 45,
-      "snr_db": 10.362331788964774,
-      "n_spikes": 96
+      "profile": {
+        "trend_degree": 0,
+        "n_harmonics": 1,
+        "base_frequency": 0.005,
+        "regime_changes": 0,
+        "noise_level": 0.1,
+        "spike_probability": 0.05,
+        "spike_magnitude": 4.0
+      },
+      "snr_db": 19.98750228550253,
+      "n_spikes": 1215
     },
     {
       "channel": 4,
       "seed": 46,
-      "snr_db": 10.544229512821799,
-      "n_spikes": 98
+      "profile": {
+        "trend_degree": 1,
+        "n_harmonics": 3,
+        "base_frequency": 0.02,
+        "regime_changes": 6,
+        "noise_level": 0.3,
+        "spike_probability": 0.0,
+        "spike_magnitude": 0.0
+      },
+      "snr_db": 10.497658550168332,
+      "n_spikes": 0
     }
   ],
   "noisy_shape": [
-    5000,
+    25000,
     5
   ],
   "clean_shape": [
-    5000,
+    25000,
     5
   ],
   "clean_channel_correlation": [
     [
-      1.0,
-      0.007627993400492904,
-      -0.08589963291931141,
-      0.09449759357473327,
-      0.14705376663005618
+      0.9999999999999998,
+      0.015368470669153273,
+      -0.0006042390804333188,
+      -0.008708548348730897,
+      0.03180633220549817
     ],
     [
-      0.007627993400492903,
+      0.015368470669153271,
       1.0,
-      0.1793664771152618,
-      -0.08442316815817251,
-      0.18558152172581782
+      -0.0002899391055726272,
+      0.0016879755895231763,
+      0.020059747128700085
     ],
     [
-      -0.08589963291931142,
-      0.1793664771152618,
-      1.0,
-      0.007647547507577952,
-      0.07546289178567354
+      -0.0006042390804333188,
+      -0.00028993910557262726,
+      0.9999999999999998,
+      0.0022434807066236775,
+      -8.190194198004124e-05
     ],
     [
-      0.09449759357473328,
-      -0.08442316815817251,
-      0.007647547507577952,
+      -0.008708548348730898,
+      0.0016879755895231761,
+      0.0022434807066236775,
       1.0,
-      0.04657386931595455
+      -0.0013965830390588311
     ],
     [
-      0.1470537666300562,
-      0.18558152172581785,
-      0.07546289178567354,
-      0.04657386931595456,
+      0.03180633220549817,
+      0.020059747128700085,
+      -8.190194198004124e-05,
+      -0.0013965830390588311,
       1.0
     ]
   ],
@@ -105,19 +194,25 @@
     "sequence_length": 256,
     "horizon": 1,
     "stride": 1,
-    "n_sequences": 4744,
+    "n_sequences": 24744,
     "X_shape": [
-      4744,
+      24744,
       256,
       5
     ],
     "y_shape": [
-      4744
+      24744
     ]
   },
+  "target_stats": {
+    "mean": 0.004124896600842476,
+    "std": 0.6917089223861694,
+    "min": -4.7478346824646,
+    "max": 3.6958200931549072
+  },
   "split": {
-    "train": 3320,
-    "val": 712,
-    "test": 712
+    "train": 17320,
+    "val": 3712,
+    "test": 3712
   }
 }

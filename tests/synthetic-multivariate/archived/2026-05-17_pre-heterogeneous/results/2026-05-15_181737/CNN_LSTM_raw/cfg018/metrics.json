@@ -1,0 +1,45 @@
+{
+  "model_name": "CNN_LSTM",
+  "mode": "raw",
+  "config_idx": 18,
+  "config": {
+    "cnn_filters": [
+      64,
+      128
+    ],
+    "cnn_kernel_sizes": [
+      5,
+      3
+    ],
+    "lstm_units": [
+      64,
+      32
+    ],
+    "dense_units": [
+      64
+    ],
+    "dropout_rate": 0.3,
+    "learning_rate": 0.001,
+    "l2_reg": 0.001,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1
+  },
+  "epochs_trained": 77,
+  "train_mse": 0.011519809253513813,
+  "train_rmse": 0.1073303743285833,
+  "train_mae": 0.08385904133319855,
+  "train_r2": 0.9594605565071106,
+  "val_mse": 0.03461141139268875,
+  "val_rmse": 0.1860414238622376,
+  "val_mae": 0.135591059923172,
+  "val_r2": 0.8052027225494385,
+  "test_mse": 0.04678267613053322,
+  "test_rmse": 0.21629303301431885,
+  "test_mae": 0.1721309870481491,
+  "test_r2": 0.8258494138717651
+}

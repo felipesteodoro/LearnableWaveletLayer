@@ -52,40 +52,89 @@ N_JOBS = max(1, os.cpu_count() // 2)   # Metade dos cores — conservador para n
 N_JOBS_QUARTER = max(1, os.cpu_count() // 4)  # 1/4 dos cores — para modelos que já paralelizam internamente
 
 # ============================================================================
-# CONFIGURAÇÕES DO SINAL SINTÉTICO MULTIVARIADO
+# CONFIGURAÇÕES DO SINAL SINTÉTICO MULTIVARIADO (HETEROGÊNEO POR CANAL)
 # ============================================================================
-# Parâmetros aplicados a cada canal individual.
+# Parâmetros globais do dataset (independentes de canal).
 SYNTHETIC_SIGNAL_CONFIG = {
-    # Tamanho e estrutura
-    "n_samples": 5000,             # Número de timesteps (por canal)
+    "n_samples": 25000,            # Número de timesteps (por canal)
     "sequence_length": 256,        # Comprimento de cada janela
-
-    # Componentes do sinal
-    "trend_degree": 2,
-    "n_harmonics": 5,
-    "base_frequency": 0.01,
-
-    # Ruído
-    "noise_level": 0.3,
-    "spike_probability": 0.02,
-    "spike_magnitude": 3.0,
-
-    # Não-estacionariedade
-    "regime_changes": 3,
-
-    # Semente para reprodutibilidade
-    "random_seed": 42,
 }
 
+# Perfis ESPECÍFICOS por canal — cada um vira **kwargs em SyntheticSignalGenerator.
+# Objetivo: cada canal tem natureza espectral distinta para justificar filtros
+# wavelet diferentes por canal (per-channel DWT na LWT).
+CHANNEL_PROFILES_HETEROGENEOUS = [
+    # Canal 0 — BAIXA FREQUÊNCIA (tendência longa + harmônicos lentos).
+    # Banda dominante: aproximação A_L (low-pass largo).
+    {
+        "trend_degree":      3,
+        "n_harmonics":       2,
+        "base_frequency":    0.002,
+        "regime_changes":    1,
+        "noise_level":       0.15,
+        "spike_probability": 0.0,
+        "spike_magnitude":   0.0,
+    },
+    # Canal 1 — MÉDIA FREQUÊNCIA (vários harmônicos médios).
+    # Banda dominante: D2/D3 (passa-banda intermediária).
+    {
+        "trend_degree":      1,
+        "n_harmonics":       8,
+        "base_frequency":    0.01,
+        "regime_changes":    0,
+        "noise_level":       0.25,
+        "spike_probability": 0.0,
+        "spike_magnitude":   0.0,
+    },
+    # Canal 2 — ALTA FREQUÊNCIA + ruído (oscilações rápidas).
+    # Banda dominante: D1 (high-pass agudo).
+    {
+        "trend_degree":      0,
+        "n_harmonics":       3,
+        "base_frequency":    0.08,
+        "regime_changes":    0,
+        "noise_level":       0.4,
+        "spike_probability": 0.0,
+        "spike_magnitude":   0.0,
+    },
+    # Canal 3 — TRANSIENTES esparsos (impulsos curtos + spikes).
+    # Beneficia-se de wavelet de suporte compacto (kernel pequeno, tipo Haar/db2).
+    {
+        "trend_degree":      0,
+        "n_harmonics":       1,
+        "base_frequency":    0.005,
+        "regime_changes":    0,
+        "noise_level":       0.1,
+        "spike_probability": 0.05,
+        "spike_magnitude":   4.0,
+    },
+    # Canal 4 — NÃO-ESTACIONÁRIO (chirp + muitas mudanças de regime).
+    # Beneficia-se de wavelets que não acoplam demais entre níveis.
+    {
+        "trend_degree":      1,
+        "n_harmonics":       3,
+        "base_frequency":    0.02,
+        "regime_changes":    6,
+        "noise_level":       0.3,
+        "spike_probability": 0.0,
+        "spike_magnitude":   0.0,
+    },
+]
+
 # Configuração específica do experimento multivariado (5 canais → 1 alvo).
+# Target é NÃO-LINEAR:
+#   y = w·clean_last
+#       + alpha * (clean_last[1] * clean_last[3])
+#       + beta  * (clean_last[2]**2 - clean_last[4]**2)
 MULTIVARIATE_CONFIG = {
     "n_channels": 5,
     "channel_seeds": [42, 43, 44, 45, 46],
-    # Pesos fixos para combinar os canais limpos no target univariado.
-    # São normalizados internamente para somar 1.0.
-    "target_weights": [0.4, 0.2, 0.15, 0.15, 0.1],
+    "channel_profiles": CHANNEL_PROFILES_HETEROGENEOUS,
+    "target_linear_weights": [0.20, 0.20, 0.25, 0.15, 0.20],
+    "target_alpha": 0.3,
+    "target_beta":  0.2,
     "horizon": 1,
-    "stride": 1,
+    "stride":  1,
 }
 
 # ============================================================================
@@ -446,45 +495,50 @@ LEARNED_WAVELET_MODELS_CONFIG = {
 }
 
 # Grid axes específicos para learned wavelets (podem diferir dos DL padrão)
+# Após diagnóstico em 2026-05-15: classificador fixado em l2_reg=1e-2 e
+# dropout=0.3 (combinação vencedora); foco do grid passa para os
+# hiperparâmetros da camada wavelet (kernel_size, levels, reg_energy, reg_high_dc).
 LEARNED_WAVELET_GRID_AXES = {
     "CNN": {
-        "kernel_size": [4, 8, 16],
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
-        "filters": [[32, 64, 128], [64, 128, 256]],
-        "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
+        "kernel_size":            [4, 8, 16],
+        "levels":                 [2, 3],
+        "reg_energy":             [0.0, 1e-3, 1e-2],
+        "reg_high_dc":            [0.0, 1e-3, 1e-2],
+        "wavelet_projection_dim": [0, 16, 32],
+        "filters":                [[32, 64, 128], [64, 128, 256]],
+        "kernel_sizes":           [[7, 5, 3], [5, 3, 3]],
     },
     "LSTM": {
         "kernel_size":       [4, 8, 16],
-        "dropout_rate":      [0.2, 0.3, 0.4],
-        "l2_reg":            [1e-4, 1e-3, 1e-2],
-        "units":             [[64, 32], [128, 64], [256, 128], [256, 128, 64]],
+        "levels":            [2, 3],
+        "reg_energy":        [0.0, 1e-3, 1e-2],
+        "reg_high_dc":       [0.0, 1e-3, 1e-2],
+        "units":             [[128, 64], [256, 128]],
         "bidirectional":     [False, True],
-        "recurrent_dropout": [0.0, 0.15],
     },
     "CNN_LSTM": {
         "kernel_size": [4, 8, 16],
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
+        "levels":      [2, 3],
+        "reg_energy":  [0.0, 1e-3, 1e-2],
+        "reg_high_dc": [0.0, 1e-3, 1e-2],
         "cnn_filters": [[32, 64], [64, 128]],
-        "lstm_units": [[64, 32], [100, 50]],
+        "lstm_units":  [[64, 32], [100, 50]],
     },
     "Transformer": {
-        "kernel_size": [4, 8, 16],
-        "dropout_rate": [0.15, 0.2, 0.3],
-        "num_heads": [2, 4],
-        "ff_dim": [64, 128],
+        "kernel_size":            [4, 8, 16],
+        "levels":                 [2, 3],
+        "reg_energy":             [0.0, 1e-3, 1e-2],
+        "reg_high_dc":            [0.0, 1e-3, 1e-2],
+        "num_heads":              [2, 4],
         "num_transformer_blocks": [2, 3],
-        "l2_reg": [1e-4, 1e-3],
-        # LWT já entrega representação multi-escala; patch_size=1 é o padrão recomendado
-        # mas incluímos 4 para comparação
-        "patch_size": [1, 4],
+        "patch_size":             [1, 4],
     },
     "MLP": {
         "kernel_size": [4, 8, 16],
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
-        "mlp_units": [[256, 128, 64], [128, 64, 32]],
+        "levels":      [2, 3],
+        "reg_energy":  [0.0, 1e-3, 1e-2],
+        "reg_high_dc": [0.0, 1e-3, 1e-2],
+        "mlp_units":   [[256, 128, 64], [128, 64, 32]],
     },
 }
 

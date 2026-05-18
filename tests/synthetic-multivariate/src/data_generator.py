@@ -638,12 +638,22 @@ class MultiScaleSyntheticGenerator(SyntheticSignalGenerator):
 
 class MultivariateSyntheticGenerator:
     """
-    Gera um sinal sintético multivariado (n_channels) com target univariado.
+    Gera um sinal sintético multivariado (n_channels) com target univariado e
+    **conteúdo espectral heterogêneo por canal**.
 
-    Estratégia: instancia n_channels cópias independentes de
-    SyntheticSignalGenerator (cada uma com sua própria seed), produzindo
-    canais descorrelacionados. O target é uma combinação linear ponderada
-    fixa dos canais limpos no fim da janela.
+    Cada canal é construído por uma instância independente de
+    `SyntheticSignalGenerator`, mas usando um conjunto distinto de parâmetros
+    fornecido em `channel_profiles` (uma lista de dicionários `**kwargs`, um por
+    canal). Isso permite, por exemplo, que o canal 0 contenha apenas baixas
+    frequências e o canal 2 apenas altas — justificando filtros wavelet
+    diferentes em cada canal.
+
+    Target univariado **não-linear** (default):
+        y[i] = w·clean_last
+             + alpha * (clean_last[1] * clean_last[3])
+             + beta  * (clean_last[2]**2 - clean_last[4]**2)
+    onde `clean_last = clean[i + L + h - 1]` é o vetor de canais limpos no fim
+    da janela. Pode ser substituído passando uma `target_fn(clean_last) -> float`.
 
     Saídas:
       - generate() -> (noisy[T,C], clean[T,C])
@@ -655,11 +665,15 @@ class MultivariateSyntheticGenerator:
         n_samples: int = 5000,
         n_channels: int = 5,
         channel_seeds: Optional[list] = None,
-        target_weights: Optional[list] = None,
-        **kwargs,
+        channel_profiles: Optional[list] = None,
+        target_linear_weights: Optional[list] = None,
+        target_alpha: float = 0.3,
+        target_beta: float = 0.2,
+        target_fn=None,
     ):
         self.n_samples = int(n_samples)
         self.n_channels = int(n_channels)
+
         self.channel_seeds = (
             list(channel_seeds)
             if channel_seeds is not None
@@ -671,30 +685,61 @@ class MultivariateSyntheticGenerator:
                 f"recebeu {len(self.channel_seeds)}"
             )
 
-        if target_weights is None:
-            target_weights = [0.4, 0.2, 0.15, 0.15, 0.1]
-        target_weights = np.array(target_weights, dtype=np.float64)
-        if len(target_weights) != self.n_channels:
+        if channel_profiles is None:
             raise ValueError(
-                f"target_weights deve ter {self.n_channels} elementos, "
-                f"recebeu {len(target_weights)}"
+                "channel_profiles é obrigatório: forneça uma lista de "
+                f"{self.n_channels} dicts com os **kwargs de cada canal."
             )
-        # Normaliza para somar 1.0
-        self.target_weights = target_weights / (target_weights.sum() + 1e-12)
+        if len(channel_profiles) != self.n_channels:
+            raise ValueError(
+                f"channel_profiles deve ter {self.n_channels} elementos, "
+                f"recebeu {len(channel_profiles)}"
+            )
+        self.channel_profiles = [dict(p) for p in channel_profiles]
 
-        self.generator_kwargs = kwargs
+        if target_linear_weights is None:
+            target_linear_weights = [1.0 / self.n_channels] * self.n_channels
+        w = np.array(target_linear_weights, dtype=np.float64)
+        if len(w) != self.n_channels:
+            raise ValueError(
+                f"target_linear_weights deve ter {self.n_channels} elementos, "
+                f"recebeu {len(w)}"
+            )
+        self.target_linear_weights = w / (w.sum() + 1e-12)
+        self.target_alpha = float(target_alpha)
+        self.target_beta = float(target_beta)
+        self.target_fn = target_fn  # se None, usa o default não-linear abaixo
+
         self.channel_generators: list = []
         self.metadata: Dict[str, Any] = {
             "n_samples": self.n_samples,
             "n_channels": self.n_channels,
             "channel_seeds": list(self.channel_seeds),
-            "target_weights": self.target_weights.tolist(),
-            "generator_kwargs": {k: v for k, v in kwargs.items()},
+            "channel_profiles": [dict(p) for p in self.channel_profiles],
+            "target": {
+                "kind": "custom_fn" if target_fn is not None else "nonlinear_default",
+                "linear_weights": self.target_linear_weights.tolist(),
+                "alpha": self.target_alpha,
+                "beta": self.target_beta,
+                "formula": (
+                    "y = w·clean_last "
+                    "+ alpha * (clean_last[1] * clean_last[3]) "
+                    "+ beta  * (clean_last[2]**2 - clean_last[4]**2)"
+                ),
+            },
         }
+
+    def _default_target(self, clean_last: np.ndarray) -> float:
+        """Target não-linear padrão (válido para n_channels >= 5)."""
+        w = self.target_linear_weights.astype(np.float32)
+        linear = float(clean_last @ w)
+        cross = float(clean_last[1] * clean_last[3])
+        sqdiff = float(clean_last[2] ** 2 - clean_last[4] ** 2)
+        return linear + self.target_alpha * cross + self.target_beta * sqdiff
 
     def generate(self) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Gera o sinal multivariado.
+        Gera o sinal multivariado heterogêneo.
 
         Returns:
             (noisy, clean) com shape (n_samples, n_channels) cada.
@@ -702,11 +747,13 @@ class MultivariateSyntheticGenerator:
         noisy_cols, clean_cols = [], []
         per_channel_meta = []
 
-        for ch_idx, seed in enumerate(self.channel_seeds):
+        for ch_idx, (seed, profile) in enumerate(
+            zip(self.channel_seeds, self.channel_profiles)
+        ):
             gen = SyntheticSignalGenerator(
                 n_samples=self.n_samples,
                 random_seed=int(seed),
-                **self.generator_kwargs,
+                **profile,
             )
             noisy, clean = gen.generate()
             noisy_cols.append(noisy)
@@ -715,6 +762,7 @@ class MultivariateSyntheticGenerator:
             per_channel_meta.append({
                 "channel": ch_idx,
                 "seed": int(seed),
+                "profile": dict(profile),
                 "snr_db": gen.metadata["signal_stats"]["snr_db"],
                 "n_spikes": gen.metadata.get("n_spikes", 0),
             })
@@ -726,7 +774,6 @@ class MultivariateSyntheticGenerator:
         self.metadata["noisy_shape"] = list(noisy.shape)
         self.metadata["clean_shape"] = list(clean.shape)
 
-        # Correlação entre canais (sinais limpos)
         if self.n_channels > 1:
             corr = np.corrcoef(clean.T)
             self.metadata["clean_channel_correlation"] = corr.tolist()
@@ -742,18 +789,14 @@ class MultivariateSyntheticGenerator:
         """
         Cria dataset multivariado com janelas deslizantes e target univariado.
 
-        Target: combinação linear dos canais limpos no fim da janela
-                y[i] = sum_c w_c * clean[i+L+h-1, c]
-
         Returns:
             X: (N, sequence_length, n_channels) sinal ruidoso
-            y: (N,) target univariado ponderado
+            y: (N,) target univariado (não-linear por padrão)
         """
         noisy, clean = self.generate()
         T = noisy.shape[0]
         L, h = int(sequence_length), int(horizon)
 
-        # índice do target da janela iniciada em i é i + L + h - 1
         n_total = T - L - h + 1
         if n_total <= 0:
             raise ValueError(
@@ -766,10 +809,12 @@ class MultivariateSyntheticGenerator:
         X = np.empty((N, L, C), dtype=np.float32)
         y = np.empty((N,), dtype=np.float32)
 
-        w = self.target_weights.astype(np.float32)
+        target_fn = self.target_fn if self.target_fn is not None else self._default_target
+
         for k, i in enumerate(starts):
             X[k] = noisy[i:i + L].astype(np.float32)
-            y[k] = float(clean[i + L + h - 1] @ w)
+            clean_last = clean[i + L + h - 1]
+            y[k] = float(target_fn(clean_last))
 
         self.metadata["dataset_info"] = {
             "sequence_length": L,
@@ -778,6 +823,12 @@ class MultivariateSyntheticGenerator:
             "n_sequences": int(N),
             "X_shape": list(X.shape),
             "y_shape": list(y.shape),
+        }
+        self.metadata["target_stats"] = {
+            "mean": float(y.mean()),
+            "std": float(y.std()),
+            "min": float(y.min()),
+            "max": float(y.max()),
         }
 
         return X, y

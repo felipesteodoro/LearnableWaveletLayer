@@ -86,13 +86,20 @@ class LearnedWaveletPair1D_QMF(Layer):
         self.warm_start_db4   = warm_start_db4
 
     def build(self, input_shape):
+        # Número de canais do problema — cada canal terá seu próprio par (h, g) aprendido.
+        # Se input_shape não informar o canal (None), assumimos 1 canal por compatibilidade
+        # com chamadas (B, L) sem dimensão de canal explícita.
+        n_channels = input_shape[-1] if input_shape[-1] is not None else 1
+        self.n_channels = int(n_channels)
+
         # Rede base: transforma o vetor de tempos ajustados em representação latente
         self.base_net = tf.keras.Sequential([
             Dense(self.wavelet_net_units, activation="relu"),
             Dense(self.wavelet_net_units, activation="relu"),
         ])
-        # Cabeça de saída: mapeia representação latente → coeficientes do filtro
-        self.low_head = Dense(self.kernel_size)
+        # Cabeça de saída: mapeia representação latente → coeficientes do filtro,
+        # produzindo K coeficientes para CADA um dos C canais (total K*C).
+        self.low_head = Dense(self.kernel_size * self.n_channels)
 
         # Força build de base_net e low_head com inputs de shape conhecida
         # (necessário para registrar os pesos antes de acessá-los no warm-start)
@@ -143,6 +150,9 @@ class LearnedWaveletPair1D_QMF(Layer):
         ficam "out of scope" e causam erros ao serem acessados posteriormente.
         """
         h_target = _db4_low_pass(self.kernel_size)  # (K,) numpy
+        # Replica o alvo db4 para cada canal — assim cada canal parte do mesmo
+        # warm-start, mas pode divergir durante o treino (filtros independentes).
+        h_target_full = np.tile(h_target, self.n_channels).reshape(1, -1)  # (1, K*C)
 
         # Vetor de tempos em numpy
         t_np = np.linspace(-self.kernel_size // 2, self.kernel_size // 2, self.kernel_size,
@@ -162,14 +172,16 @@ class LearnedWaveletPair1D_QMF(Layer):
         z = z @ W2 + b2             # (1, units)
         z = np.maximum(z, 0)        # ReLU   → (1, wavelet_net_units)
 
-        # Resolve z @ W = h_target via pseudo-inversa (mínimos quadrados)
-        # W: (wavelet_net_units, kernel_size)
-        W_ls, _, _, _ = np.linalg.lstsq(z, h_target.reshape(1, -1), rcond=None)
+        # Resolve z @ W = h_target_full via pseudo-inversa (mínimos quadrados)
+        # W: (wavelet_net_units, kernel_size * n_channels)
+        W_ls, _, _, _ = np.linalg.lstsq(z, h_target_full, rcond=None)
 
         # Ajusta apenas os pesos (kernel) do low_head; bias fica zero
         self.low_head.kernel.assign(W_ls.astype(np.float32))
         if self.low_head.bias is not None:
-            self.low_head.bias.assign(np.zeros(self.kernel_size, dtype=np.float32))
+            self.low_head.bias.assign(
+                np.zeros(self.kernel_size * self.n_channels, dtype=np.float32)
+            )
 
     def _make_t(self):
         """Cria vetor de posições temporais normalizado para a rede."""
@@ -247,7 +259,7 @@ class LearnedWaveletPair1D_QMF(Layer):
 
         C = x.shape[-1]
         if C is None:
-            C = tf.shape(x)[-1]
+            C = self.n_channels
 
         # Gera vetor de tempo e aplica escala/translação aprendíveis.
         # Isso permite que a rede "deslize" o suporte do wavelet ao longo do eixo de tempo.
@@ -255,42 +267,36 @@ class LearnedWaveletPair1D_QMF(Layer):
         scale = tf.nn.softplus(self.raw_scale) + 1e-3   # garante escala > 0
         t_adj = (t - self.translation) / scale
 
-        # Aprende h pela rede e deriva g por QMF
-        z = self.base_net(t_adj)     # (1, hidden)
-        h = self.low_head(z)         # (1, K)
-        h = self._normalize_h(h)     # (1, K)
-        g = self._qmf_from_h(h)      # (1, K)
+        # Aprende h por canal e deriva g por QMF.
+        # low_head emite K*C coeficientes; reshape para (C, K) — uma linha por canal.
+        z = self.base_net(t_adj)                                     # (1, hidden)
+        h_flat = self.low_head(z)                                    # (1, K*C)
+        h = tf.reshape(h_flat, [self.n_channels, self.kernel_size])  # (C, K)
+        h = self._normalize_h(h)                                     # (C, K) — normaliza por canal
+        g = self._qmf_from_h(h)                                      # (C, K)
 
         # --------- Regularizadores via add_loss ----------
-        # 1) Energia do low-pass: ||h||_2 ~ 1
-        #    Garante que a DWT preserve energia (filtro ortogonal)
+        # Penalidades são médias sobre os canais — cada canal contribui igualmente.
+        # 1) Energia do low-pass: ||h_c||_2 ~ 1 para cada canal c
         if self.reg_energy > 0.0:
-            h_l2 = tf.norm(h, axis=-1)  # (1,)
+            h_l2 = tf.norm(h, axis=-1)  # (C,)
             self.add_loss(self.reg_energy * tf.reduce_mean(tf.square(h_l2 - 1.0)))
 
-        # 2) DC do high-pass: sum(g) ~ 0
-        #    O passa-alta deve ter resposta nula na frequência zero (admissibilidade)
+        # 2) DC do high-pass: sum(g_c) ~ 0 para cada canal c
         if self.reg_high_dc > 0.0:
-            g_sum = tf.reduce_sum(g, axis=-1)  # (1,)
+            g_sum = tf.reduce_sum(g, axis=-1)  # (C,)
             self.add_loss(self.reg_high_dc * tf.reduce_mean(tf.square(g_sum)))
 
-        # 3) Suavidade do low-pass: segunda diferença pequena
-        #    Penaliza oscilações bruscas nos coeficientes, encorajando filtros suaves
+        # 3) Suavidade do low-pass: segunda diferença pequena (por canal)
         if self.reg_smooth > 0.0 and self.kernel_size >= 3:
-            d2 = h[:, 2:] - 2.0 * h[:, 1:-1] + h[:, :-2]
+            d2 = h[:, 2:] - 2.0 * h[:, 1:-1] + h[:, :-2]  # (C, K-2)
             self.add_loss(self.reg_smooth * tf.reduce_mean(tf.square(d2)))
         # ------------------------------------------------
 
-        # Monta kernels depthwise: (K, C, 1) — aplica o mesmo filtro em cada canal
-        h_k = tf.reshape(h, [self.kernel_size, 1, 1])
-        g_k = tf.reshape(g, [self.kernel_size, 1, 1])
-
-        if isinstance(C, int):
-            h_k = tf.tile(h_k, [1, C, 1])
-            g_k = tf.tile(g_k, [1, C, 1])
-        else:
-            h_k = tf.tile(h_k, [1, tf.shape(x)[-1], 1])
-            g_k = tf.tile(g_k, [1, tf.shape(x)[-1], 1])
+        # Monta kernels depthwise: (K, C, 1) — UM filtro distinto por canal.
+        # h tem shape (C, K); transpondo para (K, C) e expandindo eixo final.
+        h_k = tf.expand_dims(tf.transpose(h), axis=-1)  # (K, C, 1)
+        g_k = tf.expand_dims(tf.transpose(g), axis=-1)  # (K, C, 1)
 
         # Filtra e downsample por 2 (DWT: stride=2 no domínio temporal)
         A_full = self._depthwise_conv1d_per_channel(x, h_k)  # (B, L, C)

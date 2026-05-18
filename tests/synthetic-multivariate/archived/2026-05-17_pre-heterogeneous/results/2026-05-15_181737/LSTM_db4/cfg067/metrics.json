@@ -1,0 +1,38 @@
+{
+  "model_name": "LSTM",
+  "mode": "db4",
+  "config_idx": 67,
+  "config": {
+    "units": [
+      64,
+      32
+    ],
+    "dropout_rate": 0.3,
+    "recurrent_dropout": 0.15,
+    "learning_rate": 0.001,
+    "l2_reg": 0.001,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1,
+    "levels": 2,
+    "align": "pad_to_first",
+    "bidirectional": true
+  },
+  "epochs_trained": 59,
+  "train_mse": 0.04155014827847481,
+  "train_rmse": 0.20383853482223327,
+  "train_mae": 0.15851867198944092,
+  "train_r2": 0.8537805080413818,
+  "val_mse": 0.14773990213871002,
+  "val_rmse": 0.38436948648235597,
+  "val_mae": 0.296063631772995,
+  "val_r2": 0.16850155591964722,
+  "test_mse": 0.2153957635164261,
+  "test_rmse": 0.4641074913384033,
+  "test_mae": 0.3662988841533661,
+  "test_r2": 0.19817960262298584
+}

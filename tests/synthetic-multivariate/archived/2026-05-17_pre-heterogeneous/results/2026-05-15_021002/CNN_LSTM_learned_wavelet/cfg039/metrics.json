@@ -1,0 +1,53 @@
+{
+  "model_name": "CNN_LSTM",
+  "mode": "learned_wavelet",
+  "config_idx": 39,
+  "config": {
+    "cnn_filters": [
+      64,
+      128
+    ],
+    "cnn_kernel_sizes": [
+      5,
+      3
+    ],
+    "lstm_units": [
+      100,
+      50
+    ],
+    "dense_units": [
+      64
+    ],
+    "dropout_rate": 0.2,
+    "learning_rate": 0.001,
+    "l2_reg": 0.0001,
+    "epochs": 100,
+    "batch_size": 256,
+    "early_stopping_patience": 15,
+    "reduce_lr_patience": 7,
+    "reduce_lr_factor": 0.5,
+    "min_lr": 1e-06,
+    "verbose": 1,
+    "levels": 2,
+    "kernel_size": 8,
+    "wavelet_net_units": 32,
+    "reg_energy": 0.01,
+    "reg_high_dc": 0.01,
+    "reg_smooth": 0.001,
+    "align": "pad_to_first",
+    "warm_start_db4": true
+  },
+  "epochs_trained": 66,
+  "train_mse": 0.00935391616076231,
+  "train_rmse": 0.09671564589435522,
+  "train_mae": 0.07688841223716736,
+  "train_r2": 0.9670825600624084,
+  "val_mse": 0.040818262845277786,
+  "val_rmse": 0.20203530098791594,
+  "val_mae": 0.1475755274295807,
+  "val_r2": 0.7702697515487671,
+  "test_mse": 0.05319211259484291,
+  "test_rmse": 0.23063415314051583,
+  "test_mae": 0.1857391595840454,
+  "test_r2": 0.8019899725914001
+}

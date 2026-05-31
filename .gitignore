@@ -100,5 +100,6 @@ temp/
 
 #Dados de Experimentos
 metrics.json
+queue_status.json
 cfg*/
 *.npy

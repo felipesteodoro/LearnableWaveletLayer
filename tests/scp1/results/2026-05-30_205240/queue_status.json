@@ -1,12 +1,12 @@
 {
   "queue_start_time": 1780185160.7205534,
-  "updated_at": 1780253132.3640687,
+  "updated_at": 1780253250.1929028,
   "summary": {
     "total": 1764,
-    "pending": 218,
+    "pending": 216,
     "running": 7,
     "retrying": 0,
-    "done": 1539,
+    "done": 1541,
     "failed": 0
   },
   "jobs": [
@@ -70177,13 +70177,13 @@
       "max_retries": 2,
       "job_id": "ef30525f",
       "retry_count": 0,
-      "status": "running",
+      "status": "done",
       "gpu_id": 6,
-      "pid": 1785615,
+      "pid": null,
       "start_time": 1780252526.2031064,
-      "end_time": null,
+      "end_time": 1780253200.4183013,
       "error_msg": null,
-      "elapsed": 606.4533724784851,
+      "elapsed": 674.215194940567,
       "name": "Transformer/learned_wavelet/cfg063"
     },
     {
@@ -70225,13 +70225,13 @@
       "max_retries": 2,
       "job_id": "2b583463",
       "retry_count": 0,
-      "status": "running",
+      "status": "done",
       "gpu_id": 4,
-      "pid": 1795674,
+      "pid": null,
       "start_time": 1780252586.4789433,
-      "end_time": null,
+      "end_time": 1780253249.347021,
       "error_msg": null,
-      "elapsed": 546.1775939464569,
+      "elapsed": 662.8680777549744,
       "name": "Transformer/learned_wavelet/cfg064"
     },
     {
@@ -70279,7 +70279,7 @@
       "start_time": 1780252749.803459,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 382.85313653945923,
+      "elapsed": 500.5719745159149,
       "name": "Transformer/learned_wavelet/cfg065"
     },
     {
@@ -70327,7 +70327,7 @@
       "start_time": 1780252764.2874253,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 368.36922812461853,
+      "elapsed": 486.0880665779114,
       "name": "Transformer/learned_wavelet/cfg066"
     },
     {
@@ -70375,7 +70375,7 @@
       "start_time": 1780252788.1363153,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 344.52039551734924,
+      "elapsed": 462.23923444747925,
       "name": "Transformer/learned_wavelet/cfg067"
     },
     {
@@ -70423,7 +70423,7 @@
       "start_time": 1780253079.9790797,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 52.67768955230713,
+      "elapsed": 170.3965277671814,
       "name": "Transformer/learned_wavelet/cfg068"
     },
     {
@@ -70471,7 +70471,7 @@
       "start_time": 1780253131.8480594,
       "end_time": null,
       "error_msg": null,
-      "elapsed": 0.8087761402130127,
+      "elapsed": 118.52760624885559,
       "name": "Transformer/learned_wavelet/cfg069"
     },
     {
@@ -70513,13 +70513,13 @@
       "max_retries": 2,
       "job_id": "5d7dfe1a",
       "retry_count": 0,
-      "status": "pending",
-      "gpu_id": null,
-      "pid": null,
-      "start_time": null,
+      "status": "running",
+      "gpu_id": 6,
+      "pid": 1847308,
+      "start_time": 1780253203.758489,
       "end_time": null,
       "error_msg": null,
-      "elapsed": null,
+      "elapsed": 46.61723446846008,
       "name": "Transformer/learned_wavelet/cfg070"
     },
     {
@@ -70561,13 +70561,13 @@
       "max_retries": 2,
       "job_id": "26dac838",
       "retry_count": 0,
-      "status": "pending",
-      "gpu_id": null,
-      "pid": null,
-      "start_time": null,
+      "status": "running",
+      "gpu_id": 4,
+      "pid": 1855627,
+      "start_time": 1780253249.776712,
       "end_time": null,
       "error_msg": null,
-      "elapsed": null,
+      "elapsed": 0.599069356918335,
       "name": "Transformer/learned_wavelet/cfg071"
     },
     {

@@ -122,17 +122,29 @@ CHANNEL_PROFILES_HETEROGENEOUS = [
 ]
 
 # Configuração específica do experimento multivariado (5 canais → 1 alvo).
-# Target é NÃO-LINEAR:
-#   y = w·clean_last
-#       + alpha * (clean_last[1] * clean_last[3])
-#       + beta  * (clean_last[2]**2 - clean_last[4]**2)
+# Target MULTI-ESCALA TEMPORAL (FFT bandpass, bandas ALINHADAS com oitavas wavelet):
+#   Wavelet 2-level dyadic subbands: A2=[0,0.125], D2=[0.125,0.25], D1=[0.25,0.5]
+#   y = Σ_c w_c * band_feature(ch_c, octave_c)
+#       + alpha * cross_band_corr(ch0, ch4, A2)
+#       + beta  * D1_energy(ch2) * D1_var(ch3)
+#       + gamma * A2_slope(ch0) * D1_var(ch3)
+# Cada canal contribui via sua OITAVA WAVELET → LWT decompõe naturalmente.
 MULTIVARIATE_CONFIG = {
     "n_channels": 5,
     "channel_seeds": [42, 43, 44, 45, 46],
     "channel_profiles": CHANNEL_PROFILES_HETEROGENEOUS,
-    "target_linear_weights": [0.20, 0.20, 0.25, 0.15, 0.20],
-    "target_alpha": 0.3,
-    "target_beta":  0.2,
+    "target_band_weights": [0.25, 0.25, 0.20, 0.15, 0.15],
+    "target_band_specs": [
+        (0.0,   0.125),   # ch0: A2 octave — low-freq energy (trend)
+        (0.125, 0.250),   # ch1: D2 octave — mid-freq energy (harmonics)
+        (0.250, 0.500),   # ch2: D1 octave — high-freq energy
+        (0.250, 0.500),   # ch3: D1 octave — high-freq variance (transients)
+        (0.0,   0.125),   # ch4: A2 octave — low-freq trend slope
+    ],
+    "target_cross_alpha": 0.3,
+    "target_cross_beta":  0.2,
+    "target_trend_gamma": 0.15,
+    "fs": 1.0,
     "horizon": 1,
     "stride":  1,
 }
@@ -321,7 +333,7 @@ def build_param_dist(param_spec: dict) -> dict:
 # CONFIGURAÇÕES DE MODELOS DEEP LEARNING
 # ============================================================================
 DL_TRAINING_CONFIG = {
-    "epochs": EPOCHS_OVERRIDE if EPOCHS_OVERRIDE > 0 else 100,
+    "epochs": 50,  # Fixado em 50 para exploração de hiper-parâmetros
     "batch_size": 256,
     "early_stopping_patience": 15,
     "reduce_lr_patience": 7,
@@ -378,8 +390,7 @@ DL_MODELS_CONFIG = {
 }
 
 # ---- Eixos de variação do Grid para cada arquitetura DL ----
-# Cada chave mapeia para um dict de listas de valores a variar.
-# generate_dl_grid() faz o produto cartesiano.
+# Redução de 70%: mantendo 30% do grid original para exploração eficiente.
 DL_GRID_AXES = {
     "CNN": {
         "dropout_rate": [0.2, 0.3, 0.4],
@@ -387,33 +398,28 @@ DL_GRID_AXES = {
         "filters": [[32, 64, 128], [64, 128, 256]],
         "kernel_sizes": [[7, 5, 3], [5, 3, 3]],
     },
+    # LSTM: 2×2×4 = 16 configs per raw/db4 (32 total) + 24 wavelet = 56 total
     "LSTM": {
-        "dropout_rate":      [0.2, 0.3, 0.4],
-        "l2_reg":            [1e-4, 1e-3, 1e-2],
-        "units":             [[64, 32], [128, 64], [256, 128], [256, 128, 64]],
-        "bidirectional":     [False, True],
-        "recurrent_dropout": [0.0, 0.15],
+        "dropout_rate":  [0.2, 0.3],
+        "l2_reg":        [1e-4, 1e-2],
+        "units":         [[96, 48], [128, 64], [192, 96], [256, 128]],
     },
+    # CNN_LSTM: 2×2 = 4 configs per raw/db4 (8 total) + 16 wavelet = 24 total
     "CNN_LSTM": {
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
-        "cnn_filters": [[32, 64], [64, 128]],
-        "lstm_units": [[64, 32], [100, 50]],
+        "dropout_rate": [0.2, 0.3],
+        "lstm_units":   [[64, 32], [128, 64]],
     },
+    # Transformer: 2×2×4 = 16 configs per raw/db4 (32 total) + 64 wavelet = 96 total
     "Transformer": {
-        "dropout_rate": [0.15, 0.2, 0.3],
-        "num_heads": [2, 4],
-        "ff_dim": [64, 128],
-        "num_transformer_blocks": [2, 3],
-        "l2_reg": [1e-4, 1e-3],
-        # patch_size=1 → SinusoidalPositionalEncoding (comportamento original)
-        # patch_size>1 → PatchEmbedding (agrupa timesteps, reduz tokens)
-        "patch_size": [1, 4, 8, 16],
+        "dropout_rate": [0.15, 0.25],
+        "num_heads":    [2, 4],
+        "patch_size":   [1, 2, 4, 8],
     },
+    # MLP: 2×2×2 = 8 configs per raw/db4 (16 total) + 32 wavelet = 48 total
     "MLP": {
-        "dropout_rate": [0.2, 0.3, 0.4],
-        "l2_reg": [1e-4, 1e-3, 1e-2],
-        "mlp_units": [[256, 128, 64], [128, 64, 32]],
+        "dropout_rate": [0.2, 0.3],
+        "l2_reg":       [1e-4, 1e-2],
+        "mlp_units":    [[128, 64], [256, 128]],
     },
 }
 
@@ -494,10 +500,7 @@ LEARNED_WAVELET_MODELS_CONFIG = {
     },
 }
 
-# Grid axes específicos para learned wavelets (podem diferir dos DL padrão)
-# Após diagnóstico em 2026-05-15: classificador fixado em l2_reg=1e-2 e
-# dropout=0.3 (combinação vencedora); foco do grid passa para os
-# hiperparâmetros da camada wavelet (kernel_size, levels, reg_energy, reg_high_dc).
+# Grid axes específicos para learned wavelets (30% do original para eficiência).
 LEARNED_WAVELET_GRID_AXES = {
     "CNN": {
         "kernel_size":            [4, 8, 16],
@@ -508,37 +511,29 @@ LEARNED_WAVELET_GRID_AXES = {
         "filters":                [[32, 64, 128], [64, 128, 256]],
         "kernel_sizes":           [[7, 5, 3], [5, 3, 3]],
     },
+    # LSTM: 3×2×2 = 12 configs por modo LWT (24 total)
     "LSTM": {
-        "kernel_size":       [4, 8, 16],
-        "levels":            [2, 3],
-        "reg_energy":        [0.0, 1e-3, 1e-2],
-        "reg_high_dc":       [0.0, 1e-3, 1e-2],
-        "units":             [[128, 64], [256, 128]],
-        "bidirectional":     [False, True],
+        "kernel_size": [4, 8, 16],
+        "levels":      [2, 3],
+        "reg_energy":  [0.0, 1e-2],
     },
+    # CNN_LSTM: 4×2 = 8 configs por modo LWT (16 total)
     "CNN_LSTM": {
-        "kernel_size": [4, 8, 16],
+        "kernel_size": [4, 8, 12, 16],
         "levels":      [2, 3],
-        "reg_energy":  [0.0, 1e-3, 1e-2],
-        "reg_high_dc": [0.0, 1e-3, 1e-2],
-        "cnn_filters": [[32, 64], [64, 128]],
-        "lstm_units":  [[64, 32], [100, 50]],
     },
+    # Transformer: 4×3×2×2 = 48 configs por modo LWT (96 total)
     "Transformer": {
-        "kernel_size":            [4, 8, 16],
-        "levels":                 [2, 3],
-        "reg_energy":             [0.0, 1e-3, 1e-2],
-        "reg_high_dc":            [0.0, 1e-3, 1e-2],
-        "num_heads":              [2, 4],
-        "num_transformer_blocks": [2, 3],
-        "patch_size":             [1, 4],
+        "kernel_size": [4, 8, 12, 16],
+        "levels":      [2, 3, 4],
+        "patch_size":  [1, 8],
+        "reg_energy":  [0.0, 1e-2],
     },
+    # MLP: 4×2×2 = 16 configs por modo LWT (32 total)
     "MLP": {
-        "kernel_size": [4, 8, 16],
+        "kernel_size": [4, 8, 12, 16],
         "levels":      [2, 3],
-        "reg_energy":  [0.0, 1e-3, 1e-2],
-        "reg_high_dc": [0.0, 1e-3, 1e-2],
-        "mlp_units":   [[256, 128, 64], [128, 64, 32]],
+        "reg_energy":  [0.0, 1e-2],
     },
 }
 

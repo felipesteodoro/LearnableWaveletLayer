@@ -56,17 +56,40 @@
     }
   ],
   "target": {
-    "kind": "nonlinear_default",
-    "linear_weights": [
-      0.1999999999998,
-      0.1999999999998,
+    "kind": "fft_multiscale",
+    "band_weights": [
       0.24999999999974998,
+      0.24999999999974998,
+      0.1999999999998,
       0.14999999999984998,
-      0.1999999999998
+      0.14999999999984998
     ],
-    "alpha": 0.3,
-    "beta": 0.2,
-    "formula": "y = w\u00b7clean_last + alpha * (clean_last[1] * clean_last[3]) + beta  * (clean_last[2]**2 - clean_last[4]**2)"
+    "band_specs": [
+      [
+        0.0,
+        0.125
+      ],
+      [
+        0.125,
+        0.25
+      ],
+      [
+        0.25,
+        0.5
+      ],
+      [
+        0.25,
+        0.5
+      ],
+      [
+        0.0,
+        0.125
+      ]
+    ],
+    "cross_alpha": 0.3,
+    "cross_beta": 0.2,
+    "trend_gamma": 0.15,
+    "formula": "y = \u03a3_c w_c * band_energy(ch_c, band_c) + alpha * cross_band_corr(ch0, ch4, LP) + beta  * (band_energy_HP(ch2) * band_var_HP(ch3)) + gamma * trend_slope(ch0) * band_var_HP(ch3)"
   },
   "per_channel": [
     {
@@ -205,10 +228,10 @@
     ]
   },
   "target_stats": {
-    "mean": 0.004124896600842476,
-    "std": 0.6917089223861694,
-    "min": -4.7478346824646,
-    "max": 3.6958200931549072
+    "mean": 0.34691011905670166,
+    "std": 0.21439382433891296,
+    "min": 0.018977906554937363,
+    "max": 1.4256104230880737
   },
   "split": {
     "train": 17320,

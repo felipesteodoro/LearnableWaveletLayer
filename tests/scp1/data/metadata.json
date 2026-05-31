@@ -1,0 +1,27 @@
+{
+  "dataset": "SelfRegulationSCP1",
+  "n_train": 227,
+  "n_val": 41,
+  "n_test": 293,
+  "sequence_length": 896,
+  "n_features": 6,
+  "n_classes": 2,
+  "class_mapping": {
+    "negativity": 0,
+    "positivity": 1
+  },
+  "class_distribution_train": {
+    "0": 114,
+    "1": 113
+  },
+  "class_distribution_val": {
+    "0": 21,
+    "1": 20
+  },
+  "class_distribution_test": {
+    "0": 147,
+    "1": 146
+  },
+  "val_fraction": 0.15,
+  "random_seed": 42
+}

@@ -636,6 +636,67 @@ class MultiScaleSyntheticGenerator(SyntheticSignalGenerator):
         return noisy_signal, clean_signal
 
 
+# ============================================================================
+# FFT BANDPASS HELPERS (usados pelo target multi-escala)
+# ============================================================================
+
+def _fft_bandpass(signal: np.ndarray, fs: float,
+                  f_low: float, f_high: float) -> np.ndarray:
+    """
+    Zero-phase bandpass filter via FFT.
+
+    Args:
+        signal: 1-D array
+        fs: sampling frequency (normalizada; 1.0 = 1 sample/step)
+        f_low: lower cutoff (0 para lowpass)
+        f_high: upper cutoff (fs/2 para highpass)
+
+    Returns:
+        Filtered signal (same length).
+    """
+    N = len(signal)
+    freqs = np.fft.rfftfreq(N, d=1.0 / fs)
+    S = np.fft.rfft(signal)
+    mask = (freqs >= f_low) & (freqs <= f_high)
+    S[~mask] = 0.0
+    return np.fft.irfft(S, n=N)
+
+
+def _band_energy(signal: np.ndarray, fs: float,
+                 f_low: float, f_high: float) -> float:
+    """Energia normalizada do sinal na banda [f_low, f_high]."""
+    bp = _fft_bandpass(signal, fs, f_low, f_high)
+    return float(np.sum(bp ** 2) / len(signal))
+
+
+def _band_variance(signal: np.ndarray, fs: float,
+                   f_low: float, f_high: float) -> float:
+    """Variância do sinal filtrado na banda [f_low, f_high]."""
+    bp = _fft_bandpass(signal, fs, f_low, f_high)
+    return float(np.var(bp))
+
+
+def _trend_slope(signal: np.ndarray, fs: float,
+                 cutoff: float) -> float:
+    """Slope (inclinação linear) da componente lowpass do sinal."""
+    lp = _fft_bandpass(signal, fs, 0.0, cutoff)
+    x = np.arange(len(lp), dtype=np.float64)
+    # polyfit grau 1: [slope, intercept]
+    coeffs = np.polyfit(x, lp, 1)
+    return float(coeffs[0])
+
+
+def _cross_band_corr(sig_a: np.ndarray, sig_b: np.ndarray,
+                     fs: float, f_low: float, f_high: float) -> float:
+    """Pearson correlation between bandpassed versions of two signals."""
+    bp_a = _fft_bandpass(sig_a, fs, f_low, f_high)
+    bp_b = _fft_bandpass(sig_b, fs, f_low, f_high)
+    std_a, std_b = bp_a.std(), bp_b.std()
+    if std_a < 1e-12 or std_b < 1e-12:
+        return 0.0
+    return float(np.corrcoef(bp_a, bp_b)[0, 1])
+
+
 class MultivariateSyntheticGenerator:
     """
     Gera um sinal sintético multivariado (n_channels) com target univariado e
@@ -648,12 +709,11 @@ class MultivariateSyntheticGenerator:
     frequências e o canal 2 apenas altas — justificando filtros wavelet
     diferentes em cada canal.
 
-    Target univariado **não-linear** (default):
-        y[i] = w·clean_last
-             + alpha * (clean_last[1] * clean_last[3])
-             + beta  * (clean_last[2]**2 - clean_last[4]**2)
-    onde `clean_last = clean[i + L + h - 1]` é o vetor de canais limpos no fim
-    da janela. Pode ser substituído passando uma `target_fn(clean_last) -> float`.
+    Target univariado **multi-escala temporal** (default):
+        Combina energia/variância de sub-bandas FFT de cada canal +
+        interações cross-canal em bandas específicas. Requer decomposição
+        espectral da janela inteira — MLP/raw não consegue extrair essas
+        features sem front-end adequado.
 
     Saídas:
       - generate() -> (noisy[T,C], clean[T,C])
@@ -666,13 +726,17 @@ class MultivariateSyntheticGenerator:
         n_channels: int = 5,
         channel_seeds: Optional[list] = None,
         channel_profiles: Optional[list] = None,
-        target_linear_weights: Optional[list] = None,
-        target_alpha: float = 0.3,
-        target_beta: float = 0.2,
+        target_band_weights: Optional[list] = None,
+        target_band_specs: Optional[list] = None,
+        target_cross_alpha: float = 0.3,
+        target_cross_beta: float = 0.2,
+        target_trend_gamma: float = 0.15,
         target_fn=None,
+        fs: float = 1.0,
     ):
         self.n_samples = int(n_samples)
         self.n_channels = int(n_channels)
+        self.fs = float(fs)
 
         self.channel_seeds = (
             list(channel_seeds)
@@ -697,18 +761,35 @@ class MultivariateSyntheticGenerator:
             )
         self.channel_profiles = [dict(p) for p in channel_profiles]
 
-        if target_linear_weights is None:
-            target_linear_weights = [1.0 / self.n_channels] * self.n_channels
-        w = np.array(target_linear_weights, dtype=np.float64)
+        # ---------- Target multi-escala FFT ----------
+        # Bandas FFT para cada canal: (f_low, f_high)
+        # Cada canal contribui via sua banda DOMINANTE.
+        nyquist = self.fs / 2.0
+        default_band_specs = [
+            (0.0,  0.005),   # ch0: low-freq (trend)
+            (0.005, 0.02),   # ch1: mid-freq (harmonics)
+            (0.04, nyquist),  # ch2: high-freq
+            (0.01, nyquist),  # ch3: transients → detail variance
+            (0.0,  0.01),    # ch4: non-stationary → trend slope
+        ]
+        if target_band_specs is not None:
+            self.target_band_specs = list(target_band_specs)
+        else:
+            self.target_band_specs = default_band_specs[:self.n_channels]
+
+        if target_band_weights is None:
+            target_band_weights = [1.0 / self.n_channels] * self.n_channels
+        w = np.array(target_band_weights, dtype=np.float64)
         if len(w) != self.n_channels:
             raise ValueError(
-                f"target_linear_weights deve ter {self.n_channels} elementos, "
+                f"target_band_weights deve ter {self.n_channels} elementos, "
                 f"recebeu {len(w)}"
             )
-        self.target_linear_weights = w / (w.sum() + 1e-12)
-        self.target_alpha = float(target_alpha)
-        self.target_beta = float(target_beta)
-        self.target_fn = target_fn  # se None, usa o default não-linear abaixo
+        self.target_band_weights = w / (w.sum() + 1e-12)
+        self.target_cross_alpha = float(target_cross_alpha)
+        self.target_cross_beta = float(target_cross_beta)
+        self.target_trend_gamma = float(target_trend_gamma)
+        self.target_fn = target_fn
 
         self.channel_generators: list = []
         self.metadata: Dict[str, Any] = {
@@ -717,25 +798,76 @@ class MultivariateSyntheticGenerator:
             "channel_seeds": list(self.channel_seeds),
             "channel_profiles": [dict(p) for p in self.channel_profiles],
             "target": {
-                "kind": "custom_fn" if target_fn is not None else "nonlinear_default",
-                "linear_weights": self.target_linear_weights.tolist(),
-                "alpha": self.target_alpha,
-                "beta": self.target_beta,
+                "kind": "custom_fn" if target_fn is not None else "fft_multiscale",
+                "band_weights": self.target_band_weights.tolist(),
+                "band_specs": self.target_band_specs,
+                "cross_alpha": self.target_cross_alpha,
+                "cross_beta": self.target_cross_beta,
+                "trend_gamma": self.target_trend_gamma,
                 "formula": (
-                    "y = w·clean_last "
-                    "+ alpha * (clean_last[1] * clean_last[3]) "
-                    "+ beta  * (clean_last[2]**2 - clean_last[4]**2)"
+                    "y = Σ_c w_c * band_energy(ch_c, band_c) "
+                    "+ alpha * cross_band_corr(ch0, ch4, LP) "
+                    "+ beta  * (band_energy_HP(ch2) * band_var_HP(ch3)) "
+                    "+ gamma * trend_slope(ch0) * band_var_HP(ch3)"
                 ),
             },
         }
 
-    def _default_target(self, clean_last: np.ndarray) -> float:
-        """Target não-linear padrão (válido para n_channels >= 5)."""
-        w = self.target_linear_weights.astype(np.float32)
-        linear = float(clean_last @ w)
-        cross = float(clean_last[1] * clean_last[3])
-        sqdiff = float(clean_last[2] ** 2 - clean_last[4] ** 2)
-        return linear + self.target_alpha * cross + self.target_beta * sqdiff
+    # ------------------------------------------------------------------ #
+    # Target multi-escala (FFT-based, zero wavelets)
+    # ------------------------------------------------------------------ #
+
+    def _temporal_target(self, noisy_window: np.ndarray) -> float:
+        """
+        Target multi-escala computado sobre a janela RUIDOSA inteira.
+
+        Combina energia/variância em sub-bandas FFT de cada canal +
+        interações cross-canal não-lineares em bandas específicas.
+
+        Args:
+            noisy_window: (L, C) — a mesma janela que o modelo recebe
+
+        Returns:
+            float — valor escalar do target
+        """
+        fs = self.fs
+        w = self.target_band_weights
+
+        # --- Per-channel band energy ---
+        linear = 0.0
+        for c in range(self.n_channels):
+            f_lo, f_hi = self.target_band_specs[c]
+            ch_signal = noisy_window[:, c]
+            if c == 3:
+                # ch3 (transients): use variance instead of energy
+                linear += w[c] * _band_variance(ch_signal, fs, f_lo, f_hi)
+            elif c == 4:
+                # ch4 (non-stationary): use trend slope
+                linear += w[c] * _trend_slope(ch_signal, fs, cutoff=0.125)
+            else:
+                linear += w[c] * _band_energy(ch_signal, fs, f_lo, f_hi)
+
+        # --- Cross-channel interactions (octave-aligned) ---
+        # alpha: A2-band correlation between ch0 and ch4
+        cross_corr = _cross_band_corr(
+            noisy_window[:, 0], noisy_window[:, 4],
+            fs, 0.0, 0.125
+        )
+
+        # beta: D1-band product (high-freq features)
+        hp_energy_ch2 = _band_energy(noisy_window[:, 2], fs, 0.25, fs / 2)
+        hp_var_ch3 = _band_variance(noisy_window[:, 3], fs, 0.25, fs / 2)
+
+        # gamma: A2-slope × D1-variance (cross-octave interaction)
+        slope_ch0 = _trend_slope(noisy_window[:, 0], fs, cutoff=0.125)
+
+        y = (
+            linear
+            + self.target_cross_alpha * cross_corr
+            + self.target_cross_beta * (hp_energy_ch2 * hp_var_ch3)
+            + self.target_trend_gamma * (slope_ch0 * hp_var_ch3)
+        )
+        return float(y)
 
     def generate(self) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -809,12 +941,12 @@ class MultivariateSyntheticGenerator:
         X = np.empty((N, L, C), dtype=np.float32)
         y = np.empty((N,), dtype=np.float32)
 
-        target_fn = self.target_fn if self.target_fn is not None else self._default_target
+        target_fn = self.target_fn if self.target_fn is not None else self._temporal_target
 
         for k, i in enumerate(starts):
-            X[k] = noisy[i:i + L].astype(np.float32)
-            clean_last = clean[i + L + h - 1]
-            y[k] = float(target_fn(clean_last))
+            window = noisy[i:i + L]  # (L, C) — same data the model sees
+            X[k] = window.astype(np.float32)
+            y[k] = float(target_fn(window))
 
         self.metadata["dataset_info"] = {
             "sequence_length": L,

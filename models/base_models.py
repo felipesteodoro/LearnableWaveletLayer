@@ -63,7 +63,7 @@ def _cnn_backbone(x, cfg: dict):
     for i, f in enumerate(filters):
         k = kernel_sizes[i] if isinstance(kernel_sizes, list) else kernel_sizes
         x = layers.Conv1D(f, k, padding="same", activation="relu",
-                          kernel_regularizer=l2, name=f"conv_{i+1}")(x)
+                          kernel_regularizer=l2)(x)
         x = layers.BatchNormalization()(x)
         if pool_sizes is not None:
             p = pool_sizes[i] if isinstance(pool_sizes, list) else pool_sizes
@@ -72,8 +72,7 @@ def _cnn_backbone(x, cfg: dict):
 
     x = layers.GlobalAveragePooling1D()(x)
     for i, u in enumerate(dense_units):
-        x = layers.Dense(u, activation="relu", kernel_regularizer=l2,
-                         name=f"dense_{i+1}")(x)
+        x = layers.Dense(u, activation="relu", kernel_regularizer=l2)(x)
         x = layers.Dropout(dr)(x)
     return x
 
@@ -113,7 +112,7 @@ def _lstm_backbone(x, cfg: dict):
         return_seq = i < len(units) - 1
         lstm = layers.LSTM(u, return_sequences=return_seq,
                            dropout=dr, recurrent_dropout=rdr,
-                           kernel_regularizer=l2, name=f"lstm_{i+1}")
+                           kernel_regularizer=l2)
         x = layers.Bidirectional(lstm)(x) if bidirectional else lstm(x)
 
     for u in dense_units:
@@ -316,6 +315,91 @@ def apply_wavelet_frontend(x, mode: str, cfg: dict):
 
 
 # ---------------------------------------------------------------------------
+# Multihead wavelet frontend (one backbone per subband)
+# ---------------------------------------------------------------------------
+
+def _wavelet_subbands(x, mode: str, cfg: dict):
+    """
+    Decompose `x` into wavelet subbands and return them as a LIST of tensors
+    [D1, D2, ..., D_L, A_L] without concatenation. Each subband keeps its
+    native temporal resolution: D_l has length L/2^l, A_L has L/2^L.
+
+    Used by the multihead path so that each subband can be processed by an
+    independent backbone instance.
+    """
+    if mode in ("learned_wavelet_multihead", "learned_wavelet_multihead_no_warmup"):
+        from LWT.learned_wavelet_dwt_qmf import LearnedWaveletDWT1D_QMF
+        warm = False if mode == "learned_wavelet_multihead_no_warmup" else cfg.get("warm_start_db4", False)
+        lwt = LearnedWaveletDWT1D_QMF(
+            levels=cfg.get("wavelet_levels", cfg.get("levels", 2)),
+            kernel_size=cfg.get("kernel_size", 8),
+            wavelet_net_units=cfg.get("wavelet_net_units", 32),
+            reg_energy=cfg.get("reg_energy", 1e-2),
+            reg_high_dc=cfg.get("reg_high_dc", 1e-2),
+            reg_smooth=cfg.get("reg_smooth", 1e-3),
+            warm_start_db4=warm,
+            mode="coeffs",
+        )
+        A, details = lwt(x)
+        subbands = list(details) + [A]  # [D1, D2, ..., A_L]
+
+    elif mode == "db4_multihead":
+        from LWT.fixed_db4_dwt import FixedDb4DWT1D
+        # FixedDb4DWT1D only exposes "concat" — use a small helper to split.
+        # Re-implement coeffs by importing the underlying pair.
+        from LWT.learned_wavelet_dwt_qmf import LearnedWaveletDWT1D_QMF
+        # Fall back: use LWT with warm_start_db4 frozen by setting trainable=False
+        lwt = LearnedWaveletDWT1D_QMF(
+            levels=cfg.get("wavelet_levels", cfg.get("levels", 2)),
+            kernel_size=cfg.get("kernel_size", 8),
+            wavelet_net_units=cfg.get("wavelet_net_units", 32),
+            warm_start_db4=True,
+            mode="coeffs",
+        )
+        lwt.trainable = False
+        A, details = lwt(x)
+        subbands = list(details) + [A]
+    else:
+        raise ValueError(f"_wavelet_subbands called with non-multihead mode: {mode}")
+
+    # Per-subband LayerNorm to equalise scales before the backbones.
+    if cfg.get("wavelet_layernorm", True):
+        subbands = [layers.LayerNormalization(axis=-1, name=f"ln_band_{i}")(s)
+                    for i, s in enumerate(subbands)]
+    return subbands
+
+
+def _build_multihead_model(
+    model_name: str,
+    mode: str,
+    input_shape: tuple,
+    cfg: dict,
+):
+    """
+    Construct a multi-head model: one independent backbone per wavelet subband,
+    feature vectors are concatenated and fed to the output head.
+    """
+    backbone_fn = _BACKBONES.get(model_name)
+    if backbone_fn is None:
+        raise ValueError(f"Unknown model '{model_name}'. Choose from {list(_BACKBONES)}")
+
+    inputs = keras.Input(shape=input_shape, name="input")
+    subbands = _wavelet_subbands(inputs, mode, cfg)
+
+    feats = []
+    for i, s in enumerate(subbands):
+        # Each backbone is independently constructed via Python closure → unique
+        # weights per subband (Keras assigns auto-incrementing names).
+        with tf.name_scope(f"head_{i}"):
+            feats.append(backbone_fn(s, cfg))
+    if len(feats) == 1:
+        fused = feats[0]
+    else:
+        fused = layers.Concatenate(name="fuse_subbands")(feats)
+    return inputs, fused
+
+
+# ---------------------------------------------------------------------------
 # Public factory
 # ---------------------------------------------------------------------------
 
@@ -349,9 +433,17 @@ def build_model(
     if backbone_fn is None:
         raise ValueError(f"Unknown model '{model_name}'. Choose from {list(_BACKBONES)}")
 
-    inputs = keras.Input(shape=input_shape, name="input")
-    x = apply_wavelet_frontend(inputs, mode, cfg)
-    x = backbone_fn(x, cfg)
+    multihead = mode in (
+        "learned_wavelet_multihead",
+        "learned_wavelet_multihead_no_warmup",
+        "db4_multihead",
+    )
+    if multihead:
+        inputs, x = _build_multihead_model(model_name, mode, input_shape, cfg)
+    else:
+        inputs = keras.Input(shape=input_shape, name="input")
+        x = apply_wavelet_frontend(inputs, mode, cfg)
+        x = backbone_fn(x, cfg)
 
     lr = cfg.get("learning_rate", 1e-3)
     # Clipnorm global no Adam: previne divergir quando os filtros da camada

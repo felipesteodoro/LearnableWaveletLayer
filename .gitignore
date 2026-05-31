@@ -97,3 +97,8 @@ temp/
 
 # Claude Code
 .claude/
+
+#Dados de Experimentos
+metrics.json
+cfg*/
+*.npy

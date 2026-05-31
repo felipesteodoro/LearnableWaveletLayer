@@ -1,0 +1,3 @@
+Level,Filter Length,Admissible,||h||_2,QMF,Perfect Recon.,Orthogonal,Vanish. Moments,ΔtΔf,Closest Wavelet,Scale,Translation
+level_0,32,✗,0.9686,✓,✗,✗,1,2.235409,db4 (|r|=0.179),0.6574,-0.1232
+level_1,32,✓,0.9785,✓,✗,✗,1,3.116103,sym4 (|r|=0.297),0.6835,-0.0168

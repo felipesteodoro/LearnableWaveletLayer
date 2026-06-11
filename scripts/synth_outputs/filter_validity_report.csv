@@ -1,0 +1,12 @@
+Propriedade,Db4,LWT-Warm,Referência,Tolerância,Resultado
+h_sum,1.4142,1.3837,1.4142135623730951,0.05,PASS
+g_sum,0.0000,-0.0130,0.0,0.05,PASS
+h_norm,1.0000,1.0000,1.0,0.001,PASS
+g_norm,1.0000,1.0000,1.0,0.001,PASS
+qmf_residual,0.0000,0.0000,0.0,1e-10,PASS
+orth_max,0.0000,0.0122,0.0,0.05,PASS
+vanish_m0,0.0000,-0.0130,0.0,0.05,PASS
+vanish_m1,0.0000,-0.2262,0.0,0.5,PASS
+pr_std,0.0000,0.0392,0.0,0.1,PASS
+heisenberg_dtdw,0.1202,0.1247,0.2,0.1,PASS
+"corr(h_lwt, Db4)",1.0000,0.9984,≈1 (warm-start),≥0.95,PASS
